@@ -14,6 +14,8 @@ router.beforeEach((to, from, next) => {
 	} else {
 		if (to.name === "register") {
 			next();
+		}else if(to.name==="forgotpassword"){
+			next();
 		} else {
 			if (sessionStorage.getItem("token") !== undefined && sessionStorage.getItem("token") !== null && sessionStorage.getItem("token") !== null) {
 				next();
