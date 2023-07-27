@@ -39,7 +39,7 @@ httpServer.listen(3210, () => {
 
  app.use(
  	cors({
- 		origin: "*", // 前端服务器地址
+ 		origin: "http://10.0.0.118:8080/", // 前端服务器地址
  	})
  );
 
@@ -64,7 +64,7 @@ app.use(express.json());
 const mySqlConnection = mysql.createConnection({
 	host: "localhost",
 	user: "root",
-	password: "l2tril2",
+	password: "12345",
 	port: "3306",
 	database: "321db",
 	charset: "utf8mb4",
