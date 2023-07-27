@@ -39,7 +39,7 @@ httpServer.listen(3210, () => {
 
  app.use(
  	cors({
- 		origin: "http://10.0.0.118:8080/", // 前端服务器地址
+ 		origin: "http://localhost:8080/", // 前端服务器地址
  	})
  );
 
