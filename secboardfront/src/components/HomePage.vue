@@ -74,6 +74,7 @@ function goLogOut() {
 	sessionStorage.clear();
 	router.push({ path: "/" });
 }
+
 </script>
 
 <style>

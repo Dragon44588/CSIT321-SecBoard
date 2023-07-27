@@ -17,15 +17,15 @@
 				<el-input v-model="loginForm.password" type="password" style="border: 0; height: 100%; width: 100%; font-size: 20px" placeholder="enter password" color="#0D3A4A" />
 			</el-form-item>
 
-			<div style="display: flex; justify-content: flex-end; margin-top: 10px">
-				<strong>Forgot password?</strong>
+			<div style="display: flex; justify-content: flex-start; margin-top: 10px">
+				<strong><a href="/forgot" style="color:white">Forgot Password?</a> </strong>
 			</div>
 
 			<div @click="loginAction" style="border-radius: 10px; margin-top: 30px; display: flex; justify-content: center; align-items: center; background-color: #e6cec5; color: #0c3f51; height: 40px; cursor: pointer">
 				<strong>Log in</strong>
 			</div>
 			<div style="text-align: center; margin-top: 20px">
-				<strong>Do not have an account? <a href="/register" style="color: white">Sign up</a> </strong>
+				<strong>Don't have an account? <a href="/register" style="color: white">Sign up</a> </strong>
 			</div>
 		</el-form>
 	</div>
@@ -37,6 +37,8 @@ import api from "@/api/APIs";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const loginFromRef = ref();
+
+
 
 const loginForm = reactive({
 	email: "",
