@@ -183,6 +183,8 @@ app.post("/api/getMyPosts", (req, res) => {
 	});
 });
 
+const { createHash } = require('crypto');
+
 app.post("/api/addPost", async (req, res) => {
 	const loggedInToken = req.body.token;
 	// verifyRoomToken(loggedInToken, next)
@@ -194,7 +196,7 @@ app.post("/api/addPost", async (req, res) => {
 
 		const saltC = 10;
 		let salt = await bcrypt.genSalt(saltC);
-		let hashedContent = await bcrypt.hash(req.body.content, salt);
+		let hashedContent = createHash('sha256').update(req.body.content).digest('hex');
 
 		const makePostSQL = "insert into posts values(?,?,?,?,?)";
 		const makePostParams = [req.body.name, req.body.title, req.body.content, hashedContent, new Date()];
