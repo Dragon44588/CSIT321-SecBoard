@@ -18,30 +18,30 @@ const url = require("url");
 const cors = require("cors");
 const { error } = require("console");
 
-const privateKey = fs.readFileSync("./privkey1.pem", "utf8");
-const certificate = fs.readFileSync("./fullchain1.pem", "utf8");
-const credentials = { key: privateKey, cert: certificate };
+//const privateKey = fs.readFileSync("./privkey1.pem", "utf8");
+//const certificate = fs.readFileSync("./fullchain1.pem", "utf8");
+//const credentials = { key: privateKey, cert: certificate };
 var httpServer = http.createServer(app);
-var httpsServer = https.createServer(credentials, app);
+//var httpsServer = https.createServer(credentials, app);
 
-httpsServer.listen(3210, () => {
-	console.log("3210 Ports running");
-});
-httpServer.listen(3211, () => {
+//httpsServer.listen(3210, () => {
+//	console.log("3210 Ports running");
+//});
+httpServer.listen(3210, () => {
 	console.log("3211 Ports running");
 });
 
-app.use(
-	cors({
-		origin: "https://secboard.321squad.com", // 前端服务器地址
-	})
-);
+//app.use(
+//	cors({
+//		origin: "https://secboard.321squad.com", // 前端服务器地址
+//	})
+//);
 
-// app.use(
-// 	cors({
-// 		origin: "*", // 前端服务器地址
-// 	})
-// );
+ app.use(
+ 	cors({
+ 		origin: "*", // 前端服务器地址
+ 	})
+ );
 
 // app.listen(3210, () => {
 // 	console.log("3210 port running");
@@ -61,30 +61,28 @@ app.use(express.json());
 // app.use('/chunk', express.static(path.join(__dirname, 'chunk')))
 // app.use(cors());
 
+const mySqlConnection = mysql.createConnection({
+	host: "localhost",
+	user: "root",
+	password: "l2tril2",
+	port: "3306",
+	database: "321db",
+	charset: "utf8mb4",
+});
+
+
 // const mySqlConnection = mysql.createConnection({
-// 	host: "localhost",
-// 	user: "root",
-// 	password: "12345678",
+// 	host: "103.43.75.136",
+// 	user: "secboard",
+// 	password: "secboardmysql",
 // 	port: "3306",
 // 	database: "321DB",
 // 	charset: "utf8mb4",
 // });
-const mySqlConnection = mysql.createConnection({
-	host: "103.43.75.136",
-	user: "secboard",
-	password: "secboardmysql",
-	port: "3306",
-	database: "321DB",
-	charset: "utf8mb4",
-});
-// const mySqlConnection = mysql.createConnection({
-// 	host: "207.148.82.69",
-// 	user: "314usr",
-// 	password: "314mysqlconnection",
-// 	port: "3306",
-// 	database: "314DB",
-// 	charset: "utf8mb4",
-// });
+
+
+
+
 setInterval(() => {
 	const preventErro = "select * from users_info";
 	mySqlConnection.query(preventErro);
@@ -183,6 +181,9 @@ app.post("/api/getMyPosts", (req, res) => {
 	});
 });
 
+const { createHash } = require('crypto');
+
+
 app.post("/api/addPost", async (req, res) => {
 	const loggedInToken = req.body.token;
 	// verifyRoomToken(loggedInToken, next)
@@ -194,7 +195,7 @@ app.post("/api/addPost", async (req, res) => {
 
 		const saltC = 10;
 		let salt = await bcrypt.genSalt(saltC);
-		let hashedContent = await bcrypt.hash(req.body.content, salt);
+		let hashedContent = createHash('sha256').update(req.body.content).digest('hex');
 
 		const makePostSQL = "insert into posts values(?,?,?,?,?)";
 		const makePostParams = [req.body.name, req.body.title, req.body.content, hashedContent, new Date()];
