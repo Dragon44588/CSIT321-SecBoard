@@ -4,7 +4,7 @@ import { createRouter, createWebHistory } from "vue-router";
 const loginPage = () => import("../components/LoginPage");
 const registerPage = () => import("../components/RegisterPage");
 const homePage = () => import("../components/HomePage");
-const forgotLogin = () => import("../components/ForgotLogin");
+const forgotLogin = () => import("../components/ForgotLogin.vue");
 const bulletinBoardComponent = () => import("../components/HomepageComponents/Bulletin_board.vue");
 const myPostsComponent = () => import("../components/HomepageComponents/My_posts.vue");
 const addNewPostComponent = () => import("../components/HomepageComponents/Add-new-post.vue");

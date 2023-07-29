@@ -14,6 +14,13 @@ const registerApi = (data) => {
 	});
 };
 
+const forgotApi = (data) => {
+	return forgotApi.post({
+		url: "/forgot",
+		data,
+	});
+};
+
 const getPostsApi = (data) => {
 	return requestAPI.post({
 		url: "/getPosts",
@@ -35,4 +42,4 @@ const addPost = (data) => {
 	});
 };
 
-export default { loginApi, registerApi, getPostsApi, addPost, getMyPostsApi };
+export default { loginApi, registerApi, forgotApi, getPostsApi, addPost, getMyPostsApi };
