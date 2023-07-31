@@ -18,7 +18,7 @@
 			</el-form-item>
 
 			<div style="display: flex; justify-content: flex-start; margin-top: 10px">
-				<strong><a href="/forgot" style="color:white">Forgot Password?</a> </strong>
+				<strong><a href="/forgotpassword" style="color:white">Forgot password?</a></strong>
 			</div>
 
 			<div @click="loginAction" style="border-radius: 10px; margin-top: 30px; display: flex; justify-content: center; align-items: center; background-color: #e6cec5; color: #0c3f51; height: 40px; cursor: pointer">

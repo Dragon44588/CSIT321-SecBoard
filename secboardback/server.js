@@ -216,3 +216,7 @@ app.post("/api/addPost", async (req, res) => {
 		});
 	});
 });
+
+app.post("/api/forgotpassword", async (req, res) => {
+	
+});

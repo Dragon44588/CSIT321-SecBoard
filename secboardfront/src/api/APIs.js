@@ -42,4 +42,12 @@ const addPost = (data) => {
 	});
 };
 
-export default { loginApi, registerApi, forgotApi, getPostsApi, addPost, getMyPostsApi };
+const forgotpassword = (data) => {
+	return requestAPI.post({
+		url: "/forgotpassword",
+		data,
+	});
+};
+
+
+export default { loginApi, registerApi, forgotApi, getPostsApi, addPost, getMyPostsApi, forgotpassword};
