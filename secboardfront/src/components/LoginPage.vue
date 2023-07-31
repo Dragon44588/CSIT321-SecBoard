@@ -6,7 +6,7 @@
 
 		</div> -->
 		<el-form :model="loginForm" class="loginForm" :rules="rules" ref="loginFromRef">
-			<h1 style="font-size: 50px; margin-top: 50px">Log in</h1>
+			<h1 style="font-size: 50px; margin-top: 15px">Log in</h1>
 			<h3>Enter your details to continue</h3>
 
 			<strong style="margin-top: 180px">Email address *</strong>
