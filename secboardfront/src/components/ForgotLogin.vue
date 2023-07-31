@@ -1,8 +1,5 @@
-<template>
+<template> <!--the template tags are neccessary for building a page, -->
 	<div class="container">
-		<!-- <div class="loginBox">
-
-		</div> -->
 		<el-form :model="registerForm" class="registerForm" :rules="rules" ref="regiserFromRef">
 			<div style="height: 50px; margin-top: 50px; display: flex">
 				<div>
@@ -15,32 +12,32 @@
 			<h3>Discover, Connect, Create</h3>
 
 			<strong style="margin-top: 180px">Name *</strong>
-			<el-form-item prop="name" style="height: 40px; width: 100%; border-radius: 10px">
-				<el-input v-model="registerForm.name" style="border: 0; height: 100%; width: 100%; font-size: 20px" placeholder="enter name" color="#0D3A4A" />
+			<el-form-item prop="name">
+				<el-input class="input" v-model="registerForm.name"  placeholder="enter name"/>
 			</el-form-item>
 
 			<strong style="margin-top: 20px">Email address *</strong>
-			<el-form-item prop="email" style="height: 40px; width: 100%; border-radius: 10px">
-				<el-input v-model="registerForm.email" style="border: 0; height: 100%; width: 100%; font-size: 20px" placeholder="enter email" color="#0D3A4A" />
+			<el-form-item prop="email">
+				<el-input class="input" v-model="registerForm.email" placeholder="enter email"/>
 			</el-form-item>
 
 			<strong style="margin-top: 20px">Password *</strong>
-			<el-form-item prop="password" style="height: 40px; width: 100%; border-radius: 10px">
-				<el-input v-model="registerForm.password" type="password" show-password style="border: 0; height: 100%; width: 100%; font-size: 20px" placeholder="enter password" color="#0D3A4A" />
+			<el-form-item prop="password">
+				<el-input class="input" v-model="registerForm.password" type="password" show-password placeholder="enter password"/>
 			</el-form-item>
 
 			<strong style="margin-top: 20px">Repeat password *</strong>
-			<el-form-item prop="checkPassword" style="height: 40px; width: 100%; border-radius: 10px">
-				<el-input v-model="registerForm.checkPassword" type="password" show-password style="border: 0; height: 100%; width: 100%; font-size: 20px" placeholder="enter password again" color="#0D3A4A" />
+			<el-form-item prop="checkPassword">
+				<el-input class="input" v-model="registerForm.checkPassword" type="password" show-password placeholder="enter password again"/>
 			</el-form-item>
 
-			<el-form-item prop="agree" style="height: 40px; width: 100%; border-radius: 10px">
+			<el-form-item prop="agree">
 				<el-checkbox-group v-model="registerForm.agree">
 					<el-checkbox label="I agree with Terms and Conditions and Privacy Policy" />
 				</el-checkbox-group>
 			</el-form-item>
 
-			<div @click="registerAction(regiserFromRef)" style="border-radius: 10px; margin-top: 50px; display: flex; justify-content: center; align-items: center; background-color: #e6cec5; color: #0c3f51; height: 40px; cursor: pointer">
+			<div id="button" @click="registerAction(regiserFromRef)" style="border-radius: 10px; margin-top: 50px; display: flex; justify-content: center; align-items: center; background-color: #e6cec5; color: #0c3f51; height: 40px; cursor: pointer">
 				<strong>Get started!</strong>
 			</div>
 
@@ -67,27 +64,6 @@ const registerForm = reactive({
 	checkPassword: "",
 	agree: [],
 });
-
-// const validatePass = (rule, value, callback) => {
-// 	if (registerForm.password === "") {
-// 		callback(new Error("Please input the password"));
-// 	} else {
-// 		if (registerForm.checkPass !== "") {
-// 			if (!registerForm.value) return;
-// 			registerForm.value.validateField("checkPassword", () => null);
-// 		}
-// 		callback();
-// 	}
-// };
-// const validatePass2 = (rule, value, callback) => {
-// 	if (registerForm.checkPassword === "") {
-// 		callback(new Error("Please input the password again"));
-// 	} else if (registerForm.checkPassword !== registerForm.password) {
-// 		callback(new Error("Two inputs don't match!"));
-// 	} else {
-// 		callback();
-// 	}
-// };
 
 const rules = ref({
 	name: [
@@ -148,6 +124,21 @@ function registerAction() {
 </script>
 
 <style scoped>
+
+el-form-item {
+	height: 40px;
+	width: 100%;
+	border-radius: 10px
+}
+
+.input {
+	color: #0D3A4A;
+	border: 0;
+	height: 100%;
+	width: 100%;
+	font-size: 20px;
+}
+
 .container {
 	width: 100%;
 	height: 100vh;
