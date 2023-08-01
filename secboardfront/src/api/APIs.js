@@ -49,5 +49,11 @@ const forgotpassword = (data) => {
 	});
 };
 
+const resetPassword = (data) => {
+	return requestAPI.post({
+		url: "/resetpassword",
+		data,
+	});
+};
 
-export default { loginApi, registerApi, forgotApi, getPostsApi, addPost, getMyPostsApi, forgotpassword};
+export default { loginApi, registerApi, forgotApi, getPostsApi, addPost, getMyPostsApi, forgotpassword,resetPassword};

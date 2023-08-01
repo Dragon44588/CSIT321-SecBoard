@@ -4,6 +4,7 @@ const app = express();
 const mysql = require("mysql");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const sendEmail = require("./sendemail");
 
 const { generateToken } = require("./auth");
 
@@ -37,11 +38,11 @@ httpServer.listen(3210, () => {
 //	})
 //);
 
- app.use(
- 	cors({
- 		origin: "http://localhost:8080/", // 前端服务器地址
- 	})
- );
+app.use(
+	cors({
+		origin: "http://localhost:8080/", // 前端服务器地址
+	})
+);
 
 // app.listen(3210, () => {
 // 	console.log("3210 port running");
@@ -70,13 +71,13 @@ const mySqlConnection = mysql.createConnection({
 	charset: "utf8mb4",
 });
 
-mySqlConnection.connect(function(err) {
-    if (err) throw err;
-    mySqlConnection.query("SELECT * FROM posts", function (err, result, fields) {
-      if (err) throw err;
-      console.log(result);
-    });
-  });
+mySqlConnection.connect(function (err) {
+	if (err) throw err;
+	mySqlConnection.query("SELECT * FROM posts", function (err, result, fields) {
+		if (err) throw err;
+		console.log(result);
+	});
+});
 
 // const mySqlConnection = mysql.createConnection({
 // 	host: "103.43.75.136",
@@ -134,7 +135,7 @@ app.post("/api/register", async (req, res) => {
 	const saltC = 10;
 	let salt = await bcrypt.genSalt(saltC);
 	let bcPasword = await bcrypt.hash(req.body.password, salt);
-	const createUserSQL = "insert into users_info values(?,?,?)";
+	const createUserSQL = "insert into users_info values(?,?,?,null)";
 	const createUserParams = [req.body.email, req.body.name, bcPasword];
 	mySqlConnection.query(createUserSQL, createUserParams, (error, result) => {
 		if (error) {
@@ -218,5 +219,91 @@ app.post("/api/addPost", async (req, res) => {
 });
 
 app.post("/api/forgotpassword", async (req, res) => {
-	
+	console.log('forgotPassword Request Recieved');
+	//Check if email exists
+	const authEmailSQL = "select * from users_info where email=?";
+	const authEmail = [req.body.email];
+	mySqlConnection.query(authEmailSQL, authEmail, async (error, result) => {
+		if (result.length !== 0) {//The email exists, create token and link to reset password
+			const token = jwt.sign({ email: req.body.email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+			const resetLink = req.headers.origin + '/resetpassword/' + req.body.email + '/' + token;
+			//Update sql db, user's token
+			const updateTokenSQL = "UPDATE users_info SET token = ? WHERE email = ?;";
+			mySqlConnection.query(updateTokenSQL, [token, authEmail], (error, result) => {
+				if (error) {
+					return res.send({
+						status: 400,
+						message: 'insert token error'
+					});
+				}
+				//send out the mail to reset the password	
+				sendEmail(req.body.email, "Secboard password reset", 'Click the below link to reset ur password \n' + resetLink);//sends email
+				res.send({
+					status: 200,
+					message: 'Reset password email has been sent'
+				});
+			});
+
+		} else {//The email does not exist
+			res.send({
+				status: 401,
+				message: "Email does not exist",
+			});
+		}
+	});
+
+});
+
+app.post("/api/resetpassword", async (req, res) => {
+	console.log('resetpassword Request Recieved');
+	const token = req.body.token;
+	const email = req.body.email;
+	const saltC = 10;
+	let salt = await bcrypt.genSalt(saltC);
+	let bcPasword = await bcrypt.hash(req.body.password, salt);
+	//Confirm token is not expired and is real
+	jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, function (err, decoded) {
+		if (err) {
+			return res.send({
+				status: 400,
+				message: 'Token has expired or is incorrect'
+			});
+		}
+		//Check if user and token exist
+		const verifyUserTokenSQL = "Select * from users_info WHERE email = ? && token = ?;";
+		mySqlConnection.query(verifyUserTokenSQL, [email, token], async (error, result) => {
+			if (result.length !== 0) {//User and token do exist
+				//Update password
+				const updatePasswordSQL = "UPDATE users_info SET password = ? WHERE email = ? && token = ?;";
+				mySqlConnection.query(updatePasswordSQL, [bcPasword, email, token], async (error, result) => {
+					if (error) {
+						return res.send({
+							status: 400,
+							message: 'update password error'
+						});
+					}
+					//remove token from db
+					const removeTokenSQL = "UPDATE users_info set token = '' WHERE email = ?;";
+					mySqlConnection.query(removeTokenSQL, email, async (error, result) => {
+						if (error) {
+							return res.send({
+								status: 400,
+								message: 'remove token error'
+							});
+						}
+						res.send({//Everything worked out
+							status: 200,
+							message: 'Password has been reset'
+						});
+					});
+				});
+			} else {
+				return res.send({//User and token do not exist
+					status: 400,
+					message: 'User and token do not exist'
+				});
+			}
+		});
+
+	});
 });

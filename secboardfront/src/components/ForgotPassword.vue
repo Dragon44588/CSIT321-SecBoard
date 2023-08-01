@@ -40,10 +40,10 @@ const rules = ref({
 function forgotAction() {
 	forgotFromRef.value.validate((valid) => {
 		if (valid) {
-			api.forgotPassword(forgotForm).then((res) => {
+			api.forgotpassword(forgotForm).then((res) => {
 				if (res.status === 200) {
-					window.sessionStorage.setItem("email", forgotForm.email);
-					router.push({ path: "/forgotpassword" });
+					//window.sessionStorage.setItem("email", forgotForm.email);
+					router.push({ path: "/login" });
 				}
 			});
 		} else {
