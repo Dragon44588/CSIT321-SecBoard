@@ -70,6 +70,13 @@ const mySqlConnection = mysql.createConnection({
 	charset: "utf8mb4",
 });
 
+mySqlConnection.connect(function(err) {
+    if (err) throw err;
+    mySqlConnection.query("SELECT * FROM posts", function (err, result, fields) {
+      if (err) throw err;
+      console.log(result);
+    });
+  });
 
 // const mySqlConnection = mysql.createConnection({
 // 	host: "103.43.75.136",

@@ -7,11 +7,17 @@ import router from "../src/router/routerSetting";
 
 const app = createApp(App);
 
-router.beforeEach((to, from, next) => {
+
+router.beforeEach(async (to, from, next) => {
 	if (to.name === "login") {
 		sessionStorage.clear();
 		next();
-	} else {
+	}
+	else if (to.name === "forgot") {
+		sessionStorage.clear();
+		next();		
+	}
+	else {
 		if (to.name === "register") {
 			next();
 		} else {
@@ -22,28 +28,6 @@ router.beforeEach((to, from, next) => {
 			}
 		}
 	}
-	// 	// if (to.name !== "login") {
-	// 	// 	// if (to.name === "home") {
-	// 	// 	// 	if (sessionStorage.getItem("token")) {
-	// 	// 	// 		next();
-	// 	// 	// 	} else {
-	// 	// 	// 		next({ name: "login" });
-	// 	// 	// 	}
-	// 	// 	// }
-	// 	// 	// if (to.name === "register") {
-	// 	// 	// 	next();
-	// 	// 	// }
-	// 	// 	if (sessionStorage.getItem("token")) {
-	// 	// 		next();
-	// 	// 	}
-	// 	// } else {
-	// 	// 	// if (sessionStorage.getItem("token")) {
-	// 	// 	// 	next({ name: "home" });
-	// 	// 	// } else {
-	// 	// 	// 	sessionStorage.clear();
-	// 	// 	// 	next();
-	// 	// 	// }
-	// 	// }
 });
 
 app.use(ElementPlus).use(router).mount("#app");
