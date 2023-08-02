@@ -7,7 +7,7 @@ import router from "../src/router/routerSetting";
 
 const app = createApp(App);
 
-
+	console.log(to.name);
 router.beforeEach(async (to, from, next) => {
 	if (to.name === "login") {
 		sessionStorage.clear();
@@ -20,13 +20,20 @@ router.beforeEach(async (to, from, next) => {
 	else {
 		if (to.name === "register") {
 			next();
-		} else {
+		} 
+		else if(to.name==="forgotpassword"){
+			next();
+		} else if(to.name!==undefined&&to.name.startsWith('resetpassword')){
+			next();
+		}
+		else {
 			if (sessionStorage.getItem("token") !== undefined && sessionStorage.getItem("token") !== null && sessionStorage.getItem("token") !== null) {
 				next();
 			} else {
 				next({ name: "login" });
 			}
 		}
+	
 	}
 });
 
