@@ -9,6 +9,7 @@ const resetPassword = () => import("../components/ResetPassword.vue");
 const bulletinBoardComponent = () => import("../components/HomepageComponents/Bulletin_board.vue");
 const myPostsComponent = () => import("../components/HomepageComponents/My_posts.vue");
 const addNewPostComponent = () => import("../components/HomepageComponents/Add-new-post.vue");
+const myRequestsComponent = () => import("../components/HomepageComponents/My-requests.vue");
 
 const router = createRouter({
 	history: createWebHistory(),
@@ -53,6 +54,10 @@ const router = createRouter({
 				{
 					path: "add-new-post",
 					component: addNewPostComponent,
+				},
+				{
+					path: "my-requests",
+					component: myRequestsComponent,
 				},
 			],
 		},

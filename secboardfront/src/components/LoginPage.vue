@@ -1,10 +1,12 @@
 <template>
-	<div class="container">
+	
+	<div class="container" style="position: relative;">
+		<img style="position: absolute; top: 0px; left: 0px; margin: 15px; height: 100px; width: 100px" src="../../public/Logo_2.png" />
 		<!-- <div class="loginBox">
 
 		</div> -->
 		<el-form :model="loginForm" class="loginForm" :rules="rules" ref="loginFromRef">
-			<h1 style="font-size: 50px; margin-top: 50px">Log in</h1>
+			<h1 style="font-size: 50px; margin-top: 15px">Log in</h1>
 			<h3>Enter your details to continue</h3>
 
 			<strong style="margin-top: 180px">Email address *</strong>

@@ -191,7 +191,6 @@ app.post("/api/getMyPosts", (req, res) => {
 
 const { createHash } = require('crypto');
 
-
 app.post("/api/addPost", async (req, res) => {
 	const loggedInToken = req.body.token;
 	// verifyRoomToken(loggedInToken, next)
