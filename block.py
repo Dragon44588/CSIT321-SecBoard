@@ -432,7 +432,7 @@ class standardChain: # class defining the standard chain by creating a list of s
         if check == 0:
             print("No elections found with that object.")
             return
-        
+        # get vote from a list of verified votes, maybe?
         
         
         

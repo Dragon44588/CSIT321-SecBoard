@@ -36,6 +36,28 @@
 					</div>
 				</div>
 			</div>
+			<div v-if="myname=='Admin'||myname=='Admin2'||myname=='Admin3'" @click="goMyRequests" class="aside-my-requests" style="height: 40px; margin-top: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer">
+				<div style="display: flex; align-items: center; width: 100%">
+					<div style="width: 30px; margin-left: 20px; display: flex; justify-content: center; align-items: center">
+						<img style="height: 20x; width: 20px" src="../../public/my-requests.svg" />
+					</div>
+					<div style="flex: 1; margin-left: 5px">
+						<strong>My Requests</strong>
+					</div>
+				</div>
+			</div>
+			<a href="https://github.com/Dragon44588/CSIT321-SecBoard/blob/main/database.JSON" target="_blank" style="text-decoration: none; color:white; background-color:white">
+			<div @click="goDownloadBlockchain" class="aside-download-blockchain" style="height: 40px; margin-top: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer">
+				<div style="display: flex; align-items: center; width: 100%">
+					<div style="width: 30px; margin-left: 20px; display: flex; justify-content: center; align-items: center">
+						<img style="height: 20x; width: 20px" src="../../public/download-outline.svg" />
+					</div>
+					<div style="flex: 1; margin-left: 5px">
+						<strong>Download Blockchain</strong>
+					</div>
+				</div>
+			</div>
+			</a>
 			<div @click="goLogOut" class="aside-log-out" style="height: 40px; margin-top: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer">
 				<div style="display: flex; align-items: center; width: 100%">
 					<div style="width: 30px; margin-left: 20px; display: flex; justify-content: center; align-items: center">
@@ -69,6 +91,9 @@ function goMyPosts() {
 }
 function goAddNewPost() {
 	router.push({ path: "/home/add-new-post" });
+}
+function goMyRequests() {
+	router.push({ path: "/home/my-requests" });
 }
 function goLogOut() {
 	sessionStorage.clear();
@@ -106,6 +131,12 @@ function goLogOut() {
 	background-color: #082c39;
 }
 .aside-log-out:hover {
+	background-color: #082c39;
+}
+.aside-download-blockchain:hover {
+	background-color: #082c39;
+}
+.aside-my-requests:hover {
 	background-color: #082c39;
 }
 </style>
