@@ -136,7 +136,7 @@ function goLogOut() {
 .aside-download-blockchain:hover {
 	background-color: #082c39;
 }
-.aside-deletion-requests:hover {
+.aside-my-requests:hover {
 	background-color: #082c39;
 }
 </style>
