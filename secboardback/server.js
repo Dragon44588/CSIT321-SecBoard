@@ -22,6 +22,7 @@ let {PythonShell} = require('python-shell')
 
 PythonShell.run('./blockchain/main.py', null).then(messages=>{
 	console.log(messages);
+	console.log("Python script end");
 });
 
 //const privateKey = fs.readFileSync("./privkey1.pem", "utf8");
