@@ -114,6 +114,7 @@ api.getPostsApi(authForm).then((res) => {
 		border: 0px solid black;
 		padding: 14px 80px;
 		width: 70%;
+		cursor: auto;
 	}
 	.votes-received {
 		background-color: #f1c3c3;
@@ -121,6 +122,7 @@ api.getPostsApi(authForm).then((res) => {
 		border-color: #0c3f51;
 		text-align: center;
 		width: 70%;
+		cursor: auto;
 	}
 	hr {
 		margin-top: 20px;
