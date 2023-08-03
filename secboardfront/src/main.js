@@ -6,9 +6,8 @@ import "./assets/global.css";
 import router from "../src/router/routerSetting";
 
 const app = createApp(App);
-
-	console.log(to.name);
 router.beforeEach(async (to, from, next) => {
+	console.log(to.name);
 	if (to.name === "login") {
 		sessionStorage.clear();
 		next();
