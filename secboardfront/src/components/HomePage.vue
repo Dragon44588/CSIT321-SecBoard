@@ -36,13 +36,33 @@
 					</div>
 				</div>
 			</div>
-			<div v-if="myname=='Admin'||myname=='Admin2'||myname=='Admin3'" @click="goMyRequests" class="aside-my-requests" style="height: 40px; margin-top: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer">
+			<div @click="goMyRequests" class="aside-my-requests" style="height: 40px; margin-top: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer">
 				<div style="display: flex; align-items: center; width: 100%">
 					<div style="width: 30px; margin-left: 20px; display: flex; justify-content: center; align-items: center">
 						<img style="height: 20x; width: 20px" src="../../public/my-requests.svg" />
 					</div>
 					<div style="flex: 1; margin-left: 5px">
 						<strong>My Requests</strong>
+					</div>
+				</div>
+			</div>
+			<div v-if="myname=='Admin'||myname=='Admin2'||myname=='Admin3'" @click="goEditRequests" class="aside-my-requests" style="height: 40px; margin-top: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer">
+				<div style="display: flex; align-items: center; width: 100%">
+					<div style="width: 30px; margin-left: 20px; display: flex; justify-content: center; align-items: center">
+						<img style="height: 20x; width: 20px" src="../../public/edit-requests.svg" />
+					</div>
+					<div style="flex: 1; margin-left: 5px">
+						<strong>Edit Requests</strong>
+					</div>
+				</div>
+			</div>
+			<div v-if="myname=='Admin'||myname=='Admin2'||myname=='Admin3'" @click="goDeleteRequests" class="aside-my-requests" style="height: 40px; margin-top: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer">
+				<div style="display: flex; align-items: center; width: 100%">
+					<div style="width: 30px; margin-left: 20px; display: flex; justify-content: center; align-items: center">
+						<img style="height: 20x; width: 20px" src="../../public/delete-requests.svg" />
+					</div>
+					<div style="flex: 1; margin-left: 5px">
+						<strong>Delete Requests</strong>
 					</div>
 				</div>
 			</div>
@@ -94,6 +114,12 @@ function goAddNewPost() {
 }
 function goMyRequests() {
 	router.push({ path: "/home/my-requests" });
+}
+function goEditRequests() {
+	router.push({ path: "/home/edit-requests" });
+}
+function goDeleteRequests() {
+	router.push({ path: "/home/delete-requests" });
 }
 function goLogOut() {
 	sessionStorage.clear();
