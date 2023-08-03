@@ -42,4 +42,11 @@ const addPost = (data) => {
 	});
 };
 
-export default { loginApi, registerApi, forgotApi, getPostsApi, addPost, getMyPostsApi };
+const addDeleteRequest = (data) => {
+	return requestAPI.post({
+		url: "/addDeleteRequest",
+		data,
+	});
+};
+
+export default { loginApi, registerApi, forgotApi, getPostsApi, addPost, getMyPostsApi, addDeleteRequest };

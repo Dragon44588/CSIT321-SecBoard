@@ -25,7 +25,7 @@
 		</td>
 		<td>
 			<div style="height: 40px; margin-top: 20px; display: flex; justify-content: left; align-items: left; left:50px; position:relative">
-				<div @click="showDetails" class="btn votes-received" style="display: flex; justify-content: center; align-items: center; color: #0c3f51; border-radius: 10px; cursor: pointer">
+				<div @click="showDetails" class="btn votes-received" style="display: flex; justify-content: center; align-items: center; color: #0c3f51; border-radius: 10px;">
 					<strong style="font-size: 20px">Votes Received - 1</strong>
 				</div>
 			</div>
@@ -38,6 +38,37 @@
 	<div style="height: 20%; display: flex; align-items: center">
 		<h1 style="margin-left: 50px; font-size: 3em; font-weight: bold">Delete Requests</h1>
 	</div>
+	<table>
+	<tr>
+		<td>
+			<h2 style="margin-left: 50px; font-size: 2em; font-weight: bold">Request Date - </h2>
+		</td>
+		<td>
+			<div style="height: 40px; margin-top: 20px; display: flex; justify-content: left; align-items: left; left:50px; position:relative">
+				<div class="btn requested" style="display: flex; justify-content: center; align-items: center; color: #0c3f51; border-radius: 10px;">
+					<strong style="font-size: 20px; color: #ffffff">Requested</strong>
+				</div>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<div style="height: 40px; margin-top: 20px; display: flex; justify-content: left; align-items: left; left:50px; position:relative">
+				<div @click="showDetails" class="btn view-details" style="display: flex; justify-content: center; align-items: center; color: #0c3f51; border-radius: 10px; cursor: pointer">
+					<strong style="font-size: 20px">View Details</strong>
+				</div>
+			</div>
+		</td>
+		<td>
+			<div style="height: 40px; margin-top: 20px; display: flex; justify-content: left; align-items: left; left:50px; position:relative">
+				<div @click="showDetails" class="btn votes-received" style="display: flex; justify-content: center; align-items: center; color: #0c3f51; border-radius: 10px;">
+					<strong style="font-size: 20px">Votes Received - 1</strong>
+				</div>
+			</div>
+		</td>
+	</tr>
+	</table>
+	<hr>
 	
 </template>
 
@@ -57,7 +88,7 @@ api.getPostsApi(authForm).then((res) => {
 });
 </script>
 
-<style>
+<style scoped>
 	table {
 		width: 50%;
 	}
@@ -67,7 +98,6 @@ api.getPostsApi(authForm).then((res) => {
 		color: black;
 		padding: 14px 28px;
 		font-size: 16px;
-		cursor: pointer;
 	}
 	.view-details {
 		background-color: #ffffff;

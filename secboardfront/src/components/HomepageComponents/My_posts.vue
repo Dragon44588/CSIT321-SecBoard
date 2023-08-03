@@ -10,10 +10,15 @@
 						<div>
 							<strong style="font-weight: bold; font-size: 2em">{{ mpl.title }}</strong>
 						</div>
-						<div style="margin-top: 5px">
+						<div style="margin-top: 5px; height: 20px">
 							<span style="font-size: 1.1em">
 								{{ mpl.content }}
 							</span>
+						</div>
+					</div>
+					<div @click="requestDelete(mpl)" style="height: 40px; margin-top: 20px; display: flex; justify-content: left; align-items: left; left:240px; top:140px; position:relative">
+						<div class="btn delete" style="display: flex; justify-content: center; align-items: center; color: #0c3f51; border-radius: 10px;">
+							<strong style="font-size: 20px; color: #ffffff">Request Deletion</strong>
 						</div>
 					</div>
 				</li>
@@ -30,14 +35,25 @@
 <script setup>
 import { reactive, ref } from "vue";
 import api from "@/api/APIs";
+import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const myPostsList = ref();
+const postContent = ref();
+const postTitle = ref();
+
 
 const mytoken = window.sessionStorage.getItem("token");
 const myname = window.sessionStorage.getItem("name");
 
 const authForm = reactive({
+	token: mytoken,
+	name: myname,
+});
+
+const sendToDatabase = reactive({
+	title: postTitle.value,
+	content: postContent.value,
 	token: mytoken,
 	name: myname,
 });
@@ -50,13 +66,44 @@ api.getMyPostsApi(authForm).then((res) => {
 function goAddNewPost() {
 	router.push({ path: "/home/add-new-post" });
 }
+
+function requestDelete(mpl) {
+	sendToDatabase.title = mpl.title;
+	sendToDatabase.content = mpl.content;
+	api.addDeleteRequest(sendToDatabase).then((res) => {
+		if (res.status === 201) {
+			ElMessage({
+				message: "Done!",
+				type: "success",
+			});
+			router.push({ path: "/home" });
+		}
+	});
+}
 </script>
 
-<style>
+<style scope>
 .add-post-button {
 	background-color: lightgrey;
 }
 .add-post-button:hover {
 	background-color: rgb(143, 142, 142);
+}
+.btn {
+	border: 1px solid black;
+	background-color: white;
+	color: black;
+	padding: 14px 28px;
+	font-size: 16px;
+	cursor: pointer;
+}
+.delete {
+	background-color: #992C2C;
+	border: 0px solid black;
+	text-align: center;
+	width: 47%;
+}
+.delete:hover {
+	background-color: #872424;
 }
 </style>

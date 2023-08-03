@@ -5,8 +5,8 @@ import "element-plus/dist/index.css";
 import "./assets/global.css";
 import router from "../src/router/routerSetting";
 
-const app = createApp(App);
 
+const app = createApp(App);
 
 router.beforeEach(async (to, from, next) => {
 	if (to.name === "login") {

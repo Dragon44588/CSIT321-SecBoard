@@ -215,3 +215,26 @@ app.post("/api/addPost", async (req, res) => {
 		});
 	});
 });
+
+app.post("/api/addDeleteRequest", async (req, res) => {
+	const loggedInToken = req.body.token;
+	// verifyRoomToken(loggedInToken, next)
+	const secretKey = process.env.ACCESS_TOKEN_SECRET;
+	jwt.verify(loggedInToken.split(" ")[1], secretKey, async (err, decoded) => {
+		if (err) {
+			return new Error("Authentication error");
+		}
+
+		const makePostSQL = "insert into deletion_requests values(?,?,?,?,?,?)";
+		console.log(req.body.content);
+		const makePostParams = [new Date(), req.body.name, req.body.title, req.body.content, 0, 0];
+		mySqlConnection.query(makePostSQL, makePostParams, (error, result) => {
+			if (error) {
+				console.log(error);
+			}
+			res.send({
+				status: 201,
+			});
+		});
+	});
+});
