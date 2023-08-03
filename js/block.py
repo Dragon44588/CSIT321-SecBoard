@@ -1,5 +1,3 @@
-import hashlib # sha256 shenanigans
-import json
 
 difficulty = "00" # difficulty for proof of work, change here for debugging purposes
 
@@ -140,6 +138,21 @@ class standardChain: # class defining the standard chain by creating a list of s
         hash1 = ''
         # find nonce value and generate block along with its hash
         while not str(hash1).startswith(difficulty): # four zeroes currently chosen as arbitrary difficulty
+            nonceValue = nonceValue + 1
+            newBlock = json.dumps({
+    
+                'Previous Hash': previousHash,
+                'Data': hashlib.sha256(data.encode('utf-8')).hexdigest(), # hash data according to paper G(xs)
+                'Proof of Work': nonceValue,
+                'Election Hash': electionHash,
+                'Successor Hash': successorHash,
+                'Standard Head Hash': headHash
+    
+            }, sort_keys=True, indent=4, separators=(',', ': '))
+            hash1 = hashlib.sha256(newBlock.encode('utf-8')).hexdigest()
+            if nonceValue >= 1000000000: # one billion is the limit for nonce searching
+                break
+        return hash1, nonceValue # returns the completed hash along with the nonce value found as a tuple
 
 
     def createStandardBlock(self, data): # create a block by hashing the previous block and finding the proof of work nonce value

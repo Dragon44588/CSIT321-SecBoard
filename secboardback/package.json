@@ -1,5 +1,4 @@
 {
-	
 	"name": "314demo",
 	"version": "1.0.0",
 	"description": "",
@@ -20,11 +19,8 @@
 		"jsonwebtoken": "^9.0.0",
 		"mysql": "^2.18.1",
 		"nodemon": "^2.0.22",
+		"python-shell": "^5.0.0",
 		"request": "^2.88.2",
 		"url": "^0.11.0"
 	}
-
-	
 }
-
-

@@ -2,10 +2,12 @@
 	<div style="height: 20%; display: flex; align-items: center">
 		<h1 style="margin-left: 50px; font-size: 3em; font-weight: bold">Delete Requests</h1>
 	</div>
+
+<li v-for="(dl, index) in deletionsList" :key="index">
 	<table>
 	<tr>
 		<td>
-			<h2 style="margin-left: 50px; font-size: 2em; font-weight: bold">Request Date - </h2>
+			<h2 style="margin-left: 50px; font-size: 2em; font-weight: bold">Request Date - {{ dl.requestDate }}</h2>
 		</td>
 		<td>
 			<div style="height: 40px; margin-top: 20px; display: flex; justify-content: left; align-items: left; left:50px; position:relative">
@@ -33,6 +35,7 @@
 	</tr>
 	</table>
 	<hr>
+</li>
 	
 </template>
 
@@ -41,15 +44,17 @@ import { reactive, ref } from "vue";
 import api from "@/api/APIs";
 const mytoken = window.sessionStorage.getItem("token");
 
-const postsList = ref();
+const deletionsList = ref();
 
 const authForm = reactive({
 	token: mytoken,
 });
-api.getPostsApi(authForm).then((res) => {
-	console.log(res.posts);
-	postsList.value = res.posts;
+
+api.getDeleteRequest(authForm).then((res) => {
+	console.log(res.deletion_requests);
+	deletionsList.value = res.deletion_requests;
 });
+
 </script>
 
 <style scoped>

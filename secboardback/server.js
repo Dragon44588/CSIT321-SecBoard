@@ -18,6 +18,12 @@ const url = require("url");
 const cors = require("cors");
 const { error } = require("console");
 
+let {PythonShell} = require('python-shell')
+
+PythonShell.run('./blockchain/main.py', null).then(messages=>{
+	console.log(messages);
+});
+
 //const privateKey = fs.readFileSync("./privkey1.pem", "utf8");
 //const certificate = fs.readFileSync("./fullchain1.pem", "utf8");
 //const credentials = { key: privateKey, cert: certificate };
@@ -69,14 +75,6 @@ const mySqlConnection = mysql.createConnection({
 	database: "321db",
 	charset: "utf8mb4",
 });
-
-mySqlConnection.connect(function(err) {
-    if (err) throw err;
-    mySqlConnection.query("SELECT * FROM posts", function (err, result, fields) {
-      if (err) throw err;
-      console.log(result);
-    });
-  });
 
 // const mySqlConnection = mysql.createConnection({
 // 	host: "103.43.75.136",
@@ -227,7 +225,9 @@ app.post("/api/addDeleteRequest", async (req, res) => {
 
 		const makePostSQL = "insert into deletion_requests values(?,?,?,?,?,?)";
 		console.log(req.body.content);
-		const makePostParams = [new Date(), req.body.name, req.body.title, req.body.content, 0, 0];
+		const current = new Date();
+		const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
+		const makePostParams = [date, req.body.name, req.body.title, req.body.content, 0, 0];
 		mySqlConnection.query(makePostSQL, makePostParams, (error, result) => {
 			if (error) {
 				console.log(error);
@@ -238,3 +238,22 @@ app.post("/api/addDeleteRequest", async (req, res) => {
 		});
 	});
 });
+
+app.post("/api/getDeleteRequest", (req, res) => {
+	const loggedInToken = req.body.token;
+	// verifyRoomToken(loggedInToken, next)
+	const secretKey = process.env.ACCESS_TOKEN_SECRET;
+	jwt.verify(loggedInToken.split(" ")[1], secretKey, async (err, decoded) => {
+		if (err) {
+			return new Error("Authentication error");
+		}
+		const getPostsSQL = "select * from deletion_requests";
+		mySqlConnection.query(getPostsSQL, (error, result) => {
+			res.send({
+				status: 201,
+				deletion_requests: result,
+			});
+		});
+	});
+});
+
