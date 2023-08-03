@@ -45,6 +45,13 @@ const addPost = (data) => {
 const addDeleteRequest = (data) => {
 	return requestAPI.post({
 		url: "/addDeleteRequest",
+    data,
+  });
+};
+
+const forgotpassword = (data) => {
+	return requestAPI.post({
+		url: "/forgotpassword",
 		data,
 	});
 };
@@ -52,8 +59,15 @@ const addDeleteRequest = (data) => {
 const getDeleteRequest = (data) => {
 	return requestAPI.post({
 		url: "/getDeleteRequest",
+    data,
+	});
+};
+
+const resetPassword = (data) => {
+	return requestAPI.post({
+		url: "/resetpassword",
 		data,
 	});
 };
 
-export default { loginApi, registerApi, forgotApi, getPostsApi, addPost, getMyPostsApi, addDeleteRequest, getDeleteRequest, };
+export default { loginApi, registerApi, forgotApi, getPostsApi, addPost, getMyPostsApi, addDeleteRequest, getDeleteRequest, forgotpassword, resetPassword};
