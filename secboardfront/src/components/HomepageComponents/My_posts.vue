@@ -7,18 +7,25 @@
 			<ul style="display: grid; grid-template-columns: repeat(3, minmax(350px, 35%)); grid-auto-rows: 350px">
 				<li v-for="(mpl, index) in myPostsList" :key="index" style="height: 300px; margin: 20px; background-color: #fdf2b3; border-radius: 5px">
 					<div style="padding: 15px">
-						<div>
-							<strong style="font-weight: bold; font-size: 2em">{{ mpl.title }}</strong>
+						<div style="display: flex">
+							<div style="flex: 1; width: inherit; white-space: normal; word-break: break-all; word-wrap: break-word">
+								<strong style="font-weight: bold; font-size: 2em">{{ mpl.title }}</strong>
+							</div>
+
+							<div style="display: flex; justify-content: center">
+								<div style="margin-right: 10px; color: rgb(77, 76, 76); cursor: pointer">
+									<h4>Edit</h4>
+								</div>
+								<div style="cursor: pointer">
+									<img @click="requestDelete(mpl)" style="height: 20px; width: 20px" src="../../../public/trash.svg" />
+								</div>
+							</div>
 						</div>
-						<div style="margin-top: 5px; height: 20px">
+
+						<div style="margin-top: 5px">
 							<span style="font-size: 1.1em">
 								{{ mpl.content }}
 							</span>
-						</div>
-					</div>
-					<div @click="requestDelete(mpl)" style="height: 40px; margin-top: 20px; display: flex; justify-content: left; align-items: left; left:240px; top:140px; position:relative">
-						<div class="btn delete" style="display: flex; justify-content: center; align-items: center; color: #0c3f51; border-radius: 10px;">
-							<strong style="font-size: 20px; color: #ffffff">Request Deletion</strong>
 						</div>
 					</div>
 				</li>
@@ -41,7 +48,6 @@ const router = useRouter();
 const myPostsList = ref();
 const postContent = ref();
 const postTitle = ref();
-
 
 const mytoken = window.sessionStorage.getItem("token");
 const myname = window.sessionStorage.getItem("name");
@@ -98,7 +104,7 @@ function requestDelete(mpl) {
 	cursor: pointer;
 }
 .delete {
-	background-color: #992C2C;
+	background-color: #992c2c;
 	border: 0px solid black;
 	text-align: center;
 	width: 47%;
