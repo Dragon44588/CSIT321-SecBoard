@@ -3,7 +3,7 @@
 		<h1 style="margin-left: 50px; font-size: 3em; font-weight: bold">Delete Requests</h1>
 	</div>
 
-<div id="details" style="display:block">
+<div id="details" style="display:none">
 	<div style="height: 50%; width: 45%; margin-top: 20px; display: flex; justify-content: left; align-items: left; left:380px; top:150px; position:absolute; z-index: 1000">
 		<div class="btn view-details-panel" style="display: flex; justify-content: left; align-items: top; color: #0c3f51; border-radius: 20px;">
 			<strong style="font-size: 30px; color: #0C3F51; padding: 50px 40px; position:absolute">Post Title:</strong>
