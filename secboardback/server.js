@@ -19,13 +19,14 @@ const url = require("url");
 const cors = require("cors");
 const { error } = require("console");
 
-let {PythonShell} = require('python-shell')
+let { PythonShell } = require("python-shell");
 
-PythonShell.run('./blockchain/main.py', null).then(messages=>{
+PythonShell.run("./blockchain/main.py", null).then((messages) => {
 	console.log(messages);
 	console.log("Python script end");
 });
 
+//testing
 //const privateKey = fs.readFileSync("./privkey1.pem", "utf8");
 //const certificate = fs.readFileSync("./fullchain1.pem", "utf8");
 //const credentials = { key: privateKey, cert: certificate };
@@ -176,7 +177,7 @@ app.post("/api/getMyPosts", (req, res) => {
 	});
 });
 
-const { createHash } = require('crypto');
+const { createHash } = require("crypto");
 
 app.post("/api/addPost", async (req, res) => {
 	const loggedInToken = req.body.token;
@@ -189,7 +190,7 @@ app.post("/api/addPost", async (req, res) => {
 
 		const saltC = 10;
 		let salt = await bcrypt.genSalt(saltC);
-		let hashedContent = createHash('sha256').update(req.body.content).digest('hex');
+		let hashedContent = createHash("sha256").update(req.body.content).digest("hex");
 
 		const makePostSQL = "insert into posts values(?,?,?,?,?)";
 		const makePostParams = [req.body.name, req.body.title, req.body.content, hashedContent, new Date()];
@@ -216,7 +217,7 @@ app.post("/api/addDeleteRequest", async (req, res) => {
 		const makePostSQL = "insert into deletion_requests values(?,?,?,?,?,?)";
 		console.log(req.body.content);
 		const current = new Date();
-		const date = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
+		const date = `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`;
 		const makePostParams = [date, req.body.name, req.body.title, req.body.content, 0, 0];
 		mySqlConnection.query(makePostSQL, makePostParams, (error, result) => {
 			if (error) {
@@ -248,43 +249,43 @@ app.post("/api/getDeleteRequest", (req, res) => {
 });
 
 app.post("/api/forgotpassword", async (req, res) => {
-	console.log('forgotPassword Request Recieved');
+	console.log("forgotPassword Request Recieved");
 	//Check if email exists
 	const authEmailSQL = "select * from users_info where email=?";
 	const authEmail = [req.body.email];
 	mySqlConnection.query(authEmailSQL, authEmail, async (error, result) => {
-		if (result.length !== 0) {//The email exists, create token and link to reset password
-			const token = jwt.sign({ email: req.body.email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
-			const resetLink = req.headers.origin + '/resetpassword/' + req.body.email + '/' + token;
+		if (result.length !== 0) {
+			//The email exists, create token and link to reset password
+			const token = jwt.sign({ email: req.body.email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
+			const resetLink = req.headers.origin + "/resetpassword/" + req.body.email + "/" + token;
 			//Update sql db, user's token
 			const updateTokenSQL = "UPDATE users_info SET token = ? WHERE email = ?;";
 			mySqlConnection.query(updateTokenSQL, [token, authEmail], (error, result) => {
 				if (error) {
 					return res.send({
 						status: 400,
-						message: 'insert token error'
+						message: "insert token error",
 					});
 				}
-				//send out the mail to reset the password	
-				sendEmail(req.body.email, "Secboard password reset", 'Click the below link to reset ur password \n' + resetLink);//sends email
+				//send out the mail to reset the password
+				sendEmail(req.body.email, "Secboard password reset", "Click the below link to reset ur password \n" + resetLink); //sends email
 				res.send({
 					status: 200,
-					message: 'Reset password email has been sent'
+					message: "Reset password email has been sent",
 				});
 			});
-
-		} else {//The email does not exist
+		} else {
+			//The email does not exist
 			res.send({
 				status: 401,
 				message: "Email does not exist",
 			});
 		}
 	});
-
 });
 
 app.post("/api/resetpassword", async (req, res) => {
-	console.log('resetpassword Request Recieved');
+	console.log("resetpassword Request Recieved");
 	const token = req.body.token;
 	const email = req.body.email;
 	const saltC = 10;
@@ -295,20 +296,21 @@ app.post("/api/resetpassword", async (req, res) => {
 		if (err) {
 			return res.send({
 				status: 400,
-				message: 'Token has expired or is incorrect'
+				message: "Token has expired or is incorrect",
 			});
 		}
 		//Check if user and token exist
 		const verifyUserTokenSQL = "Select * from users_info WHERE email = ? && token = ?;";
 		mySqlConnection.query(verifyUserTokenSQL, [email, token], async (error, result) => {
-			if (result.length !== 0) {//User and token do exist
+			if (result.length !== 0) {
+				//User and token do exist
 				//Update password
 				const updatePasswordSQL = "UPDATE users_info SET password = ? WHERE email = ? && token = ?;";
 				mySqlConnection.query(updatePasswordSQL, [bcPasword, email, token], async (error, result) => {
 					if (error) {
 						return res.send({
 							status: 400,
-							message: 'update password error'
+							message: "update password error",
 						});
 					}
 					//remove token from db
@@ -317,22 +319,23 @@ app.post("/api/resetpassword", async (req, res) => {
 						if (error) {
 							return res.send({
 								status: 400,
-								message: 'remove token error'
+								message: "remove token error",
 							});
 						}
-						res.send({//Everything worked out
+						res.send({
+							//Everything worked out
 							status: 200,
-							message: 'Password has been reset'
+							message: "Password has been reset",
 						});
 					});
 				});
 			} else {
-				return res.send({//User and token do not exist
+				return res.send({
+					//User and token do not exist
 					status: 400,
-					message: 'User and token do not exist'
+					message: "User and token do not exist",
 				});
 			}
 		});
-
 	});
 });
