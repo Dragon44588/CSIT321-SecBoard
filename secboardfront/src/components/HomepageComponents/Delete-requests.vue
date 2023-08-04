@@ -3,6 +3,7 @@
 		<h1 style="margin-left: 50px; font-size: 3em; font-weight: bold">Delete Requests</h1>
 	</div>
 
+<<<<<<< HEAD
 	<div v-if="showPopup_Delete" style="display: flex; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(108, 108, 108, 0.5); z-index: 9999">
 		<div style="height: 400px; width: 500px; background-color: white; border-radius: 20px; display: flex; flex-direction: column; overflow: hidden; padding: 20px 30px 30px 30px">
 			<div style="width: 100%; display: flex; justify-content: flex-end">
@@ -15,6 +16,15 @@
 				<h1 style="color: #136583; margin-top: 20px">Post Content:</h1>
 				<h3>{{ delete_popup.originalMessage }}</h3>
 			</div>
+=======
+<div id="details" style="display:none">
+	<div style="height: 50%; width: 45%; margin-top: 20px; display: flex; justify-content: left; align-items: left; left:380px; top:150px; position:absolute; z-index: 1000">
+		<div class="btn view-details-panel" style="display: flex; justify-content: left; align-items: top; color: #0c3f51; border-radius: 20px;">
+			<strong style="font-size: 30px; color: #0C3F51; padding: 50px 40px; position:absolute">Post Title:</strong>
+			<strong style="font-size: 25px; color: #000000; padding: 100px 40px; position:absolute" id="viewDetailsTitle"></strong>
+			<strong style="font-size: 30px; color: #0C3F51; padding: 180px 40px; position:absolute">Post Content:</strong>
+			<p style="text-align: left; font-size: 18px; color: #000000; padding: 230px 40px; position:absolute; width:50%; " id="viewDetailsContent"></p>
+>>>>>>> a6acb5f6b4d4426ad7982fb3a231bd89a5a8771e
 		</div>
 	</div>
 
