@@ -66,7 +66,7 @@
 					</div>
 				</div>
 			</div>
-			<a href="https://github.com/Dragon44588/CSIT321-SecBoard/blob/main/database.JSON" target="_blank" style="text-decoration: none; color:white; background-color:white">
+			<a href="/files/database.JSON" download target="_blank" style="text-decoration: none; color:white; background-color:white">
 			<div @click="goDownloadBlockchain" class="aside-download-blockchain" style="height: 40px; margin-top: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer">
 				<div style="display: flex; align-items: center; width: 100%">
 					<div style="width: 30px; margin-left: 20px; display: flex; justify-content: center; align-items: center">

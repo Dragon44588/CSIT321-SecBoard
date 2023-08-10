@@ -6,7 +6,12 @@
             "Proof of work": 24,
             "Correction hash": "Correction"
         },
-        null,
+        {
+            "Previous Hash": "00c7a3be93f1bf7c0f586ac83c6849689bf43dd2d2faf497749ff015ead62b05",
+            "Data": "Hello world!",
+            "Proof of work": 55,
+            "Correction hash": "Correction"
+        },
         {
             "Previous Hash": "00d7f77e87cefd0d6b3dc165fa4cb0f4512d0fe3723592f1156a0678ee5e3286",
             "Data": "another message",
@@ -19,24 +24,30 @@
             "Proof of work": 122,
             "Correction hash": "Correction"
         },
-        null
-    ],
-    "Correction chain": [
         {
-            "Previous hash": "00c7a3be93f1bf7c0f586ac83c6849689bf43dd2d2faf497749ff015ead62b05",
-            "Data": "New message!",
-            "Proof of work": 20,
-            "Election hash": "Election Hash TBI",
-            "Standard head hash": "004b25194f07f7c8e7e5d4048ee832d86485c12e7b4478a46720d4e9444de493",
-            "Successor hash": "Successor Hash TBI"
+            "Previous Hash": "005e502d39b09d4195084ca23711737734abcd1baa32ded0583778309d7db829",
+            "Data": "test 4",
+            "Proof of work": 28,
+            "Correction hash": "Correction"
         },
         {
-            "Previous hash": "00c1c2051238143e11ba37e58456b5454a3e8a5a8c0af3c4568b58592a6cb7e9",
-            "Data": "New message 2!",
-            "Proof of work": 480,
-            "Election hash": "Election Hash TBI",
-            "Standard head hash": "004b25194f07f7c8e7e5d4048ee832d86485c12e7b4478a46720d4e9444de493",
-            "Successor hash": "Successor Hash TBI"
+            "Previous Hash": "004b25194f07f7c8e7e5d4048ee832d86485c12e7b4478a46720d4e9444de493",
+            "Data": "COME ON",
+            "Proof of work": 13,
+            "Correction hash": "Correction"
+        },
+        {
+            "Previous Hash": "00d58c210b959f32d7e4a7a781e7aae374e670f0f97c18f76c3e1c7cb05c4e18",
+            "Data": "COME ON",
+            "Proof of work": 62,
+            "Correction hash": "Correction"
+        },
+        {
+            "Previous Hash": "005acc73d9b53946a2ccc89d061678b281f14ef8c5cfeb419a0d3996ad1e4519",
+            "Data": "COME ON",
+            "Proof of work": 284,
+            "Correction hash": "Correction"
         }
-    ]
+    ],
+    "Correction chain": []
 }
