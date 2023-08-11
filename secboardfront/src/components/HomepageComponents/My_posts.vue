@@ -13,7 +13,7 @@
 							</div>
 
 							<div style="display: flex; justify-content: center">
-								<div style="margin-right: 10px; color: rgb(77, 76, 76); cursor: pointer">
+								<div @click="requestEdit(mpl)" style="margin-right: 10px; color: rgb(77, 76, 76); cursor: pointer">
 									<h4>Edit</h4>
 								</div>
 								<div style="cursor: pointer">
@@ -58,6 +58,7 @@ const authForm = reactive({
 });
 
 const sendToDatabase = reactive({
+	post_id: null,
 	title: postTitle.value,
 	content: postContent.value,
 	token: mytoken,
@@ -65,7 +66,6 @@ const sendToDatabase = reactive({
 });
 
 api.getMyPostsApi(authForm).then((res) => {
-	console.log(res);
 	myPostsList.value = res.myPosts;
 });
 
@@ -74,9 +74,24 @@ function goAddNewPost() {
 }
 
 function requestDelete(mpl) {
+	sendToDatabase.post_id = mpl.post_id;
 	sendToDatabase.title = mpl.title;
 	sendToDatabase.content = mpl.content;
 	api.addDeleteRequest(sendToDatabase).then((res) => {
+		if (res.status === 201) {
+			ElMessage({
+				message: "Done!",
+				type: "success",
+			});
+			router.push({ path: "/home" });
+		}
+	});
+}
+function requestEdit(mpl) {
+	sendToDatabase.post_id = mpl.post_id;
+	sendToDatabase.title = mpl.title;
+	sendToDatabase.content = mpl.content;
+	api.addEditRequest(sendToDatabase).then((res) => {
 		if (res.status === 201) {
 			ElMessage({
 				message: "Done!",

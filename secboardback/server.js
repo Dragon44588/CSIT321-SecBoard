@@ -22,7 +22,6 @@ const { error } = require("console");
 let { PythonShell } = require("python-shell");
 
 PythonShell.run("./blockchain/main.py", null).then((messages) => {
-	console.log(messages);
 	console.log("Python script end");
 });
 
@@ -73,7 +72,7 @@ app.use(express.json());
 const mySqlConnection = mysql.createConnection({
 	host: "localhost",
 	user: "root",
-	password: "12345",
+	password: "12345678",
 	port: "3306",
 	database: "321db",
 	charset: "utf8mb4",
@@ -192,8 +191,8 @@ app.post("/api/addPost", async (req, res) => {
 		let salt = await bcrypt.genSalt(saltC);
 		let hashedContent = createHash("sha256").update(req.body.content).digest("hex");
 
-		const makePostSQL = "insert into posts values(?,?,?,?,?)";
-		const makePostParams = [req.body.name, req.body.title, req.body.content, hashedContent, new Date()];
+		const makePostSQL = "insert into posts values(NULL, ?,?,?,?,?,?,?,?)";
+		const makePostParams = [decoded.email, req.body.name, 0, req.body.title, req.body.content, hashedContent, new Date(), "#ffff"];
 		mySqlConnection.query(makePostSQL, makePostParams, (error, result) => {
 			if (error) {
 				console.log(error);
@@ -214,11 +213,10 @@ app.post("/api/addDeleteRequest", async (req, res) => {
 			return new Error("Authentication error");
 		}
 
-		const makePostSQL = "insert into deletion_requests values(?,?,?,?,?,?)";
-		console.log(req.body.content);
+		const makePostSQL = "insert into deletion_requests values(?,?,?,?,?,?,?)";
 		const current = new Date();
 		const date = `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`;
-		const makePostParams = [date, req.body.name, req.body.title, req.body.content, 0, 0];
+		const makePostParams = [req.body.post_id, date, decoded.email, req.body.name, req.body.title, req.body.content, "pending"];
 		mySqlConnection.query(makePostSQL, makePostParams, (error, result) => {
 			if (error) {
 				console.log(error);
@@ -238,11 +236,160 @@ app.post("/api/getDeleteRequest", (req, res) => {
 		if (err) {
 			return new Error("Authentication error");
 		}
-		const getPostsSQL = "select * from deletion_requests";
-		mySqlConnection.query(getPostsSQL, (error, result) => {
+		/**
+		 * SELECT 
+    dr.*,
+    COALESCE(votes.yes_votes, 0) AS yes_votes,
+    COALESCE(votes.no_votes, 0) AS no_votes,
+    CASE 
+        WHEN v.vote_yes_or_no = 1 THEN 'voted_yes'
+        WHEN v.vote_yes_or_no = 0 THEN 'voted_no'
+        ELSE ''
+    END AS did_u_vote
+FROM 
+    deletion_requests dr
+LEFT JOIN 
+    (SELECT 
+        post_id,
+        SUM(CASE WHEN vote_yes_or_no = 1 THEN 1 ELSE 0 END) AS yes_votes,
+        SUM(CASE WHEN vote_yes_or_no = 0 THEN 1 ELSE 0 END) AS no_votes
+    FROM 
+        Votes
+    GROUP BY 
+        post_id) votes ON dr.post_id = votes.post_id
+LEFT JOIN 
+    Votes v ON dr.post_id = v.post_id AND v.email = ?;
+
+		 */
+		const getPostsSQL = "SELECT dr.*,COALESCE(votes.yes_votes, 0) AS yes_votes,COALESCE(votes.no_votes, 0) AS no_votes,CASE WHEN v.vote_yes_or_no = 1 THEN 'voted_yes'WHEN v.vote_yes_or_no = 0 THEN 'voted_no'ELSE '' END AS did_u_vote FROM deletion_requests dr LEFT JOIN (SELECT post_id,SUM(CASE WHEN vote_yes_or_no = 1 THEN 1 ELSE 0 END) AS yes_votes,SUM(CASE WHEN vote_yes_or_no = 0 THEN 1 ELSE 0 END) AS no_votes FROM Votes GROUP BY post_id) votes ON dr.post_id = votes.post_id LEFT JOIN Votes v ON dr.post_id = v.post_id AND v.email = ?";
+		const pra = [decoded.email];
+		mySqlConnection.query(getPostsSQL, pra, (error, result) => {
+			if (error) {
+				console.error("Error executing query:", error);
+				return;
+			}
+			// console.log(result);
 			res.send({
 				status: 201,
 				deletion_requests: result,
+			});
+		});
+	});
+});
+
+app.post("/api/handle_delete_request", (req, res) => {
+	const loggedInToken = req.body.token;
+	// verifyRoomToken(loggedInToken, next)
+	const secretKey = process.env.ACCESS_TOKEN_SECRET;
+	jwt.verify(loggedInToken.split(" ")[1], secretKey, async (err, decoded) => {
+		if (err) {
+			return new Error("Authentication error");
+		}
+
+		const accept_delete_SQL = "insert into Votes values (?, ?, ?, ?)";
+		const accept_delte_Param = [req.body.post_id, "Delete", req.body.yes_or_no, decoded.email];
+		mySqlConnection.query(accept_delete_SQL, accept_delte_Param, (error, result) => {
+			if (error) {
+				return console.log(error);
+			}
+			res.send({
+				status: 200,
+			});
+		});
+	});
+});
+
+app.post("/api/addEditRequest", async (req, res) => {
+	const loggedInToken = req.body.token;
+	// verifyRoomToken(loggedInToken, next)
+	const secretKey = process.env.ACCESS_TOKEN_SECRET;
+	jwt.verify(loggedInToken.split(" ")[1], secretKey, async (err, decoded) => {
+		if (err) {
+			return new Error("Authentication error");
+		}
+
+		const add_edit_request_SQL = "insert into edit_requests values(?,?,?,?,?,?,?,?,?)";
+		const current = new Date();
+		const date = `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`;
+		const add_edit_request_Params = [req.body.post_id, date, decoded.email, req.body.name, req.body.title, req.body.content, "nothing edited", "nothing edited", "pending"];
+		mySqlConnection.query(add_edit_request_SQL, add_edit_request_Params, (error, result) => {
+			if (error) {
+				console.log(error);
+				return;
+			}
+			res.send({
+				status: 201,
+			});
+		});
+	});
+});
+
+app.post("/api/getEditRequest", (req, res) => {
+	const loggedInToken = req.body.token;
+	// verifyRoomToken(loggedInToken, next)
+	const secretKey = process.env.ACCESS_TOKEN_SECRET;
+	jwt.verify(loggedInToken.split(" ")[1], secretKey, async (err, decoded) => {
+		if (err) {
+			return new Error("Authentication error");
+		}
+		/**
+		 * SELECT 
+    er.*,
+    COALESCE(votes.yes_votes, 0) AS yes_votes,
+    COALESCE(votes.no_votes, 0) AS no_votes,
+    CASE 
+        WHEN v.vote_yes_or_no = 1 THEN 'voted_yes'
+        WHEN v.vote_yes_or_no = 0 THEN 'voted_no'
+        ELSE ''
+    END AS did_u_vote
+FROM 
+    edit_requests er
+LEFT JOIN 
+    (SELECT 
+        post_id,
+        SUM(CASE WHEN vote_yes_or_no = 1 THEN 1 ELSE 0 END) AS yes_votes,
+        SUM(CASE WHEN vote_yes_or_no = 0 THEN 1 ELSE 0 END) AS no_votes
+    FROM 
+        Votes
+    GROUP BY 
+        post_id) votes ON er.post_id = votes.post_id
+LEFT JOIN 
+    Votes v ON er.post_id = v.post_id AND v.email = ?;
+
+		 */
+		const getPostsSQL = "SELECT er.*,COALESCE(votes.yes_votes, 0) AS yes_votes,COALESCE(votes.no_votes, 0) AS no_votes,CASE WHEN v.vote_yes_or_no = 1 THEN 'voted_yes'WHEN v.vote_yes_or_no = 0 THEN 'voted_no'ELSE '' END AS did_u_vote FROM edit_requests er LEFT JOIN (SELECT post_id,SUM(CASE WHEN vote_yes_or_no = 1 THEN 1 ELSE 0 END) AS yes_votes,SUM(CASE WHEN vote_yes_or_no = 0 THEN 1 ELSE 0 END) AS no_votes FROM Votes GROUP BY post_id) votes ON er.post_id = votes.post_id LEFT JOIN Votes v ON er.post_id = v.post_id AND v.email = ?;";
+		const pra = [decoded.email];
+		mySqlConnection.query(getPostsSQL, pra, (error, result) => {
+			if (error) {
+				console.error("Error executing query:", error);
+				return;
+			}
+			console.log(result);
+			res.send({
+				status: 201,
+				edit_requests: result,
+			});
+		});
+	});
+});
+
+app.post("/api/handle_edit_request", (req, res) => {
+	const loggedInToken = req.body.token;
+	// verifyRoomToken(loggedInToken, next)
+	const secretKey = process.env.ACCESS_TOKEN_SECRET;
+	jwt.verify(loggedInToken.split(" ")[1], secretKey, async (err, decoded) => {
+		if (err) {
+			return new Error("Authentication error");
+		}
+
+		const accept_edit_SQL = "insert into Votes values (?, ?, ?, ?)";
+		const accept_edit_Param = [req.body.post_id, "Edit", req.body.yes_or_no, decoded.email];
+		mySqlConnection.query(accept_edit_SQL, accept_edit_Param, (error, result) => {
+			if (error) {
+				return console.log(error);
+			}
+			res.send({
+				status: 200,
 			});
 		});
 	});
