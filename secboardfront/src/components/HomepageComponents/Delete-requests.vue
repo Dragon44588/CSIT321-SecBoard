@@ -18,7 +18,6 @@
 			</div>
 		</div>
 	</div>
-
 	<div v-if="showPopup_Delete" style="display: flex; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(108, 108, 108, 0.5); z-index: 9999">
 		<div style="height: 400px; width: 500px; background-color: white; border-radius: 20px; display: flex; flex-direction: column; overflow: hidden; padding: 20px 30px 30px 30px">
 			<div style="width: 100%; display: flex; justify-content: flex-end">
@@ -31,6 +30,7 @@
 				<h1 style="color: #136583; margin-top: 20px">Post Content:</h1>
 				<h3>{{ delete_popup.originalMessage }}</h3>
 			</div>
+
 		</div>
 	</div>
 	<div style="height: 100%; display: flex; flex-direction: column; align-items: center">
@@ -43,6 +43,7 @@
 							<h3>Request Date - {{ post.requestDate }}</h3>
 							<h4 @click="get_delete_popup_content(index)" class="view_detail_button_css" style="margin-top: 10px; cursor: pointer; border: 1px solid gray; padding: 5px 10px 5px 10px; width: max-content; border-radius: 10px">View Details</h4>
 						</div>
+
 
 						<!-- <div style="min-width: 200px">
 							<h3 style="background-color: rgb(221, 221, 2); margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; border-radius: 10px; text-align: center; color: white">Requested</h3>
@@ -69,6 +70,7 @@
 			</ul>
 		</div>
 	</div>
+
 </template>
 
 <script setup>
@@ -76,7 +78,9 @@ import { reactive, ref } from "vue";
 import api from "@/api/APIs";
 const mytoken = window.sessionStorage.getItem("token");
 
+
 const deleteReuqestsList = ref();
+
 
 const authForm = reactive({
 	token: mytoken,
@@ -107,6 +111,7 @@ function handleDeleteRequest(post, yes_or_no) {
 			});
 		}
 	});
+
 }
 
 </script>
