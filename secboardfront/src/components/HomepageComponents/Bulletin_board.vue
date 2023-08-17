@@ -14,6 +14,7 @@
 							<span style="font-size: 1.1em">
 								{{ pl.content }}
 							</span>
+							
 						</div>
 					</div>
 				</li>

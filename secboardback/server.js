@@ -6,7 +6,17 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("./sendemail");
 const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
+const storage = multer.diskStorage({
+	destination: function (req, file, cb) {
+	  cb(null, 'uploads/')
+	},
+	filename: function (req, file, cb) {
+		let ext = file.originalname.substring(file.originalname.lastIndexOf('.'), file.originalname.length);
+        cb(null, Date.now() + ext)
+	}
+  })
+const upload = multer({ storage: storage });
+
 
 const { generateToken } = require("./auth");
 
@@ -183,6 +193,7 @@ app.post("/api/getMyPosts", (req, res) => {
 			if (error) {
 				console.log(error);
 			}
+			//res.setHeader('Content-Type', 'image/png');
 			res.send({
 				status: 201,
 				myPosts: result,
@@ -197,7 +208,7 @@ const { createHash } = require('crypto');
 app.post("/api/addPost", upload.single("file"), async (req, res) => {
 	const loggedInToken = req.body.token;
 	// verifyRoomToken(loggedInToken, next)
-	console.log(req.body);
+	console.log(req.file);
 	const secretKey = process.env.ACCESS_TOKEN_SECRET;
 	jwt.verify(loggedInToken.split(" ")[1], secretKey, async (err, decoded) => {
 		if (err) {
