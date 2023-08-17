@@ -19,7 +19,6 @@
 		</div>
 	</div>
 
-<<<<<<< HEAD
 	<div v-if="showPopup_Delete" style="display: flex; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(108, 108, 108, 0.5); z-index: 9999">
 		<div style="height: 400px; width: 500px; background-color: white; border-radius: 20px; display: flex; flex-direction: column; overflow: hidden; padding: 20px 30px 30px 30px">
 			<div style="width: 100%; display: flex; justify-content: flex-end">
