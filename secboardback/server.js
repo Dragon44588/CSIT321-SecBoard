@@ -22,6 +22,7 @@ const { error } = require("console");
 let { PythonShell } = require("python-shell");
 
 PythonShell.run("./blockchain/main.py", null).then((messages) => {
+	console.log(messages);
 	console.log("Python script end");
 });
 
@@ -72,7 +73,7 @@ app.use(express.json());
 const mySqlConnection = mysql.createConnection({
 	host: "localhost",
 	user: "root",
-	password: "12345678",
+	password: "12345",
 	port: "3306",
 	database: "321db",
 	charset: "utf8mb4",
