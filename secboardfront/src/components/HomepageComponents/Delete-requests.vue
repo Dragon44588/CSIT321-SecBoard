@@ -79,9 +79,6 @@ const mytoken = window.sessionStorage.getItem("token");
 
 const deleteReuqestsList = ref();
 
-const showPopup_Delete = ref(false);
-const delete_popup = ref();
-
 const authForm = reactive({
 	token: mytoken,
 });
@@ -112,6 +109,7 @@ function handleDeleteRequest(post, yes_or_no) {
 		}
 	});
 }
+
 </script>
 
 <style scoped>
