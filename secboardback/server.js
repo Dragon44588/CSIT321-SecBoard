@@ -5,6 +5,8 @@ const mysql = require("mysql");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("./sendemail");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
 const { generateToken } = require("./auth");
 
@@ -192,9 +194,10 @@ app.post("/api/getMyPosts", (req, res) => {
 const { createHash } = require('crypto');
 
 
-app.post("/api/addPost", async (req, res) => {
+app.post("/api/addPost", upload.single("file"), async (req, res) => {
 	const loggedInToken = req.body.token;
 	// verifyRoomToken(loggedInToken, next)
+	console.log(req.body);
 	const secretKey = process.env.ACCESS_TOKEN_SECRET;
 	jwt.verify(loggedInToken.split(" ")[1], secretKey, async (err, decoded) => {
 		if (err) {
@@ -207,6 +210,7 @@ app.post("/api/addPost", async (req, res) => {
 
 		const makePostSQL = "insert into posts values(?,?,?,?,?)";
 		const makePostParams = [req.body.name, req.body.title, req.body.content, hashedContent, new Date()];
+		
 		mySqlConnection.query(makePostSQL, makePostParams, (error, result) => {
 			if (error) {
 				console.log(error);

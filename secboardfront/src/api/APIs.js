@@ -36,7 +36,7 @@ const getMyPostsApi = (data) => {
 };
 
 const addPost = (data) => {
-	return requestAPI.post({
+	return requestAPI.post2({
 		url: "/addPost",
 		data,
 	});
