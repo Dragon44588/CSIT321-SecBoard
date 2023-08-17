@@ -61,6 +61,7 @@ const postForm = reactive({
 	token: myToken,
 	name: myName,
 });
+
 function goSavePost() {
 	if (postTitle.value === "" || postTitle.value === undefined || postContent.value === "" || postContent.value === undefined) {
 		ElMessage({

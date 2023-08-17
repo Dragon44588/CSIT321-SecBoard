@@ -35,7 +35,7 @@ class standardChain: # class defining the standard chain by creating a list of s
 
         print('Hash of Genesis: ' + str(hash1[0])) # hash1 is a tuple, hash1[0] gives the hash and hash1[1] gives the nonce value
         print()
-        genesis = standardBlock("Genesis", "Test", hash1[1], "None") # generate a genesis block when the list (chain) is created
+        genesis = standardBlock("Genesis", "Test", hash1[1], "Correction") # generate a genesis block when the list (chain) is created
         self.chainList = [] # initiate the list
         self.chainList.append(genesis) # add to the list. append adds to the end of the list. To modify at a certain index, use 'insert(index, object)'
 

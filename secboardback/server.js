@@ -192,6 +192,19 @@ app.post("/api/addPost", async (req, res) => {
 		let salt = await bcrypt.genSalt(saltC);
 		let hashedContent = createHash("sha256").update(req.body.content).digest("hex");
 
+		// add post to blockchain
+		let options = {
+			mode: 'text',
+			pythonOptions: ['-u'], // get print results in real-time
+			scriptPath: '../secboardback/blockchain/',
+			args: [req.body.content]
+		  };
+		  
+		  PythonShell.run('addStandardBlock.py', options).then(messages=>{
+			// results is an array consisting of messages collected during execution
+			console.log(messages);
+		  });
+
 		const makePostSQL = "insert into posts values(?,?,?,?,?)";
 		const makePostParams = [req.body.name, req.body.title, req.body.content, hashedContent, new Date()];
 		mySqlConnection.query(makePostSQL, makePostParams, (error, result) => {
