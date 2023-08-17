@@ -1,60 +1,76 @@
 <template>
-	<div style="height: 20%; display: flex; align-items: center">
-		<h1 style="margin-left: 50px; font-size: 3em; font-weight: bold">Delete Requests</h1>
-	</div>
+	<div v-if="showPopup_Edit">
+		<View_Detail_Delete_Popup style="display: none" />
+		<div style="display: flex; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(108, 108, 108, 0.5); z-index: 9999">
+			<div style="height: 400px; width: 500px; background-color: white; border-radius: 20px; display: flex; flex-direction: column; overflow: hidden; padding: 20px 30px 30px 30px">
+				<div style="width: 100%; display: flex; justify-content: flex-end">
+					<img @click="showPopup_Edit = false" style="height: 50px; width: 50px; cursor: pointer" src="../../../public/close-outline.svg" />
+				</div>
+				<div style="width: 100%; overflow: auto">
+					<h1 style="color: #136583">Original Post</h1>
+					<h2>{{ edit_popup.title }}</h2>
+					<h3>{{ edit_popup.content }}</h3>
 
-<div id="details" style="display:none">
-	<div style="height: 50%; width: 45%; margin-top: 20px; display: flex; justify-content: left; align-items: left; left:380px; top:150px; position:absolute; z-index: 1000">
-		<div class="btn view-details-panel" style="display: flex; justify-content: left; align-items: top; color: #0c3f51; border-radius: 20px;">
-			<strong style="font-size: 30px; color: #0C3F51; padding: 50px 40px; position:absolute">Post Title:</strong>
-			<strong style="font-size: 25px; color: #000000; padding: 100px 40px; position:absolute" id="viewDetailsTitle"></strong>
-			<strong style="font-size: 30px; color: #0C3F51; padding: 180px 40px; position:absolute">Post Content:</strong>
-			<p style="text-align: left; font-size: 18px; color: #000000; padding: 230px 40px; position:absolute; width:50%; " id="viewDetailsContent"></p>
+					<h1 style="color: #136583; margin-top: 20px; border-top: 1px solid gray; padding-top: 20px">Edited Post</h1>
+					<h2>{{ edit_popup.title }}</h2>
+					<h3>{{ edit_popup.content }} <span style="color: red">new added/edited text shown in red</span></h3>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div v-if="showPopup_Delete" style="display: flex; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(108, 108, 108, 0.5); z-index: 9999">
+		<div style="height: 400px; width: 500px; background-color: white; border-radius: 20px; display: flex; flex-direction: column; overflow: hidden; padding: 20px 30px 30px 30px">
+			<div style="width: 100%; display: flex; justify-content: flex-end">
+				<img @click="showPopup_Delete = false" style="height: 50px; width: 50px; cursor: pointer" src="../../../public/close-outline.svg" />
+			</div>
+			<div style="width: 100%; overflow: auto">
+				<h1 style="color: #136583">Post Title:</h1>
+				<h2>{{ delete_popup.originalTitle }}</h2>
+
+				<h1 style="color: #136583; margin-top: 20px">Post Content:</h1>
+				<h3>{{ delete_popup.originalMessage }}</h3>
+			</div>
+
+		</div>
+	</div>
+	<div style="height: 100%; display: flex; flex-direction: column; align-items: center">
+		<div style="width: 90%; margin-top: 50px; margin-bottom: 20px">
+			<h1 style="margin: 30px 0 50px 0; font-size: 2.5em; font-weight: 900">Delete Requests</h1>
+			<ul>
+				<li v-for="(post, index) in deleteReuqestsList" :key="index" style="border-bottom: 1px solid gray; padding-bottom: 10px; display: flex; justify-content: center">
+					<div style="flex: 1; display: flex; justify-content: space-between">
+						<div>
+							<h3>Request Date - {{ post.requestDate }}</h3>
+							<h4 @click="get_delete_popup_content(index)" class="view_detail_button_css" style="margin-top: 10px; cursor: pointer; border: 1px solid gray; padding: 5px 10px 5px 10px; width: max-content; border-radius: 10px">View Details</h4>
+						</div>
+
+
+						<!-- <div style="min-width: 200px">
+							<h3 style="background-color: rgb(221, 221, 2); margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; border-radius: 10px; text-align: center; color: white">Requested</h3>
+							<h4 style="background-color: #e6cec5; margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; border-radius: 10px; text-align: center">Votes Receivied: 1</h4>
+						</div> -->
+
+						<div style="min-width: 200px">
+							<div v-if="post.did_u_vote === ''">
+								<h3 @click="handleDeleteRequest(post, 1)" style="background-color: green; margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; border-radius: 10px; text-align: center; color: white; cursor: pointer">Appcet</h3>
+								<h3 @click="handleDeleteRequest(post, 0)" style="background-color: red; margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; border-radius: 10px; text-align: center; color: white; cursor: pointer">Reject</h3>
+							</div>
+
+							<div v-else>
+								<h3 :style="{ backgroundColor: post.did_u_vote === 'voted_yes' ? 'green' : 'red' }" style="margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; border-radius: 10px; text-align: center; color: white">{{ post.did_u_vote === "voted_yes" ? "Accepted" : "Rejected" }}</h3>
+							</div>
+
+							<div style="background-color: #e6cec5; margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; border-radius: 10px; text-align: center">
+								<h4>Current Votes</h4>
+								<h4>Yes: {{ post.yes_votes }} || No: {{ post.no_votes }}</h4>
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
 		</div>
 	</div>
 
-	<div style="position:absolute; z-index: 1001; left:930px; top:180px">
-		<img @click="viewDetails" style="height: 8%; width: 8%; cursor:pointer" src="../../../public/black-cross.svg" />
-	</div>
-	
-	<div style="height: 100%; width: 100%; position:absolute; background:#0C3F51; opacity: 0.5; z-index:999; top:0; left:0;">
-	</div>
-</div>
-
-<li v-for="(dl, index) in deletionsList" :key="index">
-	<table>
-	<tr>
-		<td>
-			<h2 style="margin-left: 50px; font-size: 2em; font-weight: bold">Request Date - {{ dl.requestDate }}</h2>
-		</td>
-		<td>
-			<div style="height: 40px; margin-top: 20px; display: flex; justify-content: left; align-items: left; left:50px; position:relative">
-				<div class="btn accept" style="display: flex; justify-content: center; align-items: center; color: #0c3f51; border-radius: 10px;">
-					<strong style="font-size: 20px; color: #ffffff">Accept</strong>
-				</div>
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<div style="height: 40px; margin-top: 20px; display: flex; justify-content: left; align-items: left; left:50px; position:relative">
-				<div @click="viewDetails(dl)" class="btn view-details" style="display: flex; justify-content: center; align-items: center; color: #0c3f51; border-radius: 10px; cursor: pointer">
-					<strong style="font-size: 20px">View Details</strong>
-				</div>
-			</div>
-		</td>
-		<td>
-			<div style="height: 40px; margin-top: 20px; display: flex; justify-content: left; align-items: left; left:50px; position:relative">
-				<div class="btn reject" style="display: flex; justify-content: center; align-items: center; color: #0c3f51; border-radius: 10px;">
-					<strong style="font-size: 20px; color: #ffffff">Reject</strong>
-				</div>
-			</div>
-		</td>
-	</tr>
-	</table>
-	<hr>
-</li>
-	
 </template>
 
 <script setup>
@@ -62,79 +78,49 @@ import { reactive, ref } from "vue";
 import api from "@/api/APIs";
 const mytoken = window.sessionStorage.getItem("token");
 
-const deletionsList = ref();
+
+const deleteReuqestsList = ref();
+
 
 const authForm = reactive({
 	token: mytoken,
 });
 
 api.getDeleteRequest(authForm).then((res) => {
-	console.log(res.deletion_requests);
-	deletionsList.value = res.deletion_requests;
+	deleteReuqestsList.value = res.deletion_requests;
 });
 
-function viewDetails(dl) {
-	document.getElementById("viewDetailsTitle").innerHTML = dl.originalTitle;
-	document.getElementById("viewDetailsContent").innerHTML = dl.originalMessage;
-	var x = document.getElementById("details");
-	if (x.style.display == "none") {
-		x.style.display = "block";
-	} else {
-		x.style.display = "none";
-	}
+function get_delete_popup_content(index) {
+	showPopup_Delete.value = true;
+	delete_popup.value = deleteReuqestsList.value[index];
+}
+
+const handle_delete_request_form = reactive({
+	token: mytoken,
+	post_id: null,
+	yes_or_no: null,
+});
+function handleDeleteRequest(post, yes_or_no) {
+	handle_delete_request_form.post_id = post.post_id;
+	handle_delete_request_form.yes_or_no = yes_or_no;
+	api.handleDeleteRequest(handle_delete_request_form).then((res) => {
+		if (res.status === 200) {
+			console.log("handled a delete request");
+			api.getDeleteRequest(authForm).then((res) => {
+				deleteReuqestsList.value = res.deletion_requests;
+			});
+		}
+	});
+
 }
 
 </script>
 
 <style scoped>
-	table {
-		width: 50%;
-	}
-	.btn {
-		border: 1px solid black;
-		background-color: white;
-		color: black;
-		padding: 14px 28px;
-		font-size: 16px;
-		cursor: pointer;
-	}
-	.view-details {
-		background-color: #ffffff;
-		border: 1px solid black;
-		border-color: #0c3f51;
-	}
-	.view-details:hover {
-		background-color: #ebebeb;
-		border: 1px solid black;
-		border-color: #0c3f51;
-	}
-	.accept {
-		background-color: #41894B;
-		border: 0px solid black;
-		padding: 14px 80px;
-		width: 70%;
-	}
-	.accept:hover {
-		background-color: #326A3A;
-	}
-	.reject {
-		background-color: #992C2C;
-		border: 0px solid black;
-		text-align: center;
-		width: 70%;
-	}
-	.reject:hover {
-		background-color: #872424;
-	}
-	hr {
-		margin-top: 20px;
-	}
-	.view-details-panel {
-		background-color: #F7E4DE;
-		border: 0px solid black;
-		border-color: #0c3f51;
-		text-align: center;
-		width: 70%;
-		cursor: auto;
-	}
+.view_detail_button_css {
+	background-color: white;
+}
+.view_detail_button_css:hover {
+	background-color: rgb(174, 174, 174);
+}
 </style>

@@ -8,12 +8,12 @@
 				</div>
 				<div style="width: 100%; overflow: auto">
 					<h1 style="color: #136583">Original Post</h1>
-					<h2>{{ edit_popup.title }}</h2>
-					<h3>{{ edit_popup.content }}</h3>
+					<h2>{{ edit_popup.originTitle }}</h2>
+					<h3>{{ edit_popup.originMessage }}</h3>
 
 					<h1 style="color: #136583; margin-top: 20px; border-top: 1px solid gray; padding-top: 20px">Edited Post</h1>
-					<h2>{{ edit_popup.title }}</h2>
-					<h3>{{ edit_popup.content }} <span style="color: red">new added/edited text shown in red</span></h3>
+					<h2>{{ edit_popup.originTitle }}</h2>
+					<h3>{{ edit_popup.originMessage }} <span style="color: red">new added/edited text shown in red</span></h3>
 				</div>
 			</div>
 		</div>
@@ -38,29 +38,19 @@
 		<div style="width: 90%">
 			<h1 style="margin: 30px 0 50px 0; font-size: 2.5em; font-weight: 900">Edit Requests</h1>
 			<ul>
-				<li v-for="(post, index) in postsList" :key="index" style="border-bottom: 1px solid gray; padding-bottom: 10px; display: flex; justify-content: center">
+				<li v-for="(post, index) in editRequestsList" :key="index" style="border-bottom: 1px solid gray; padding-bottom: 10px; display: flex; justify-content: center">
 					<div style="flex: 1; display: flex; justify-content: space-between">
 						<div>
-							<h3>Request Date - {{ post.timestamp }}</h3>
+							<h3>Request Date - {{ post.requestDate }}</h3>
 							<h4 @click="get_edit_popup_content(index)" class="view_detail_button_css" style="margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; width: max-content; border-radius: 10px; cursor: pointer">View Details</h4>
 						</div>
 
 						<div style="min-width: 200px">
 							<h3 style="background-color: rgb(221, 221, 2); margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; border-radius: 10px; text-align: center; color: white">Requested</h3>
-							<h4 style="background-color: #e6cec5; margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; border-radius: 10px; text-align: center">Votes Receivied: 1</h4>
-						</div>
-					</div>
-				</li>
-
-				<li style="border-bottom: 1px solid gray; margin-top: 20px; padding-bottom: 10px; display: flex; justify-content: center">
-					<div style="flex: 1; display: flex; justify-content: space-between">
-						<div>
-							<h3>Request Date - 05/05/2023</h3>
-							<h4 style="background-color: white; margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; width: max-content; border-radius: 10px">View Details</h4>
-						</div>
-
-						<div style="min-width: 200px">
-							<h3 style="background-color: green; margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; border-radius: 10px; text-align: center; color: white">Accepted</h3>
+							<div style="background-color: #e6cec5; margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; border-radius: 10px; text-align: center">
+								<h4>Current Votes</h4>
+								<h4>Yes: {{ post.yes_votes }} || No: {{ post.no_votes }}</h4>
+							</div>
 						</div>
 					</div>
 				</li>
@@ -83,20 +73,11 @@
 						</div> -->
 
 						<div style="min-width: 200px">
-							<h3 style="background-color: green; margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; border-radius: 10px; text-align: center; color: white">Accepted</h3>
-						</div>
-					</div>
-				</li>
-
-				<li style="border-bottom: 1px solid gray; margin-top: 20px; padding-bottom: 10px; display: flex; justify-content: center">
-					<div style="flex: 1; display: flex; justify-content: space-between">
-						<div>
-							<h3>Request Date - 05/05/2023</h3>
-							<h4 style="background-color: white; margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; width: max-content; border-radius: 10px">View Details</h4>
-						</div>
-
-						<div style="min-width: 200px">
-							<h3 style="background-color: red; margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; border-radius: 10px; text-align: center; color: white">Rejected</h3>
+							<h3 style="background-color: rgb(221, 221, 2); margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; border-radius: 10px; text-align: center; color: white">Requested</h3>
+							<div style="background-color: #e6cec5; margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; border-radius: 10px; text-align: center">
+								<h4>Current Votes</h4>
+								<h4>Yes: {{ post.yes_votes }} || No: {{ post.no_votes }}</h4>
+							</div>
 						</div>
 					</div>
 				</li>
@@ -110,8 +91,8 @@ import { reactive, ref } from "vue";
 import api from "@/api/APIs";
 const mytoken = window.sessionStorage.getItem("token");
 
-const postsList = ref();
 const deleteReuqestsList = ref();
+const editRequestsList = ref();
 
 const showPopup_Edit = ref(false);
 const edit_popup = ref();
@@ -121,7 +102,7 @@ const delete_popup = ref();
 
 function get_edit_popup_content(index) {
 	showPopup_Edit.value = true;
-	edit_popup.value = postsList.value[index];
+	edit_popup.value = editRequestsList.value[index];
 }
 
 function get_delete_popup_content(index) {
@@ -132,13 +113,14 @@ function get_delete_popup_content(index) {
 const authForm = reactive({
 	token: mytoken,
 });
-api.getPostsApi(authForm).then((res) => {
-	console.log(res.posts);
-	postsList.value = res.posts;
-});
+
 api.getDeleteRequest(authForm).then((res) => {
 	console.log("Im Delete Request List", res.deletion_requests);
 	deleteReuqestsList.value = res.deletion_requests;
+});
+api.getEditRequest(authForm).then((res) => {
+	console.log("Im Edit Request List", res.edit_requests);
+	editRequestsList.value = res.edit_requests;
 });
 </script>
 
