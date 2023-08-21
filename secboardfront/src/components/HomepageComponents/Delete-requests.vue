@@ -80,7 +80,8 @@ const mytoken = window.sessionStorage.getItem("token");
 
 
 const deleteReuqestsList = ref();
-
+const showPopup_Delete = false;
+const delete_popup = false;
 
 const authForm = reactive({
 	token: mytoken,
@@ -100,6 +101,7 @@ const handle_delete_request_form = reactive({
 	post_id: null,
 	yes_or_no: null,
 });
+
 function handleDeleteRequest(post, yes_or_no) {
 	handle_delete_request_form.post_id = post.post_id;
 	handle_delete_request_form.yes_or_no = yes_or_no;
