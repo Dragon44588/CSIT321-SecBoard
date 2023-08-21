@@ -6,44 +6,34 @@ import "./assets/global.css";
 import router from "../src/router/routerSetting";
 
 const app = createApp(App);
-
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
+	console.log(to.name);
 	if (to.name === "login") {
 		sessionStorage.clear();
 		next();
-	} else {
+	}
+	else if (to.name === "forgot") {
+		sessionStorage.clear();
+		next();		
+	}
+	else {
 		if (to.name === "register") {
 			next();
-		} else {
+		} 
+		else if(to.name==="forgotpassword"){
+			next();
+		} else if(to.name!==undefined&&to.name.startsWith('resetpassword')){
+			next();
+		}
+		else {
 			if (sessionStorage.getItem("token") !== undefined && sessionStorage.getItem("token") !== null && sessionStorage.getItem("token") !== null) {
 				next();
 			} else {
 				next({ name: "login" });
 			}
 		}
+	
 	}
-	// 	// if (to.name !== "login") {
-	// 	// 	// if (to.name === "home") {
-	// 	// 	// 	if (sessionStorage.getItem("token")) {
-	// 	// 	// 		next();
-	// 	// 	// 	} else {
-	// 	// 	// 		next({ name: "login" });
-	// 	// 	// 	}
-	// 	// 	// }
-	// 	// 	// if (to.name === "register") {
-	// 	// 	// 	next();
-	// 	// 	// }
-	// 	// 	if (sessionStorage.getItem("token")) {
-	// 	// 		next();
-	// 	// 	}
-	// 	// } else {
-	// 	// 	// if (sessionStorage.getItem("token")) {
-	// 	// 	// 	next({ name: "home" });
-	// 	// 	// } else {
-	// 	// 	// 	sessionStorage.clear();
-	// 	// 	// 	next();
-	// 	// 	// }
-	// 	// }
 });
 
 app.use(ElementPlus).use(router).mount("#app");

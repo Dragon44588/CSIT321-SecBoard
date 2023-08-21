@@ -14,6 +14,13 @@ const registerApi = (data) => {
 	});
 };
 
+const forgotApi = (data) => {
+	return forgotApi.post({
+		url: "/forgot",
+		data,
+	});
+};
+
 const getPostsApi = (data) => {
 	return requestAPI.post({
 		url: "/getPosts",
@@ -35,4 +42,60 @@ const addPost = (data) => {
 	});
 };
 
-export default { loginApi, registerApi, getPostsApi, addPost, getMyPostsApi };
+const addDeleteRequest = (data) => {
+	return requestAPI.post({
+		url: "/addDeleteRequest",
+		data,
+	});
+};
+
+const addEditRequest = (data) => {
+	return requestAPI.post({
+		url: "/addEditRequest",
+		data,
+	});
+};
+
+const forgotpassword = (data) => {
+	return requestAPI.post({
+		url: "/forgotpassword",
+		data,
+	});
+};
+
+const getDeleteRequest = (data) => {
+	return requestAPI.post({
+		url: "/getDeleteRequest",
+		data,
+	});
+};
+
+const getEditRequest = (data) => {
+	return requestAPI.post({
+		url: "/getEditRequest",
+		data,
+	});
+};
+
+const handleDeleteRequest = (data) => {
+	return requestAPI.post({
+		url: "/handle_delete_request",
+		data,
+	});
+};
+
+const handleEditRequest = (data) => {
+	return requestAPI.post({
+		url: "/handle_edit_request",
+		data,
+	});
+};
+
+const resetPassword = (data) => {
+	return requestAPI.post({
+		url: "/resetpassword",
+		data,
+	});
+};
+
+export default { loginApi, registerApi, forgotApi, getPostsApi, addPost, getMyPostsApi, addDeleteRequest, addEditRequest, forgotpassword, resetPassword, getDeleteRequest, getEditRequest, handleDeleteRequest, handleEditRequest};
