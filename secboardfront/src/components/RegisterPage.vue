@@ -1,18 +1,16 @@
 <template>
-	<div class="container">
+	<div class="container" style="position: relative;">
+		<img style="position: absolute; top: 0px; left: 0px; margin: 15px; height: 100px; width: 100px" src="../../public/Logo_2.png" />
 		<!-- <div class="loginBox">
 
 		</div> -->
 		<el-form :model="registerForm" class="registerForm" :rules="rules" ref="regiserFromRef">
-			<div style="height: 50px; margin-top: 50px; display: flex">
+			<div style="height: 50px; margin-top: 15px; display: flex;">
 				<div>
-					<img style="height: 50px; width: 50px" src="../../public/Logo_1.png" />
-				</div>
-				<div>
-					<h1 style="font-size: 50px; font-weight: 900">SecBoard</h1>
+					<h1 style="position: relative; font-size: 50px; font-weight: 900; top: 0px; left: 0px;">SecBoard</h1>
 				</div>
 			</div>
-			<h3>Discover, Connect, Create</h3>
+			<h3 style="margin-top: 15px;">Discover, Connect, Create</h3>
 
 			<strong style="margin-top: 180px">Name *</strong>
 			<el-form-item prop="name" style="height: 40px; width: 100%; border-radius: 10px">
