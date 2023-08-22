@@ -427,11 +427,10 @@ app.post("/api/handleReportRequest", (req, res) => {
 				}
 				console.log('id:' + req.body.post_id + ', email:' + req.body.email + ', name:' + req.body.name + ', title:' + req.body.title + ', content:' + req.body.content)
 				addDeleteRequest(req.body.post_id, req.body.email, req.body.name, req.body.title, req.body.content);//Adds delete request
-				if (handleDeleteRequest(req.body.post_id, req.body.yes_or_no, decoded.email)) {//Adds vote toward delete request
-					res.send({
-						status: 200,
-					});
-				}
+				handleDeleteRequest(req.body.post_id, req.body.yes_or_no, decoded.email)//Adds vote toward delete request
+				res.send({
+					status: 200,
+				});
 			});
 		} else {//If the vote is no
 			const accept_report_SQL = "insert into Votes values (?, ?, ?, ?)";
