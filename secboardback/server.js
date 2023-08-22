@@ -6,9 +6,10 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("./sendemail");
 const multer = require("multer");
+const path = require('path');
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
-	  cb(null, 'uploads/')
+	  cb(null, 'public/')
 	},
 	filename: function (req, file, cb) {
 		let ext = file.originalname.substring(file.originalname.lastIndexOf('.'), file.originalname.length);
@@ -17,6 +18,8 @@ const storage = multer.diskStorage({
   })
 const upload = multer({ storage: storage });
 
+//app.use(express.static(path.join(__dirname,'uploads')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 const { generateToken } = require("./auth");
 
@@ -27,7 +30,7 @@ const https = require("https");
 const request = require("request");
 const http = require("http");
 const url = require("url");
-// const path = require('path')
+
 const cors = require("cors");
 const { error } = require("console");
 
@@ -84,6 +87,7 @@ const mySqlConnection = mysql.createConnection({
 });
 
 mySqlConnection.connect(function (err) {
+	
 	if (err) throw err;
 	mySqlConnection.query("SELECT * FROM posts", function (err, result, fields) {
 		if (err) throw err;

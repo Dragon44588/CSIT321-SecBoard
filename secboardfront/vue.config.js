@@ -10,6 +10,7 @@ module.exports = {
 };
 
 module.exports = {
+	//publicPath:'',
 	devServer: {
 		proxy: {
 			"/api": {
