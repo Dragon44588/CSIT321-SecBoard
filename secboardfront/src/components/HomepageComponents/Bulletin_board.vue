@@ -12,7 +12,7 @@
 							<strong style="font-weight: bold; font-size: 2em">{{ pl.title }}</strong>
 							<v-spacer />
 							<span style="float:right">
-								<strong><a href="/report" style="color: red">Report</a> </strong>
+								<strong><a href="" @click="requestReport(pl)" style="color: red">Report</a> </strong>
 							</span>
 						</div>
 						<div style="margin-top: 5px">
@@ -31,6 +31,9 @@
 <script setup>
 import { reactive, ref } from "vue";
 import api from "@/api/APIs";
+import { ElMessage } from "element-plus";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const mytoken = window.sessionStorage.getItem("token");
 
 const postsList = ref();
@@ -41,6 +44,35 @@ api.getPostsApi(authForm).then((res) => {
 	console.log(res.posts);
 	postsList.value = res.posts;
 });
+
+const myname = window.sessionStorage.getItem("name");
+
+const sendToDatabase = reactive({
+	post_id: null,
+	title: 'na',
+	content: 'na',
+	token: mytoken,
+	name: myname,
+});
+
+function requestReport(pl) {
+
+	sendToDatabase.post_id = pl.post_id;
+	console.log("poo:"+pl.post_id);
+	sendToDatabase.title = pl.title;
+	sendToDatabase.content = pl.content;
+	if (sendToDatabase.title !== 'na') {
+		api.addReportRequest(sendToDatabase).then((res) => {
+			if (res.status === 201) {
+				ElMessage({
+					message: "Done!",
+					type: "success",
+				});
+				router.push({ path: "/home" });
+			}
+		});
+	}
+}
 </script>
 
 <style></style>

@@ -48,7 +48,12 @@ const addDeleteRequest = (data) => {
 		data,
 	});
 };
-
+const addReportRequest = (data) => {
+	return requestAPI.post({
+		url: "/addReportRequest",
+		data,
+	})
+}
 const addEditRequest = (data) => {
 	return requestAPI.post({
 		url: "/addEditRequest",
@@ -70,6 +75,13 @@ const getDeleteRequest = (data) => {
 	});
 };
 
+const getReportRequest = (data) => {
+	return requestAPI.post({
+		url: "/getReportRequest",
+		data,
+	})
+}
+
 const getEditRequest = (data) => {
 	return requestAPI.post({
 		url: "/getEditRequest",
@@ -82,6 +94,13 @@ const handleDeleteRequest = (data) => {
 		url: "/handle_delete_request",
 		data,
 	});
+};
+
+const handleReportRequest = (data) => {
+	return requestAPI.post({
+		url: "/handleReportRequest",
+		data,
+	})
 };
 
 const handleEditRequest = (data) => {
@@ -98,4 +117,5 @@ const resetPassword = (data) => {
 	});
 };
 
-export default { loginApi, registerApi, forgotApi, getPostsApi, addPost, getMyPostsApi, addDeleteRequest, addEditRequest, forgotpassword, resetPassword, getDeleteRequest, getEditRequest, handleDeleteRequest, handleEditRequest};
+export default {loginApi, registerApi, forgotApi, getPostsApi, addPost, getMyPostsApi, addDeleteRequest,addReportRequest, addEditRequest, forgotpassword,
+	resetPassword,getDeleteRequest,getReportRequest, getEditRequest, handleDeleteRequest,handleReportRequest, handleEditRequest};
