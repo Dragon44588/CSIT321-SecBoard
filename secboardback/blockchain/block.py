@@ -154,7 +154,7 @@ class standardChain: # class defining the standard chain by creating a list of s
             hash1 = hashlib.sha256(newBlock.encode('utf-8')).hexdigest()
             if nonceValue >= 1000000000: # one billion is the limit for nonce searching
                 break
-        return hash1, nonceValue # returns the completed hash along with the nonce value found as a tuple
+        return nonceValue 
 
 
     def createStandardBlock(self, data): # create a block by hashing the previous block and finding the proof of work nonce value

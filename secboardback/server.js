@@ -205,8 +205,8 @@ app.post("/api/addPost", async (req, res) => {
 			console.log(messages);
 		  });
 
-		const makePostSQL = "insert into posts values(?,?,?,?,?)";
-		const makePostParams = [req.body.name, req.body.title, req.body.content, hashedContent, new Date()];
+		const makePostSQL = "insert into posts values(?,?,?,?,?,?,?,?,?)";
+		const makePostParams = [null, req.body.email, req.body.name, 0, req.body.title, req.body.content, hashedContent, new Date(), null];
 		mySqlConnection.query(makePostSQL, makePostParams, (error, result) => {
 			if (error) {
 				console.log(error);

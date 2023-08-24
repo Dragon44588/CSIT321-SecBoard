@@ -33,10 +33,10 @@ if __name__ == "__main__": # apparently this is cool
     testChain.createStandardBlock('test 5')
     
     #Print chain after corrections
-    #print("========================")
-    #print("NEW BLOCKCHAIN")
-    #print("========================")
-    #testChain.printTrueList()
+    print("========================")
+    print("NEW BLOCKCHAIN")
+    print("========================")
+    testChain.printTrueList()
     
     #Write changes to the database (this should be put after every block is created probably)
     #WriteMainChain(testChain)
