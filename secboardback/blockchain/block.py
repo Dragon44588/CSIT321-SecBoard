@@ -12,13 +12,14 @@ class standardBlock: # class to define the standard block, with properties taken
         self.correctionHash = correctionHash # the hash of the last block in the correction chain, to be used for validating the chain in case a correction exists
 
 class correctionBlock: # class to define the standard block, with properties taken from the correctable chain paper
-    def __init__(self, previousHash, data, proofOfWork, electionHash, successorHash, standardHeadHash):
+    def __init__(self, previousHash, data, proofOfWork, electionHash, successorHash, standardHeadHash, blockReplaceNumber):
         self.previousHash = previousHash 
         self.data = data # the new data to correct the previous, whether it is a new message or null
         self.proofOfWork = proofOfWork
         self.electionHash = electionHash # hash of election TX E
         self.successorHash = successorHash # hash of successor of the block to be corrected BSi, i.e. H(BSi+1)
         self.standardHeadHash = standardHeadHash # hash value of the head of the standard chain
+        self.blockReplaceNumber = blockReplaceNumber # block number that is being replaced in the standard chain
 
 class election: # class to define an election, as a list of unfinished elections is required
     def __init__(self, previousHash, data, newData, proofOfWork, correctionHash):
@@ -26,7 +27,7 @@ class election: # class to define an election, as a list of unfinished elections
         self.data = data 
         self.newData = newData # data proposed to replace the existing data
         self.proofOfWork = proofOfWork 
-        self.correctionHash = correctionHash 
+        self.correctionHash = correctionHash
 
 class standardChain: # class defining the standard chain by creating a list of standardBlock objects
 
@@ -70,7 +71,8 @@ class standardChain: # class defining the standard chain by creating a list of s
                 "Proof of Work:   {:}\n"
                 "Election Hash:   {:}\n"
                 "Successor Hash:  {:}\n"
-                "Head Hash:       {:}\n").format(count, x.previousHash, x.data, x.proofOfWork, x.electionHash, x.successorHash, x.standardHeadHash)
+                "Head Hash:       {:}\n"
+                "Block Num:       {:}\n").format(count, x.previousHash, x.data, x.proofOfWork, x.electionHash, x.successorHash, x.standardHeadHash, x.blockReplaceNumber)
         print(output)
 
     def printTrueList(self):
@@ -86,7 +88,8 @@ class standardChain: # class defining the standard chain by creating a list of s
                 "Proof of Work:   {:}\n"
                 "Election Hash:   {:}\n"
                 "Successor Hash:  {:}\n"
-                "Head Hash:       {:}\n\n").format(count, self.correctionList[corrections].previousHash, self.correctionList[corrections].data, self.correctionList[corrections].proofOfWork, self.correctionList[corrections].electionHash, self.correctionList[corrections].successorHash, self.correctionList[corrections].standardHeadHash)
+                "Head Hash:       {:}\n"
+                "Block Num:       {:}\n\n").format(count, self.correctionList[corrections].previousHash, self.correctionList[corrections].data, self.correctionList[corrections].proofOfWork, self.correctionList[corrections].electionHash, self.correctionList[corrections].successorHash, self.correctionList[corrections].standardHeadHash, self.correctionList[corrections].blockReplaceNumber)
                 corrections += 1
             else:
                 output +=("BLOCK {:}\n"
@@ -135,7 +138,7 @@ class standardChain: # class defining the standard chain by creating a list of s
                 break
         return nonceValue 
 
-    def ProofOfWorkCorrection(self, previousHash, data, electionHash, successorHash, headHash): # generates nonce value for correction chain
+    def ProofOfWorkCorrection(self, previousHash, data, electionHash, successorHash, headHash, block_replace_number): # generates nonce value for correction chain
         nonceValue = -1 # ensures nonce counting will start at 0
         hash1 = ''
         # find nonce value and generate block along with its hash
@@ -148,7 +151,8 @@ class standardChain: # class defining the standard chain by creating a list of s
                 'Proof of Work': nonceValue,
                 'Election Hash': electionHash,
                 'Successor Hash': successorHash,
-                'Standard Head Hash': headHash
+                'Standard Head Hash': headHash,
+                'Block Replace Number': block_replace_number
     
             }, sort_keys=True, indent=4, separators=(',', ': '))
             hash1 = hashlib.sha256(newBlock.encode('utf-8')).hexdigest()
@@ -177,7 +181,8 @@ class standardChain: # class defining the standard chain by creating a list of s
                 'Proof of Work': self.correctionList[previousBlockIndex].proofOfWork,
                 'Election Hash': self.correctionList[previousBlockIndex].electionHash,
                 'Successor Hash': self.correctionList[previousBlockIndex].successorHash,
-                'Standard Head Hash': self.correctionList[previousBlockIndex].standardHeadHash
+                'Standard Head Hash': self.correctionList[previousBlockIndex].standardHeadHash,
+                'Block Replace Number': self.correctionList[previousBlockIndex].blockReplaceNumber
     
             }, sort_keys=True, indent=4, separators=(',', ': '))
             correctionHash = hashlib.sha256(correctionBlock.encode('utf-8')).hexdigest()
@@ -249,10 +254,10 @@ class standardChain: # class defining the standard chain by creating a list of s
             headHash = hashlib.sha256(headBlock.encode('utf-8')).hexdigest()
 
             # find nonce of new block
-            newNonce = self.ProofOfWorkCorrection(hashOfPrevious, data, 'Election Hash TBI', newSuccessorHash, headHash)
+            newNonce = self.ProofOfWorkCorrection(hashOfPrevious, data, 'Election Hash TBI', newSuccessorHash, headHash, block_replace_number)
 
             # create correctionBlock object
-            newBlock = correctionBlock(hashOfPrevious, data, newNonce, 'Election Hash TBI', newSuccessorHash, headHash)
+            newBlock = correctionBlock(hashOfPrevious, data, newNonce, 'Election Hash TBI', newSuccessorHash, headHash, block_replace_number)
 
             # add the block to the correction list
             self.correctionList.append(newBlock)
@@ -275,7 +280,8 @@ class standardChain: # class defining the standard chain by creating a list of s
             'Proof of Work': self.correctionList[previousBlockIndex].proofOfWork,
             'Election Hash': self.correctionList[previousBlockIndex].electionHash,
             'Successor Hash': self.correctionList[previousBlockIndex].successorHash,
-            'Standard Head Hash': self.correctionList[previousBlockIndex].standardHeadHash
+            'Standard Head Hash': self.correctionList[previousBlockIndex].standardHeadHash,
+            'Block Replace Number': self.correctionList[previousBlockIndex].blockReplaceNumber
 
         }, sort_keys=True, indent=4, separators=(',', ': '))
         hashOfPrevious = hashlib.sha256(newBlock.encode('utf-8')).hexdigest()
@@ -308,10 +314,10 @@ class standardChain: # class defining the standard chain by creating a list of s
         headHash = hashlib.sha256(headBlock.encode('utf-8')).hexdigest()
 
         # find nonce of new block
-        newNonce = self.ProofOfWorkCorrection(hashOfPrevious, data, 'Election Hash TBI', newSuccessorHash, headHash)
+        newNonce = self.ProofOfWorkCorrection(hashOfPrevious, data, 'Election Hash TBI', newSuccessorHash, headHash, block_replace_number)
 
         # create correctionBlock object
-        newBlock = correctionBlock(hashOfPrevious, data, newNonce, 'Election Hash TBI', newSuccessorHash, headHash)
+        newBlock = correctionBlock(hashOfPrevious, data, newNonce, 'Election Hash TBI', newSuccessorHash, headHash, block_replace_number)
 
         # add the block to the correction list
         self.correctionList.append(newBlock)
@@ -354,7 +360,8 @@ class standardChain: # class defining the standard chain by creating a list of s
                     'Proof of Work': self.correctionList[corrections-1].proofOfWork,
                     'Election Hash': self.correctionList[corrections-1].electionHash,
                     'Successor Hash': self.correctionList[corrections-1].successorHash,
-                    'Standard Head Hash': self.correctionList[corrections-1].standardHeadHash
+                    'Standard Head Hash': self.correctionList[corrections-1].standardHeadHash,
+                    'Block Replace Number': self.correctionList[corrections-1].blockReplaceNumber
 
                 }, sort_keys=True, indent=4, separators=(',', ': '))
                 rehash_previous_block = hashlib.sha256(newBlock.encode('utf-8')).hexdigest()
