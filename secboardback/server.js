@@ -11,9 +11,17 @@ const { generateToken } = require("./auth");
 // const axios = require('axios')
 const fs = require("fs");
 
+//const http = require("http");
 const https = require("https");
 const request = require("request");
-const http = require("http");
+
+// https setup
+const options = {
+	key: fs.readFileSync('key.pem', 'utf8'),
+	cert: fs.readFileSync('cert.pem', 'utf8')
+};
+
+
 const url = require("url");
 // const path = require('path')
 const cors = require("cors");
@@ -30,15 +38,15 @@ PythonShell.run("./blockchain/main.py", null).then((messages) => {
 //const privateKey = fs.readFileSync("./privkey1.pem", "utf8");
 //const certificate = fs.readFileSync("./fullchain1.pem", "utf8");
 //const credentials = { key: privateKey, cert: certificate };
-var httpServer = http.createServer(app);
-//var httpsServer = https.createServer(credentials, app);
+//var httpServer = http.createServer(app);
+var httpServer = https.createServer(options, app);
 
-//httpsServer.listen(3210, () => {
-//	console.log("3210 Ports running");
-//});
 httpServer.listen(3210, () => {
-	console.log("3211 Ports running");
+	console.log("3210 Ports running");
 });
+//httpServer.listen(3210, () => {
+//	console.log("3211 Ports running");
+//});
 
 //app.use(
 //	cors({
