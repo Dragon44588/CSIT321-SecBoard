@@ -7,19 +7,21 @@ const jwt = require("jsonwebtoken");
 const sendEmail = require("./sendemail");
 const multer = require("multer");
 const path = require('path');
+let fileExt;
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
 		cb(null, 'public/')
 	},
 	filename: function (req, file, cb) {
-		let ext = file.originalname.substring(file.originalname.lastIndexOf('.'), file.originalname.length);
-		cb(null, Date.now() + ext)
+		fileExt = Date.now() + file.originalname;
+		cb(null, fileExt)
 	}
 })
 const upload = multer({ storage: storage });
 
 //app.use(express.static(path.join(__dirname,'uploads')));
 //app.use(express.static(path.join(__dirname, 'public')));
+//app.use(express.static(path.join(__dirname, 'public',)));
 
 const { generateToken } = require("./auth");
 
@@ -240,13 +242,19 @@ app.post("/api/addPost", upload.single("file"), async (req, res) => {
 
 		PythonShell.run('addStandardBlock.py', options).then(messages => {
 			// results is an array consisting of messages collected during execution
-			console.log(messages);
+			//console.log(messages);
 		});
-
-		const makePostSQL = "insert into posts values(?,?,?,?,?,?,?,?,?)";
-		const makePostParams = [, decoded.email, req.body.name, false, req.body.title, req.body.content, hashedContent, new Date(), 'white'];
+		let absoluteFileLocation;
+		if (fileExt !== null) {
+			absoluteFileLocation = (path.join(__dirname, 'public', fileExt));
+		}else{
+			absoluteFileLocation=null;
+		}
+		const makePostSQL = "insert into posts values(?,?,?,?,?,?,?,?,?,?)";
+		const makePostParams = [, decoded.email, req.body.name, false, req.body.title, req.body.content, hashedContent, new Date(), 'white', absoluteFileLocation];
 
 		mySqlConnection.query(makePostSQL, makePostParams, (error, result) => {
+			absoluteFileLocation=null;
 			if (error) {
 				console.log(error);
 			}
