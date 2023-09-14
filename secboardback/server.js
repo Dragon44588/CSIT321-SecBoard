@@ -247,14 +247,14 @@ app.post("/api/addPost", upload.single("file"), async (req, res) => {
 		let absoluteFileLocation;
 		if (fileExt !== null) {
 			absoluteFileLocation = (path.join(__dirname, 'public', fileExt));
-		}else{
-			absoluteFileLocation=null;
+		} else {
+			absoluteFileLocation = null;
 		}
 		const makePostSQL = "insert into posts values(?,?,?,?,?,?,?,?,?,?)";
 		const makePostParams = [, decoded.email, req.body.name, false, req.body.title, req.body.content, hashedContent, new Date(), 'white', absoluteFileLocation];
 
 		mySqlConnection.query(makePostSQL, makePostParams, (error, result) => {
-			absoluteFileLocation=null;
+			absoluteFileLocation = null;
 			if (error) {
 				console.log(error);
 			}
@@ -377,19 +377,65 @@ app.post("/api/addReportRequest", async (req, res) => {//Add error handling, Che
 		if (err) {
 			return new Error("Authentication error");
 		}
+		let alreadyRequested = false;
 
-		const makePostSQL = "insert into report_requests values(?,?,?,?,?,?,?)";
-		const current = new Date();
-		const date = `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`;
-		const makePostParams = [req.body.post_id, date, decoded.email, req.body.name, req.body.title, req.body.content, "pending"];
-		mySqlConnection.query(makePostSQL, makePostParams, (error, result) => {
+		//Check if post is already reported or in the vote to be deleted
+		mySqlConnection.query("select * from report_requests where post_id = ?", [req.body.post_id], (error, result) => {
+			console.log('reportrequest#1:');
 			if (error) {
 				console.log(error);
 			}
-			res.send({
-				status: 201,
-			});
+			if (result.length > 0) {//If it's already been reported 
+				alreadyRequested = true;
+				res.send({
+					status: 201,
+					message: 'Already in progress of being reported',
+				});
+			} else {//Checking if it's in progress of being deleted
+				mySqlConnection.query("select * from deletion_requests where post_id = ?", [req.body.post_id], (error, result) => {
+					console.log('reportrequest#2:');
+					if (error) {
+						console.log(error);
+					}
+					if (result.length > 0) {
+						alreadyRequested = true;
+						res.send({
+							status: 201,
+							message: 'Already in progress of being deleted',
+						});
+					}
+				});
+			}
 		});
+		if (alreadyRequested === false) {
+			//Check if user reporting is admin
+			mySqlConnection.query("select * from users_info where email = ?", [decoded.email], (error, result) => {
+				console.log("reportrequest#3:result.name:" + result.name);
+				if (error) {
+					console.log(error);
+				}
+				if (result.name === 'Admin' || result.name === 'Admin2' || result.name === 'Admin3') {//Send it to deletion and send a vote towards it
+					addDeleteRequest(req.body.post_id, req.body.email, req.body.name, req.body.title, req.body.content);//Adds delete request
+					handleDeleteRequest(req.body.post_id, 1, decoded.email)//Adds vote toward delete request
+					res.send({
+						status: 201,
+					});
+				} else {//else normal user
+					const makePostSQL = "insert into report_requests values(?,?,?,?,?,?,?)";
+					const current = new Date();
+					const date = `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`;
+					const makePostParams = [req.body.post_id, date, decoded.email, req.body.name, req.body.title, req.body.content, "pending"];
+					mySqlConnection.query(makePostSQL, makePostParams, (error, result) => {
+						if (error) {
+							console.log(error);
+						}
+						res.send({
+							status: 201,
+						});
+					});
+				}
+			});
+		}
 	});
 });
 
