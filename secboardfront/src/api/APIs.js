@@ -98,4 +98,4 @@ const resetPassword = (data) => {
 	});
 };
 
-export default { loginApi, registerApi, forgotApi, getPostsApi, addPost, getMyPostsApi, addDeleteRequest, addEditRequest, forgotpassword, resetPassword, getDeleteRequest, getEditRequest, handleDeleteRequest, handleEditRequest, forgotpassword, resetPassword };
+export default { loginApi, registerApi, forgotApi, getPostsApi, addPost, getMyPostsApi, addDeleteRequest, addEditRequest, forgotpassword, resetPassword, getDeleteRequest, getEditRequest, handleDeleteRequest, handleEditRequest};
