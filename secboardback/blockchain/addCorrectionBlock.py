@@ -48,7 +48,6 @@ chainData = json.load(chainFile)
 
 testChain = standardChain() # initialise standard chain
 
-# load standard blocks
 counter = 0
 for i in chainData['Main chain']:
     if counter == 0: # skip stored genesis hash
@@ -56,7 +55,6 @@ for i in chainData['Main chain']:
         continue
     if i == None:
         print('null')
-        testChain.createStandardBlock('null')
         continue
     print(i['Data'])
     testChain.createStandardBlock(str(i['Data']))
@@ -72,10 +70,10 @@ chainFile.close()
 
 
 
-# Step 2: Create the new block to add to the chain
+# Step 2: Create the new correction block to add to the chain. This automatically removes the old block from the standard chain
 print ("Number of arguments:", len(sys.argv), "arguments")
 print ("Argument List:", str(sys.argv))
-testChain.createStandardBlock(sys.argv[1])
+testChain.createCorrectionBlock(sys.argv[1], sys.argv[2], int(sys.argv[3]))
 #testChain.createStandardBlock("testing code")
 
 # Step 3: Update the JSON file with the new block

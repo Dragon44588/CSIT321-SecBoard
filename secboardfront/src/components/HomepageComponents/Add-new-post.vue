@@ -52,6 +52,7 @@ const router = useRouter();
 
 const myToken = window.sessionStorage.getItem("token");
 const myName = window.sessionStorage.getItem("name");
+const myEmail = window.sessionStorage.getItem("email");
 
 const postTitle = ref();
 const postContent = ref();
@@ -60,6 +61,7 @@ const postForm = reactive({
 	content: postContent.value,
 	token: myToken,
 	name: myName,
+	email: myEmail,
 });
 
 function goSavePost() {

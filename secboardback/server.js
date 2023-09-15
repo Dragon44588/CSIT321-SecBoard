@@ -11,9 +11,17 @@ const { generateToken } = require("./auth");
 // const axios = require('axios')
 const fs = require("fs");
 
+//const http = require("http");
 const https = require("https");
 const request = require("request");
-const http = require("http");
+
+// https setup
+const options = {
+	key: fs.readFileSync('key.pem', 'utf8'),
+	cert: fs.readFileSync('cert.pem', 'utf8')
+};
+
+
 const url = require("url");
 // const path = require('path')
 const cors = require("cors");
@@ -30,15 +38,15 @@ PythonShell.run("./blockchain/main.py", null).then((messages) => {
 //const privateKey = fs.readFileSync("./privkey1.pem", "utf8");
 //const certificate = fs.readFileSync("./fullchain1.pem", "utf8");
 //const credentials = { key: privateKey, cert: certificate };
-var httpServer = http.createServer(app);
-//var httpsServer = https.createServer(credentials, app);
+//var httpServer = http.createServer(app);
+var httpServer = https.createServer(options, app);
 
-//httpsServer.listen(3210, () => {
-//	console.log("3210 Ports running");
-//});
 httpServer.listen(3210, () => {
-	console.log("3211 Ports running");
+	console.log("3210 Ports running");
 });
+//httpServer.listen(3210, () => {
+//	console.log("3211 Ports running");
+//});
 
 //app.use(
 //	cors({
@@ -205,8 +213,8 @@ app.post("/api/addPost", async (req, res) => {
 			console.log(messages);
 		  });
 
-		const makePostSQL = "insert into posts values(?,?,?,?,?)";
-		const makePostParams = [req.body.name, req.body.title, req.body.content, hashedContent, new Date()];
+		const makePostSQL = "insert into posts values(?,?,?,?,?,?,?,?,?)";
+		const makePostParams = [null, req.body.email, req.body.name, 0, req.body.title, req.body.content, hashedContent, new Date(), null];
 		mySqlConnection.query(makePostSQL, makePostParams, (error, result) => {
 			if (error) {
 				console.log(error);
@@ -306,6 +314,49 @@ app.post("/api/handle_delete_request", (req, res) => {
 			if (error) {
 				return console.log(error);
 			}
+		});
+
+		// check if yes votes == 2 (correction block added) or no votes == 2 (request denied)
+		// check if vote SUCCEEDED
+		mySqlConnection.query("SELECT vote_yes_or_no FROM Votes WHERE post_id = " + req.body.post_id + " AND vote_yes_or_no = 1", (error, result) => {
+			if (error) {
+				return console.log(error);
+			}
+			if (result.length == 2) {
+				// update page to reflect that vote failed
+				// run python code to add correction block with new data\
+				let options = {
+					mode: 'text',
+					pythonOptions: ['-u'], // get print results in real-time
+					scriptPath: '../secboardback/blockchain/',
+					args: [req.body.content, 'Election Hash TBI', req.body.post_id + 1] // adding correction block requires the following:
+					// the message content
+					// the election hash, to be added in future
+					// (post_id + 1) which equals the block number, as block 1 is genesis and post 1 is block 2 added after the genesis
+				  };
+				  
+				  PythonShell.run('addCorrectionBlock.py', options).then(messages=>{
+					// results is an array consisting of messages collected during execution
+					console.log(messages);
+				  });
+
+				  mySqlConnection.query("DELETE FROM posts WHERE post_id =" + req.body.post_id, (error, result) => {
+						if (error) {
+							return console.log(error);
+						}
+				  });
+			}
+			
+		});	
+		
+		// check if vote FAILED
+		mySqlConnection.query("SELECT vote_yes_or_no FROM Votes WHERE post_id = " + req.body.post_id + " AND vote_yes_or_no = 0", (error, result) => {
+			if (error) {
+				return console.log(error);
+			}
+			if (result.length == 2) {
+				// update page to reflect that vote failed
+			}
 			res.send({
 				status: 200,
 			});
@@ -401,6 +452,43 @@ app.post("/api/handle_edit_request", (req, res) => {
 		mySqlConnection.query(accept_edit_SQL, accept_edit_Param, (error, result) => {
 			if (error) {
 				return console.log(error);
+			}
+		});
+
+		// check if yes votes == 2 (correction block added) or no votes == 2 (request denied)
+		// check if vote SUCCEEDED
+		mySqlConnection.query("SELECT vote_yes_or_no FROM Votes WHERE post_id = " + req.body.post_id + " AND vote_yes_or_no = 1", (error, result) => {
+			if (error) {
+				return console.log(error);
+			}
+			if (result.length == 2) {
+				// update page to reflect that vote failed
+				// run python code to add correction block with new data\
+				let options = {
+					mode: 'text',
+					pythonOptions: ['-u'], // get print results in real-time
+					scriptPath: '../secboardback/blockchain/',
+					args: [req.body.content, 'Election', req.body.post_id + 1] // adding correction block requires the following:
+					// the message content
+					// the election hash, to be added in future
+					// (post_id + 1) which equals the block number, as block 1 is genesis and post 1 is block 2 added after the genesis
+				  };
+				  
+				  PythonShell.run('addCorrectionBlock.py', options).then(messages=>{
+					// results is an array consisting of messages collected during execution
+					console.log(messages);
+				  });
+			}
+			
+		});	
+		
+		// check if vote FAILED
+		mySqlConnection.query("SELECT vote_yes_or_no FROM Votes WHERE post_id = " + req.body.post_id + " AND vote_yes_or_no = 0", (error, result) => {
+			if (error) {
+				return console.log(error);
+			}
+			if (result.length == 2) {
+				// update page to reflect that vote failed
 			}
 			res.send({
 				status: 200,

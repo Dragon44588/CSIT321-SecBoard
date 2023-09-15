@@ -29,7 +29,7 @@ def WriteMainChain(chain):
             print("block doesnt exist")
             cBlocks.append(None)
         else:
-            block = {"Previous hash": i.previousHash, "Data": i.data, "Proof of work": i.proofOfWork, "Election hash": i.electionHash, "Standard head hash": i.standardHeadHash, "Successor hash": i.successorHash}
+            block = {"Previous hash": i.previousHash, "Data": i.data, "Proof of work": i.proofOfWork, "Election hash": i.electionHash, "Standard head hash": i.standardHeadHash, "Successor hash": i.successorHash, "Block replace number": i.blockReplaceNumber}
             print(block)
             cBlocks.append(block)    
             
