@@ -8,9 +8,12 @@
 				<strong style="width: 100px; color: white; font-size: 1.2em; font-weight: bold; border-radius: 5px; text-align: center">Save</strong>
 			</div>
 		</div>
-
 		<div style="flex: 1; display: flex; flex-direction: column">
-			<div style="height: 150px; padding: 30px"><input v-model="postTitle" placeholder="Title" style="height: 100%; width: 100%; border: none; outline: none; background-color: #f7e4de; font-size: 2.8em; font-weight: bold" /></div>
+			
+			<div style="height: 150px; padding: 30px">
+				<strong>Select files</strong><br/>
+                <input type="file" @change="onFileChange" multiple>
+				<input v-model="postTitle" placeholder="Title" style="height: 100%; width: 100%; border: none; outline: none; background-color: #f7e4de; font-size: 2.8em; font-weight: bold" /></div>
 			<div style="flex: 1; padding: 0 30px 30px 30px">
 				<textarea v-model="postContent" placeholder="Content" style="resize: none; height: 100%; width: 100%; background-color: #f7e4de; border: none; outline: none; font-size: 1.8em"></textarea>
 			</div>
@@ -43,7 +46,7 @@
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
+import {  ref } from "vue";
 import { ElMessage } from "element-plus";
 import api from "@/api/APIs";
 import { useRouter } from "vue-router";
@@ -56,13 +59,16 @@ const myEmail = window.sessionStorage.getItem("email");
 
 const postTitle = ref();
 const postContent = ref();
-const postForm = reactive({
+
+/*const postForm = reactive({
 	title: postTitle.value,
 	content: postContent.value,
 	token: myToken,
 	name: myName,
+	file: [],
 	email: myEmail,
-});
+});*/
+let postForm2 = new FormData();
 
 function goSavePost() {
 	if (postTitle.value === "" || postTitle.value === undefined || postContent.value === "" || postContent.value === undefined) {
@@ -71,9 +77,14 @@ function goSavePost() {
 			type: "warning",
 		});
 	} else {
-		postForm.title = postTitle.value;
-		postForm.content = postContent.value;
-		api.addPost(postForm).then((res) => {
+		postForm2.append('title',postTitle.value);
+		postForm2.append('content',postContent.value);
+		postForm2.append('token',myToken);
+		postForm2.append('name',myName);
+
+		//postForm.title = postTitle.value;
+		//postForm.content = postContent.value;
+		api.addPost(postForm2).then((res) => {
 			if (res.status === 201) {
 				ElMessage({
 					message: "Done!",
@@ -86,6 +97,12 @@ function goSavePost() {
 }
 function goCancelAddNewPost() {
 	router.push({ path: "/home/my_posts" });
+}
+
+function onFileChange(event){
+	//postFile.value=event.target.files[0];
+	postForm2.append('file',event.target.files[0]);
+	console.log(postForm2.get('file'));
 }
 </script>
 

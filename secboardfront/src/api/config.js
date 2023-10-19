@@ -4,9 +4,10 @@ import { ElMessage } from "element-plus";
 
 const Service = axios.create({
 	baseURL: process.env.VUE_APP_BASE_API,
-	headers: {
-		"Content-Type": "application/json;charset=utf-8",
-	},
+	/*headers: {
+		//"Content-Type": "application/json;charset=utf-8",
+		"Content-Type": "multipart/form-data"
+	},*/
 	timeout: 5000,
 });
 

@@ -12,7 +12,7 @@ const addNewPostComponent = () => import("../components/HomepageComponents/Add-n
 const myRequestsComponent = () => import("../components/HomepageComponents/My-requests.vue");
 const editRequestsComponent = () => import("../components/HomepageComponents/Edit-requests.vue");
 const deleteRequestsComponent = () => import("../components/HomepageComponents/Delete-requests.vue");
-
+const reportRequestsComponent = () => import("../components/HomepageComponents/Report-requests.vue");
 
 const router = createRouter({
 	history: createWebHistory(),
@@ -69,6 +69,10 @@ const router = createRouter({
 				{
 					path: "delete-requests",
 					component: deleteRequestsComponent,
+				},
+				{
+					path: "report-requests",
+					component: reportRequestsComponent,
 				},
 			],
 		},
