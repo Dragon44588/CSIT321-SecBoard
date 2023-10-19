@@ -188,10 +188,10 @@ class standardChain: # class defining the standard chain by creating a list of s
             correctionHash = hashlib.sha256(correctionBlock.encode('utf-8')).hexdigest()
 
             #find nonce of new block
-            newNonce = self.ProofOfWork(hashOfPrevious, data, correctionHash)
+            newNonce = self.ProofOfWork(hashOfPrevious, hashlib.sha256(data.encode('utf-8')).hexdigest(), correctionHash)
 
             # create standardBlock object
-            newBlock = standardBlock(hashOfPrevious, data, newNonce, correctionHash)
+            newBlock = standardBlock(hashOfPrevious, hashlib.sha256(data.encode('utf-8')).hexdigest(), newNonce, correctionHash)
             
         else:
             newBlock = json.dumps({
@@ -205,10 +205,10 @@ class standardChain: # class defining the standard chain by creating a list of s
             hashOfPrevious = hashlib.sha256(newBlock.encode('utf-8')).hexdigest()
         
             # find nonce of new block
-            newNonce = self.ProofOfWork(hashOfPrevious, data, self.chainList[previousBlockIndex].correctionHash)
+            newNonce = self.ProofOfWork(hashOfPrevious, hashlib.sha256(data.encode('utf-8')).hexdigest(), self.chainList[previousBlockIndex].correctionHash)
 
             # create standardBlock object
-            newBlock = standardBlock(hashOfPrevious, data, newNonce, self.chainList[previousBlockIndex].correctionHash)
+            newBlock = standardBlock(hashOfPrevious, hashlib.sha256(data.encode('utf-8')).hexdigest(), newNonce, self.chainList[previousBlockIndex].correctionHash)
         # add block to the list
         self.chainList.append(newBlock)
         return
@@ -254,10 +254,10 @@ class standardChain: # class defining the standard chain by creating a list of s
             headHash = hashlib.sha256(headBlock.encode('utf-8')).hexdigest()
 
             # find nonce of new block
-            newNonce = self.ProofOfWorkCorrection(hashOfPrevious, data, 'Election Hash TBI', newSuccessorHash, headHash, block_replace_number)
+            newNonce = self.ProofOfWorkCorrection(hashOfPrevious, hashlib.sha256(data.encode('utf-8')).hexdigest(), 'Election Hash TBI', newSuccessorHash, headHash, block_replace_number)
 
             # create correctionBlock object
-            newBlock = correctionBlock(hashOfPrevious, data, newNonce, 'Election Hash TBI', newSuccessorHash, headHash, block_replace_number)
+            newBlock = correctionBlock(hashOfPrevious, hashlib.sha256(data.encode('utf-8')).hexdigest(), newNonce, 'Election Hash TBI', newSuccessorHash, headHash, block_replace_number)
 
             # add the block to the correction list
             self.correctionList.append(newBlock)
@@ -314,10 +314,10 @@ class standardChain: # class defining the standard chain by creating a list of s
         headHash = hashlib.sha256(headBlock.encode('utf-8')).hexdigest()
 
         # find nonce of new block
-        newNonce = self.ProofOfWorkCorrection(hashOfPrevious, data, 'Election Hash TBI', newSuccessorHash, headHash, block_replace_number)
+        newNonce = self.ProofOfWorkCorrection(hashOfPrevious, hashlib.sha256(data.encode('utf-8')).hexdigest(), 'Election Hash TBI', newSuccessorHash, headHash, block_replace_number)
 
         # create correctionBlock object
-        newBlock = correctionBlock(hashOfPrevious, data, newNonce, 'Election Hash TBI', newSuccessorHash, headHash, block_replace_number)
+        newBlock = correctionBlock(hashOfPrevious, hashlib.sha256(data.encode('utf-8')).hexdigest(), newNonce, 'Election Hash TBI', newSuccessorHash, headHash, block_replace_number)
 
         # add the block to the correction list
         self.correctionList.append(newBlock)

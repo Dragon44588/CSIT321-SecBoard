@@ -12,6 +12,7 @@ const addNewPostComponent = () => import("../components/HomepageComponents/Add-n
 const myRequestsComponent = () => import("../components/HomepageComponents/My-requests.vue");
 const editRequestsComponent = () => import("../components/HomepageComponents/Edit-requests.vue");
 const deleteRequestsComponent = () => import("../components/HomepageComponents/Delete-requests.vue");
+const blockchainPageComponent = () => import("../components/HomepageComponents/Blockchain-page.vue");
 
 
 const router = createRouter({
@@ -69,6 +70,10 @@ const router = createRouter({
 				{
 					path: "delete-requests",
 					component: deleteRequestsComponent,
+				},
+				{
+					path: "blockchain-page",
+					component: blockchainPageComponent,
 				},
 			],
 		},

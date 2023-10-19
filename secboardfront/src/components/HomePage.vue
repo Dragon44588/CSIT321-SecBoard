@@ -78,6 +78,16 @@
 				</div>
 			</div>
 			</a>
+			<div class="aside-my-posts" @click="goBlockchainPage" style="height: 40px; margin-top: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer">
+				<div style="display: flex; align-items: center; width: 100%">
+					<div style="width: 30px; margin-left: 20px; display: flex; justify-content: center; align-items: center">
+						<img style="height: 20x; width: 20px" src="../../public/clipboard-outline.svg" />
+					</div>
+					<div style="flex: 1; margin-left: 5px">
+						<strong>View Blockchain</strong>
+					</div>
+				</div>
+			</div>
 			<div @click="goLogOut" class="aside-log-out" style="height: 40px; margin-top: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer">
 				<div style="display: flex; align-items: center; width: 100%">
 					<div style="width: 30px; margin-left: 20px; display: flex; justify-content: center; align-items: center">
@@ -120,6 +130,9 @@ function goEditRequests() {
 }
 function goDeleteRequests() {
 	router.push({ path: "/home/delete-requests" });
+}
+function goBlockchainPage() {
+	router.push({ path: "/home/blockchain-page" });
 }
 function goLogOut() {
 	sessionStorage.clear();

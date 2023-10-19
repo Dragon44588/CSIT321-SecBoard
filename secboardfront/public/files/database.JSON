@@ -8,26 +8,32 @@
         },
         null,
         {
-            "Previous Hash": "008fe2b67e79cce73ee2d6d9463d9ce113c87ad5350c18335a65d7e392bde2c4",
-            "Data": "Post 2",
-            "Proof of work": 269,
+            "Previous Hash": "004f073b9acbeac816cb05b10d93c0d1bea3a26b86a4058ee14ebbcae6d28405",
+            "Data": "b532a09676cdb5ebc9eda9c7046e335e8cf6d161fd730ce7fe8ae8a55d2902a7",
+            "Proof of work": 23,
             "Correction hash": "Correction"
         },
         {
-            "Previous Hash": "00b15574de5cb55687f7c36df2fd77a4dfdf08495fdb14c82251a0134dff179f",
-            "Data": "Post 3",
-            "Proof of work": 814,
+            "Previous Hash": "0059c7d09053a36a9ab75a85f9bb8355de4f8db14a30c2fef2dd8deaf26fbc2c",
+            "Data": "5ab94a85a47494c0e9e7143f58428550b1dd69ed8ab62be2929ddf87ac5df559",
+            "Proof of work": 123,
+            "Correction hash": "Correction"
+        },
+        {
+            "Previous Hash": "0039201a3dc1438636f02ece4d06e7a4d8b2616026eec57b7db284aad105c48a",
+            "Data": "60303ae22b998861bce3b28f33eec1be758a213c86c93c076dbe9f558c11c752",
+            "Proof of work": 133,
             "Correction hash": "Correction"
         }
     ],
     "Correction chain": [
         {
             "Previous hash": "00c7a3be93f1bf7c0f586ac83c6849689bf43dd2d2faf497749ff015ead62b05",
-            "Data": "undefined",
-            "Proof of work": 86,
+            "Data": "eb045d78d273107348b0300c01d29b7552d622abbc6faf81b3ec55359aa9950c",
+            "Proof of work": 298,
             "Election hash": "Election Hash TBI",
-            "Standard head hash": "00f9bf832987403e932b2ac2d4cbedba24a06a973acb5a48e4f925a2d3e9a89e",
-            "Successor hash": "00b15574de5cb55687f7c36df2fd77a4dfdf08495fdb14c82251a0134dff179f",
+            "Standard head hash": "0039201a3dc1438636f02ece4d06e7a4d8b2616026eec57b7db284aad105c48a",
+            "Successor hash": "0059c7d09053a36a9ab75a85f9bb8355de4f8db14a30c2fef2dd8deaf26fbc2c",
             "Block replace number": 2
         }
     ]
