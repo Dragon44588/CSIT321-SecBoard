@@ -46,7 +46,7 @@
 					</div>
 				</div>
 			</div>
-			<div v-if="myname=='Admin'||myname=='Admin2'||myname=='Admin3'" @click="goEditRequests" class="aside-my-requests" style="height: 40px; margin-top: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer">
+			<div v-if="myname == 'Admin' || myname == 'Admin2' || myname == 'Admin3'" @click="goEditRequests" class="aside-my-requests" style="height: 40px; margin-top: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer">
 				<div style="display: flex; align-items: center; width: 100%">
 					<div style="width: 30px; margin-left: 20px; display: flex; justify-content: center; align-items: center">
 						<img style="height: 20x; width: 20px" src="../../public/edit-requests.svg" />
@@ -56,7 +56,7 @@
 					</div>
 				</div>
 			</div>
-			<div v-if="myname=='Admin'||myname=='Admin2'||myname=='Admin3'" @click="goDeleteRequests" class="aside-my-requests" style="height: 40px; margin-top: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer">
+			<div v-if="myname == 'Admin' || myname == 'Admin2' || myname == 'Admin3'" @click="goDeleteRequests" class="aside-my-requests" style="height: 40px; margin-top: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer">
 				<div style="display: flex; align-items: center; width: 100%">
 					<div style="width: 30px; margin-left: 20px; display: flex; justify-content: center; align-items: center">
 						<img style="height: 20x; width: 20px" src="../../public/delete-requests.svg" />
@@ -66,7 +66,7 @@
 					</div>
 				</div>
 			</div>
-			<div v-if="myname=='Admin'||myname=='Admin2'||myname=='Admin3'" @click="goReportRequests" class="aside-my-requests" style="height: 40px; margin-top: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer">
+			<div v-if="myname == 'Admin' || myname == 'Admin2' || myname == 'Admin3'" @click="goReportRequests" class="aside-my-requests" style="height: 40px; margin-top: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer">
 				<div style="display: flex; align-items: center; width: 100%">
 					<div style="width: 30px; margin-left: 20px; display: flex; justify-content: center; align-items: center">
 						<img style="height: 20x; width: 20px" src="../../public/report-request.svg" />
@@ -76,17 +76,29 @@
 					</div>
 				</div>
 			</div>
-			<a href="/files/database.JSON" download target="_blank" style="text-decoration: none; color:white; background-color:white">
-			<div @click="goDownloadBlockchain" class="aside-download-blockchain" style="height: 40px; margin-top: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer">
+
+			<div v-if="myname == 'Admin' || myname == 'Admin2' || myname == 'Admin3'" @click="goBlockChain" class="aside-my-requests" style="height: 40px; margin-top: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer">
 				<div style="display: flex; align-items: center; width: 100%">
 					<div style="width: 30px; margin-left: 20px; display: flex; justify-content: center; align-items: center">
-						<img style="height: 20x; width: 20px" src="../../public/download-outline.svg" />
+						<img style="height: 20x; width: 20px" src="../../public/report-request.svg" />
 					</div>
 					<div style="flex: 1; margin-left: 5px">
-						<strong>Download Blockchain</strong>
+						<strong>Block Chain</strong>
 					</div>
 				</div>
 			</div>
+
+			<a href="/files/database.JSON" download target="_blank" style="text-decoration: none; color: white; background-color: white">
+				<div @click="goDownloadBlockchain" class="aside-download-blockchain" style="height: 40px; margin-top: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer">
+					<div style="display: flex; align-items: center; width: 100%">
+						<div style="width: 30px; margin-left: 20px; display: flex; justify-content: center; align-items: center">
+							<img style="height: 20x; width: 20px" src="../../public/download-outline.svg" />
+						</div>
+						<div style="flex: 1; margin-left: 5px">
+							<strong>Download Blockchain</strong>
+						</div>
+					</div>
+				</div>
 			</a>
 			<div @click="goLogOut" class="aside-log-out" style="height: 40px; margin-top: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer">
 				<div style="display: flex; align-items: center; width: 100%">
@@ -131,14 +143,16 @@ function goEditRequests() {
 function goDeleteRequests() {
 	router.push({ path: "/home/delete-requests" });
 }
-function goReportRequests(){
-	router.push({path:"/home/report-requests"});
+function goReportRequests() {
+	router.push({ path: "/home/report-requests" });
+}
+function goBlockChain() {
+	router.push({ path: "/home/block-chain" });
 }
 function goLogOut() {
 	sessionStorage.clear();
 	router.push({ path: "/" });
 }
-
 </script>
 
 <style>

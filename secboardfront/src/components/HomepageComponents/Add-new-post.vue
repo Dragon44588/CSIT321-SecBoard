@@ -19,6 +19,7 @@
 				<strong style="width: 100px; color: white; font-size: 1.2em; font-weight: bold; border-radius: 5px; text-align: center">Save</strong>
 			</div>
 		</div>
+
 		<div style="flex: 1; display: flex; flex-direction: column">
 			<div style="height: 150px; padding: 30px">
 				<input v-model="postTitle" placeholder="Title" style="height: 100%; width: 100%; border: none; outline: none; background-color: #f7e4de; font-size: 2.8em; font-weight: bold" />
@@ -34,7 +35,7 @@
 </template>
 
 <script setup>
-import {  ref } from "vue";
+import { reactive, ref } from "vue";
 import { ElMessage } from "element-plus";
 import api from "@/api/APIs";
 import { useRouter } from "vue-router";
@@ -55,17 +56,13 @@ function handle_post_color(color) {
 
 const postTitle = ref();
 const postContent = ref();
-
-/*const postForm = reactive({
+const postForm = reactive({
 	title: postTitle.value,
 	content: postContent.value,
 	post_color: current_post_color.value,
 	token: myToken,
 	name: myName,
-	file: [],
-	email: myEmail,
-});*/
-let postForm2 = new FormData();
+});
 
 function goSavePost() {
 	if (rich_text.value === undefined) {

@@ -11,7 +11,7 @@
  Target Server Version : 80030 (8.0.30)
  File Encoding         : 65001
 
- Date: 15/09/2023 11:25:40
+ Date: 20/10/2023 14:01:32
 */
 
 SET NAMES utf8mb4;
@@ -32,6 +32,6 @@ CREATE TABLE `posts` (
   `timestamp` datetime DEFAULT NULL,
   `background_color` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`post_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;

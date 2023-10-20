@@ -14,6 +14,7 @@ const editRequestsComponent = () => import("../components/HomepageComponents/Edi
 const deleteRequestsComponent = () => import("../components/HomepageComponents/Delete-requests.vue");
 const editPostCoponent = () => import("../components/HomepageComponents/Edit_A_Post.vue");
 const reportRequestsComponent = () => import("../components/HomepageComponents/Report-requests.vue");
+const blockChainPageComponent = () => import("../components/HomepageComponents/Blockchain-page.vue");
 
 const router = createRouter({
 	history: createWebHistory(),
@@ -78,6 +79,10 @@ const router = createRouter({
 				{
 					path: "report-requests",
 					component: reportRequestsComponent,
+				},
+				{
+					path: "block-chain",
+					component: blockChainPageComponent,
 				},
 			],
 		},

@@ -6,17 +6,17 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("./sendemail");
 const multer = require("multer");
-const path = require('path');
+const path = require("path");
 let fileExt;
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
-		cb(null, 'public/')
+		cb(null, "public/");
 	},
 	filename: function (req, file, cb) {
 		fileExt = Date.now() + file.originalname;
-		cb(null, fileExt)
-	}
-})
+		cb(null, fileExt);
+	},
+});
 const upload = multer({ storage: storage });
 
 //app.use(express.static(path.join(__dirname,'uploads')));
@@ -34,10 +34,9 @@ const request = require("request");
 
 // https setup
 const options = {
-	key: fs.readFileSync('key.pem', 'utf8'),
-	cert: fs.readFileSync('cert.pem', 'utf8')
+	key: fs.readFileSync("key.pem", "utf8"),
+	cert: fs.readFileSync("cert.pem", "utf8"),
 };
-
 
 const url = require("url");
 
@@ -109,11 +108,10 @@ const mySqlConnection = mysql.createConnection({
 });
 
 mySqlConnection.connect(function (err) {
-
 	if (err) throw err;
 	mySqlConnection.query("SELECT * FROM posts", function (err, result, fields) {
 		if (err) throw err;
-		console.log(result);
+		// console.log(result);
 	});
 });
 
@@ -125,9 +123,6 @@ mySqlConnection.connect(function (err) {
 // 	database: "321DB",
 // 	charset: "utf8mb4",
 // });
-
-
-
 
 setInterval(() => {
 	const preventErro = "select * from users_info";
@@ -321,7 +316,7 @@ app.post("/api/addDeleteRequest", async (req, res) => {
 			res.send({
 				status: 201,
 			});
-		}
+		});
 	});
 });
 function addDeleteRequest(id, email, name, title, content) {
@@ -334,9 +329,7 @@ function addDeleteRequest(id, email, name, title, content) {
 			console.log(error);
 		}
 	});
-};
-
-
+}
 
 app.post("/api/getDeleteRequest", (req, res) => {
 	const loggedInToken = req.body.token;
@@ -437,7 +430,7 @@ LEFT JOIN
 				// post.newMessage = JSON.parse(post.newMessage);
 			});
 
-			// console.log(result);
+			console.log(result);
 			res.send({
 				status: 201,
 				deletion_requests: result,
@@ -472,7 +465,8 @@ function handleDeleteRequest(id, yes_or_no, email) {
 	});
 }
 
-app.post("/api/addReportRequest", async (req, res) => {//Add error handling, Check if it's already reported or already in delete request and if admin reports immediatley goes to delete requests
+app.post("/api/addReportRequest", async (req, res) => {
+	//Add error handling, Check if it's already reported or already in delete request and if admin reports immediatley goes to delete requests
 	const loggedInToken = req.body.token;
 	// verifyRoomToken(loggedInToken, next)
 	const secretKey = process.env.ACCESS_TOKEN_SECRET;
@@ -480,65 +474,36 @@ app.post("/api/addReportRequest", async (req, res) => {//Add error handling, Che
 		if (err) {
 			return new Error("Authentication error");
 		}
-		let alreadyRequested = false;
+		// let alreadyRequested = false;
 
 		//Check if post is already reported or in the vote to be deleted
 		mySqlConnection.query("select * from report_requests where post_id = ?", [req.body.post_id], (error, result) => {
-			console.log('reportrequest#1:');
 			if (error) {
 				console.log(error);
+				return;
 			}
-			if (result.length > 0) {//If it's already been reported 
-				alreadyRequested = true;
+			if (result.length > 0) {
+				//If it's already been reported
+				// alreadyRequested = true;
 				res.send({
 					status: 201,
-					message: 'Already in progress of being reported',
+					message: "Already in progress of being reported",
 				});
-			} else {//Checking if it's in progress of being deleted
-				mySqlConnection.query("select * from deletion_requests where post_id = ?", [req.body.post_id], (error, result) => {
-					console.log('reportrequest#2:');
-					if (error) {
-						console.log(error);
-					}
-					if (result.length > 0) {
-						alreadyRequested = true;
-						res.send({
-							status: 201,
-							message: 'Already in progress of being deleted',
-						});
-					}
-				});
+				return;
 			}
-		});
-		if (alreadyRequested === false) {
-			//Check if user reporting is admin
-			mySqlConnection.query("select * from users_info where email = ?", [decoded.email], (error, result) => {
-				console.log("reportrequest#3:result.name:" + result.name);
+			const makePostSQL = "insert into report_requests values(?,?,?,?,?,?,?)";
+			const current = new Date();
+			const date = `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`;
+			const makePostParams = [req.body.post_id, date, decoded.email, req.body.name, req.body.title, JSON.stringify(req.body.content), "pending"];
+			mySqlConnection.query(makePostSQL, makePostParams, (error, result) => {
 				if (error) {
 					console.log(error);
 				}
-				if (result.name === 'Admin' || result.name === 'Admin2' || result.name === 'Admin3') {//Send it to deletion and send a vote towards it
-					addDeleteRequest(req.body.post_id, req.body.email, req.body.name, req.body.title, req.body.content);//Adds delete request
-					handleDeleteRequest(req.body.post_id, 1, decoded.email)//Adds vote toward delete request
-					res.send({
-						status: 201,
-					});
-				} else {//else normal user
-					const makePostSQL = "insert into report_requests values(?,?,?,?,?,?,?)";
-					const current = new Date();
-					const date = `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`;
-					const makePostParams = [req.body.post_id, date, decoded.email, req.body.name, req.body.title, req.body.content, "pending"];
-					mySqlConnection.query(makePostSQL, makePostParams, (error, result) => {
-						if (error) {
-							console.log(error);
-						}
-						res.send({
-							status: 201,
-						});
-					});
-				}
+				res.send({
+					status: 201,
+				});
 			});
-		}
+		});
 	});
 });
 
@@ -550,61 +515,51 @@ app.post("/api/getReportRequest", (req, res) => {
 		if (err) {
 			return new Error("Authentication error");
 		}
+		/**
+		 * SELECT 
+	rr.*,
+	COALESCE(votes.yes_votes, 0) AS yes_votes,
+	COALESCE(votes.no_votes, 0) AS no_votes,
+	CASE 
+		WHEN v.vote_yes_or_no = 1 THEN 'voted_yes'
+		WHEN v.vote_yes_or_no = 0 THEN 'voted_no'
+		ELSE ''
+	END AS did_u_vote
+FROM 
+	report_requests rr
+LEFT JOIN 
+	(SELECT 
+		post_id,
+		SUM(CASE WHEN vote_yes_or_no = 1 THEN 1 ELSE 0 END) AS yes_votes,
+		SUM(CASE WHEN vote_yes_or_no = 0 THEN 1 ELSE 0 END) AS no_votes
+	FROM 
+		Votes
+	WHERE
+		request_type = 'report'
+	GROUP BY 
+		post_id) votes ON rr.post_id = votes.post_id
+LEFT JOIN 
+	Votes v ON rr.post_id = v.post_id AND v.email = ?;
 
-		const getPostsSQL = "SELECT dr.*,COALESCE(votes.yes_votes, 0) AS yes_votes,COALESCE(votes.no_votes, 0) AS no_votes,CASE WHEN v.vote_yes_or_no = 1 THEN 'voted_yes'WHEN v.vote_yes_or_no = 0 THEN 'voted_no'ELSE '' END AS did_u_vote FROM report_requests dr LEFT JOIN (SELECT post_id,SUM(CASE WHEN vote_yes_or_no = 1 THEN 1 ELSE 0 END) AS yes_votes,SUM(CASE WHEN vote_yes_or_no = 0 THEN 1 ELSE 0 END) AS no_votes FROM Votes GROUP BY post_id) votes ON dr.post_id = votes.post_id LEFT JOIN Votes v ON dr.post_id = v.post_id AND v.email = ?";
+		 */
+		// const getPostsSQL = "SELECT rr.*,COALESCE(votes.yes_votes, 0) AS yes_votes,COALESCE(votes.no_votes, 0) AS no_votes,CASE WHEN v.vote_yes_or_no = 1 THEN 'voted_yes'WHEN v.vote_yes_or_no = 0 THEN 'voted_no'ELSE '' END AS did_u_vote FROM report_requests rr LEFT JOIN (SELECT post_id,SUM(CASE WHEN vote_yes_or_no = 1 THEN 1 ELSE 0 END) AS yes_votes,SUM(CASE WHEN vote_yes_or_no = 0 THEN 1 ELSE 0 END) AS no_votes FROM Votes WHERE request_type = 'report' GROUP BY post_id) votes ON rr.post_id = votes.post_id LEFT JOIN Votes v ON rr.post_id = v.post_id AND v.email = ?";
+		const getPostsSQL = "SELECT rr.*, COALESCE(votes.yes_votes, 0) AS yes_votes, COALESCE(votes.no_votes, 0) AS no_votes, CASE WHEN COALESCE(votes.yes_votes, 0) = 0 AND COALESCE(votes.no_votes, 0) = 0 THEN '' WHEN v.vote_yes_or_no = 1 THEN 'voted_yes' WHEN v.vote_yes_or_no = 0 THEN 'voted_no' ELSE '' END AS did_u_vote FROM report_requests rr LEFT JOIN (SELECT post_id, SUM(CASE WHEN vote_yes_or_no = 1 THEN 1 ELSE 0 END) AS yes_votes, SUM(CASE WHEN vote_yes_or_no = 0 THEN 1 ELSE 0 END) AS no_votes FROM Votes WHERE request_type = 'report' GROUP BY post_id) votes ON rr.post_id = votes.post_id LEFT JOIN Votes v ON rr.post_id = v.post_id AND v.email = ? AND v.request_type = 'report';";
 		const pra = [decoded.email];
 		mySqlConnection.query(getPostsSQL, pra, (error, result) => {
 			if (error) {
 				console.error("Error executing query:", error);
 				return;
 			}
+			result.forEach((post) => {
+				post.originalMessage = JSON.parse(post.originalMessage);
+				// post.newMessage = JSON.parse(post.newMessage);
+			});
+
 			// console.log(result);
-		});
-
-		// check if yes votes == 2 (correction block added) or no votes == 2 (request denied)
-		// check if vote SUCCEEDED
-		mySqlConnection.query("SELECT vote_yes_or_no FROM Votes WHERE post_id = " + req.body.post_id + " AND vote_yes_or_no = 1", (error, result) => {
-			if (error) {
-				return console.log(error);
-			}
-			if (result.length == 2) {
-				// update page to reflect that vote failed
-				// run python code to add correction block with new data\
-				let options = {
-					mode: 'text',
-					pythonOptions: ['-u'], // get print results in real-time
-					scriptPath: '../secboardback/blockchain/',
-					args: [req.body.content, 'Election Hash TBI', req.body.post_id + 1] // adding correction block requires the following:
-					// the message content
-					// the election hash, to be added in future
-					// (post_id + 1) which equals the block number, as block 1 is genesis and post 1 is block 2 added after the genesis
-				  };
-				  
-				  PythonShell.run('addCorrectionBlock.py', options).then(messages=>{
-					// results is an array consisting of messages collected during execution
-					console.log(messages);
-				  });
-
-				  mySqlConnection.query("DELETE FROM posts WHERE post_id =" + req.body.post_id, (error, result) => {
-						if (error) {
-							return console.log(error);
-						}
-				  });
-			}
-			
-		});	
-		
-		// check if vote FAILED
-		mySqlConnection.query("SELECT vote_yes_or_no FROM Votes WHERE post_id = " + req.body.post_id + " AND vote_yes_or_no = 0", (error, result) => {
-			if (error) {
-				return console.log(error);
-			}
-			if (result.length == 2) {
-				// update page to reflect that vote failed
-			}
+			console.log(result);
 			res.send({
 				status: 201,
-				deletion_requests: result,
+				report_requests: result,
 			});
 		});
 	});
@@ -615,24 +570,25 @@ app.post("/api/handleReportRequest", (req, res) => {
 	const enoughNoVotes = 3;
 	// verifyRoomToken(loggedInToken, next)
 	const secretKey = process.env.ACCESS_TOKEN_SECRET;
-	const removeRequestSQL = "delete from report_requests where post_id = ?;";//Removes From report Request table
+	const removeRequestSQL = "delete from report_requests where post_id = ?;"; //Removes From report Request table
 	jwt.verify(loggedInToken.split(" ")[1], secretKey, async (err, decoded) => {
 		if (err) {
 			return new Error("Authentication error");
-		}
-		else if (req.body.yes_or_no === 1) {//If the vote is yes (only needs one yes vote for it to be voted on deletion)
+		} else if (req.body.yes_or_no === 1) {
+			//If the vote is yes (only needs one yes vote for it to be voted on deletion)
 			mySqlConnection.query(removeRequestSQL, [req.body.post_id], (error, result) => {
 				if (error) {
 					return console.log(error);
 				}
-				console.log('id:' + req.body.post_id + ', email:' + req.body.email + ', name:' + req.body.name + ', title:' + req.body.title + ', content:' + req.body.content)
-				addDeleteRequest(req.body.post_id, req.body.email, req.body.name, req.body.title, req.body.content);//Adds delete request
-				handleDeleteRequest(req.body.post_id, req.body.yes_or_no, decoded.email)//Adds vote toward delete request
+				console.log("id:" + req.body.post_id + ", email:" + req.body.email + ", name:" + req.body.name + ", title:" + req.body.title + ", content:" + req.body.content);
+				addDeleteRequest(req.body.post_id, req.body.email, req.body.name, req.body.title, req.body.content); //Adds delete request
+				handleDeleteRequest(req.body.post_id, req.body.yes_or_no, decoded.email); //Adds vote toward delete request
 				res.send({
 					status: 200,
 				});
 			});
-		} else {//If the vote is no
+		} else {
+			//If the vote is no
 			const accept_report_SQL = "insert into Votes values (?, ?, ?, ?)";
 			const accept_report_Param = [req.body.post_id, "Report", req.body.yes_or_no, decoded.email];
 			mySqlConnection.query(accept_report_SQL, accept_report_Param, (error, result) => {
@@ -641,7 +597,8 @@ app.post("/api/handleReportRequest", (req, res) => {
 				}
 				const voteCountSQL = "select COUNT(post_id) as votes from votes where post_id = ? && vote_yes_or_no = 0 && request_type = 'Report';";
 				mySqlConnection.query(voteCountSQL, [req.body.post_id], (error, result) => {
-					if (result[0].votes >= enoughNoVotes) {//remove post from report request
+					if (result[0].votes >= enoughNoVotes) {
+						//remove post from report request
 						mySqlConnection.query(removeRequestSQL, [req.body.post_id], (error, result) => {
 							if (error) {
 								return console.log(error);
@@ -817,23 +774,22 @@ app.post("/api/handle_edit_request", (req, res) => {
 				// update page to reflect that vote failed
 				// run python code to add correction block with new data\
 				let options = {
-					mode: 'text',
-					pythonOptions: ['-u'], // get print results in real-time
-					scriptPath: '../secboardback/blockchain/',
-					args: [req.body.content, 'Election', req.body.post_id + 1] // adding correction block requires the following:
+					mode: "text",
+					pythonOptions: ["-u"], // get print results in real-time
+					scriptPath: "../secboardback/blockchain/",
+					args: [req.body.content, "Election", req.body.post_id + 1], // adding correction block requires the following:
 					// the message content
 					// the election hash, to be added in future
 					// (post_id + 1) which equals the block number, as block 1 is genesis and post 1 is block 2 added after the genesis
-				  };
-				  
-				  PythonShell.run('addCorrectionBlock.py', options).then(messages=>{
+				};
+
+				PythonShell.run("addCorrectionBlock.py", options).then((messages) => {
 					// results is an array consisting of messages collected during execution
 					console.log(messages);
-				  });
+				});
 			}
-			
-		});	
-		
+		});
+
 		// check if vote FAILED
 		mySqlConnection.query("SELECT vote_yes_or_no FROM Votes WHERE post_id = " + req.body.post_id + " AND vote_yes_or_no = 0", (error, result) => {
 			if (error) {

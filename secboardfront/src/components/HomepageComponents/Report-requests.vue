@@ -1,6 +1,6 @@
 <template>
 	<div v-if="showPopup_Edit">
-		<View_Detail_Report_Popup style="display: none" />
+		<View_Detail_Delete_Popup style="display: none" />
 		<div style="display: flex; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(108, 108, 108, 0.5); z-index: 9999">
 			<div style="height: 400px; width: 500px; background-color: white; border-radius: 20px; display: flex; flex-direction: column; overflow: hidden; padding: 20px 30px 30px 30px">
 				<div style="width: 100%; display: flex; justify-content: flex-end">
@@ -18,10 +18,10 @@
 			</div>
 		</div>
 	</div>
-	<div v-if="showPopup_Report" style="display: flex; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(108, 108, 108, 0.5); z-index: 9999">
+	<div v-if="showPopup_report" style="display: flex; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(108, 108, 108, 0.5); z-index: 9999">
 		<div style="height: 400px; width: 500px; background-color: white; border-radius: 20px; display: flex; flex-direction: column; overflow: hidden; padding: 20px 30px 30px 30px">
 			<div style="width: 100%; display: flex; justify-content: flex-end">
-				<img @click="showPopup_Report = false" style="height: 50px; width: 50px; cursor: pointer" src="../../../public/close-outline.svg" />
+				<img @click="showPopup_report = false" style="height: 50px; width: 50px; cursor: pointer" src="../../../public/close-outline.svg" />
 			</div>
 			<div style="width: 100%; overflow: auto">
 				<h1 style="color: #136583">Post Title:</h1>
@@ -30,7 +30,6 @@
 				<h1 style="color: #136583; margin-top: 20px">Post Content:</h1>
 				<h3>{{ report_popup.originalMessage }}</h3>
 			</div>
-
 		</div>
 	</div>
 	<div style="height: 100%; display: flex; flex-direction: column; align-items: center">
@@ -41,9 +40,8 @@
 					<div style="flex: 1; display: flex; justify-content: space-between">
 						<div>
 							<h3>Request Date - {{ post.requestDate }}</h3>
-							<h4 @click="get_report_popup_content(index,true)" class="view_detail_button_css" style="margin-top: 10px; cursor: pointer; border: 1px solid gray; padding: 5px 10px 5px 10px; width: max-content; border-radius: 10px">View Details</h4>
+							<h4 @click="get_report_popup_content(index)" class="view_detail_button_css" style="margin-top: 10px; cursor: pointer; border: 1px solid gray; padding: 5px 10px 5px 10px; width: max-content; border-radius: 10px">View Details</h4>
 						</div>
-
 
 						<!-- <div style="min-width: 200px">
 							<h3 style="background-color: rgb(221, 221, 2); margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; border-radius: 10px; text-align: center; color: white">Requested</h3>
@@ -52,8 +50,8 @@
 
 						<div style="min-width: 200px">
 							<div v-if="post.did_u_vote === ''">
-								<h3 @click="handleReportRequest(post, 1,index)" style="background-color: green; margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; border-radius: 10px; text-align: center; color: white; cursor: pointer">Accept</h3>
-								<h3 @click="handleReportRequest(post, 0,index)" style="background-color: red; margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; border-radius: 10px; text-align: center; color: white; cursor: pointer">Reject</h3>
+								<h3 @click="handleReportRequest(post, 1)" style="background-color: green; margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; border-radius: 10px; text-align: center; color: white; cursor: pointer">Accept</h3>
+								<h3 @click="handleReportRequest(post, 0)" style="background-color: red; margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; border-radius: 10px; text-align: center; color: white; cursor: pointer">Reject</h3>
 							</div>
 
 							<div v-else>
@@ -70,7 +68,6 @@
 			</ul>
 		</div>
 	</div>
-
 </template>
 
 <script setup>
@@ -78,9 +75,8 @@ import { reactive, ref } from "vue";
 import api from "@/api/APIs";
 const mytoken = window.sessionStorage.getItem("token");
 
-
 const reportReuqestsList = ref();
-const showPopup_Report = ref(false);
+const showPopup_report = ref(false);
 const report_popup = ref();
 
 const authForm = reactive({
@@ -88,11 +84,11 @@ const authForm = reactive({
 });
 
 api.getReportRequest(authForm).then((res) => {
-	reportReuqestsList.value = res.deletion_requests;
+	reportReuqestsList.value = res.report_requests;
 });
 
-function get_report_popup_content(index,popup) {
-	showPopup_Report.value = popup;
+function get_report_popup_content(index) {
+	showPopup_report.value = true;
 	report_popup.value = reportReuqestsList.value[index];
 }
 
@@ -100,31 +96,20 @@ const handle_report_request_form = reactive({
 	token: mytoken,
 	post_id: null,
 	yes_or_no: null,
-	name:null,
-	content:null,
-	title:null,
-	email:null,
 });
 
-function handleReportRequest(post, yes_or_no,index) {
-	get_report_popup_content(index,false);
+function handleReportRequest(post, yes_or_no) {
 	handle_report_request_form.post_id = post.post_id;
 	handle_report_request_form.yes_or_no = yes_or_no;
-	handle_report_request_form.name = post.name;
-	handle_report_request_form.content = report_popup.value.originalMessage;
-	handle_report_request_form.title= report_popup.value.originalTitle;
-	handle_report_request_form.email= post.email;
-	api.handleReportRequest(handle_report_request_form).then((res) => {
+	api.handleDeleteRequest(handle_report_request_form).then((res) => {
 		if (res.status === 200) {
 			console.log("handled a report request");
-			api.getReportRequest(authForm).then((res) => {
-				reportReuqestsList.value = res.deletion_requests;
+			api.getDeleteRequest(authForm).then((res) => {
+				reportReuqestsList.value = res.report_requests;
 			});
 		}
 	});
-
 }
-
 </script>
 
 <style scoped>
