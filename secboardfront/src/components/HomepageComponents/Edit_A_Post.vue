@@ -98,10 +98,10 @@ function goSavePost() {
 		});
 	} else {
 		postForm.title = postTitle.value;
-		postForm.content = rich_text.value;
+		postForm.content = JSON.stringify(rich_text.value);
 		postForm.post_color = current_post_color.value;
 		postForm.origin_title = origin_post.title;
-		postForm.origin_content = origin_post.content;
+		postForm.origin_content = JSON.stringify(origin_post.content);
 		postForm.origin_post_color = origin_post.background_color;
 		postForm.post_id = origin_post.post_id;
 		api.addEditRequest(postForm).then((res) => {

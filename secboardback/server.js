@@ -257,7 +257,6 @@ const { createHash } = require("crypto");
 
 app.post("/api/addPost", upload.single("file"), async (req, res) => {
 	const loggedInToken = req.body.token;
-	console.log(req.file);
 	const secretKey = process.env.ACCESS_TOKEN_SECRET;
 	jwt.verify(loggedInToken.split(" ")[1], secretKey, async (err, decoded) => {
 		if (err) {
@@ -266,7 +265,7 @@ app.post("/api/addPost", upload.single("file"), async (req, res) => {
 
 		const saltC = 10;
 		let salt = await bcrypt.genSalt(saltC);
-		let stringify_content = JSON.stringify(req.body.content);
+		let stringify_content = req.body.content;
 		let hashedContent = createHash("sha256").update(stringify_content).digest("hex");
 
 		// add post to blockchain
@@ -283,9 +282,8 @@ app.post("/api/addPost", upload.single("file"), async (req, res) => {
 		});
 
 		const makePostSQL = "insert into posts values(?,?,?,?,?,?,?,?,?)";
-		const makePostParams = [null, decoded.email, req.body.name, 0, req.body.title, stringify_content, hashedContent, new Date(), req.body.post_color];
+		const makePostParams = [null, decoded.email, req.body.name, 0, req.body.title, req.body.content, hashedContent, new Date(), req.body.post_color];
 		mySqlConnection.query(makePostSQL, makePostParams, (error, result) => {
-			absoluteFileLocation = null;
 			if (error) {
 				console.log(error);
 			}
@@ -623,6 +621,8 @@ app.post("/api/addEditRequest", async (req, res) => {
 			return new Error("Authentication error");
 		}
 
+		console.log(typeof req.body.content);
+		console.log(typeof req.body.origin_content);
 		const add_edit_request_SQL = "insert into edit_requests values(?,?,?,?,?,?,?,?,?)";
 		const current = new Date();
 		const date = `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`;

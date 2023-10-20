@@ -81,7 +81,7 @@ function goSavePost() {
 		});
 	} else {
 		postForm.title = postTitle.value;
-		postForm.content = rich_text.value;
+		postForm.content = JSON.stringify(rich_text.value);
 		postForm.post_color = current_post_color.value;
 		api.addPost(postForm).then((res) => {
 			if (res.status === 201) {
