@@ -23,7 +23,7 @@ def WriteMainChain(chain):
             print("block doesnt exist")
             cBlocks.append(None)
         else:
-            #block = {"Previous hash": i.previousHash, "Data": i.data, "Proof of work": i.proofOfWork, "Election hash": i.electionHash, "Standard head hash": i.standardHeadHash, "Successor hash": i.successorHash}
+            block = {"Previous hash": i.previousHash, "Data": i.data, "Proof of work": i.proofOfWork, "Election hash": i.electionHash, "Standard head hash": i.standardHeadHash, "Successor hash": i.successorHash, "Block replace number": i.blockReplaceNumber}
             print(block)
             cBlocks.append(block)    
             
@@ -48,6 +48,7 @@ chainData = json.load(chainFile)
 
 testChain = standardChain() # initialise standard chain
 
+# load standard blocks
 counter = 0
 for i in chainData['Main chain']:
     if counter == 0: # skip stored genesis hash
@@ -55,9 +56,16 @@ for i in chainData['Main chain']:
         continue
     if i == None:
         print('null')
+        testChain.createStandardBlock('null')
         continue
     print(i['Data'])
     testChain.createStandardBlock(str(i['Data']))
+
+# load correction blocks
+counter = 0
+for i in chainData['Correction chain']:
+    print(i['Data'])
+    testChain.createCorrectionBlock(str(i['Data']), 'Election Hash TBI', int(i['Block replace number']))
 
 chainFile.close()
 
@@ -69,9 +77,6 @@ print ("Number of arguments:", len(sys.argv), "arguments")
 print ("Argument List:", str(sys.argv))
 testChain.createStandardBlock(sys.argv[1])
 #testChain.createStandardBlock("testing code")
-
-print(testChain)
-testChain.validateChain()
 
 # Step 3: Update the JSON file with the new block
 WriteMainChain(testChain)

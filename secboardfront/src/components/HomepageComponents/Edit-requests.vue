@@ -51,7 +51,7 @@
 
 						<div style="min-width: 200px">
 							<div v-if="post.did_u_vote === ''">
-								<h3 @click="handleEditRequest(post, 1)" style="background-color: green; margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; border-radius: 10px; text-align: center; color: white; cursor: pointer">Appcet</h3>
+								<h3 @click="handleEditRequest(post, 1)" style="background-color: green; margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; border-radius: 10px; text-align: center; color: white; cursor: pointer">Accept</h3>
 								<h3 @click="handleEditRequest(post, 0)" style="background-color: red; margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; border-radius: 10px; text-align: center; color: white; cursor: pointer">Reject</h3>
 							</div>
 

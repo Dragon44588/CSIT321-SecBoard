@@ -22,6 +22,9 @@
 <script setup>
 import { reactive, ref } from "vue";
 import api from "@/api/APIs";
+import { ElMessage } from "element-plus";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const mytoken = window.sessionStorage.getItem("token");
 ///////////////////////////
 import { QuillEditor } from "@vueup/vue-quill";
@@ -30,7 +33,6 @@ import "@vueup/vue-quill/dist/vue-quill.bubble.css";
 
 ///////////////////////////
 const postsList = ref();
-
 const authForm = reactive({
 	token: mytoken,
 });

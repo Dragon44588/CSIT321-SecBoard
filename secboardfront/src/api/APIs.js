@@ -36,7 +36,7 @@ const getMyPostsApi = (data) => {
 };
 
 const addPost = (data) => {
-	return requestAPI.post({
+	return requestAPI.post2({
 		url: "/addPost",
 		data,
 	});
@@ -48,7 +48,12 @@ const addDeleteRequest = (data) => {
 		data,
 	});
 };
-
+const addReportRequest = (data) => {
+	return requestAPI.post({
+		url: "/addReportRequest",
+		data,
+	})
+}
 const addEditRequest = (data) => {
 	return requestAPI.post({
 		url: "/addEditRequest",
@@ -77,6 +82,13 @@ const getAllDeleteRequest = (data) => {
 	});
 };
 
+const getReportRequest = (data) => {
+	return requestAPI.post({
+		url: "/getReportRequest",
+		data,
+	})
+}
+
 const getEditRequest = (data) => {
 	return requestAPI.post({
 		url: "/getEditRequest",
@@ -98,6 +110,13 @@ const handleDeleteRequest = (data) => {
 	});
 };
 
+const handleReportRequest = (data) => {
+	return requestAPI.post({
+		url: "/handleReportRequest",
+		data,
+	})
+};
+
 const handleEditRequest = (data) => {
 	return requestAPI.post({
 		url: "/handle_edit_request",
@@ -112,4 +131,5 @@ const resetPassword = (data) => {
 	});
 };
 
-export default { loginApi, registerApi, forgotApi, getPostsApi, addPost, getMyPostsApi, addDeleteRequest, addEditRequest, forgotpassword, resetPassword, getDeleteRequest, getAllDeleteRequest, getEditRequest, getAllEditRequest, handleDeleteRequest, handleEditRequest };
+export default {loginApi, registerApi, forgotApi, getPostsApi, addPost, getMyPostsApi, addDeleteRequest,addReportRequest, addEditRequest, forgotpassword,
+	resetPassword,getDeleteRequest,getReportRequest, getEditRequest, handleDeleteRequest,handleReportRequest, handleEditRequest, getAllDeleteRequest, getEditRequest, getAllEditRequest};
