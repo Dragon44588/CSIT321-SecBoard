@@ -75,6 +75,13 @@ const getDeleteRequest = (data) => {
 	});
 };
 
+const getAllDeleteRequest = (data) => {
+	return requestAPI.post({
+		url: "/getAllDeleteRequest",
+		data,
+	});
+};
+
 const getReportRequest = (data) => {
 	return requestAPI.post({
 		url: "/getReportRequest",
@@ -85,6 +92,13 @@ const getReportRequest = (data) => {
 const getEditRequest = (data) => {
 	return requestAPI.post({
 		url: "/getEditRequest",
+		data,
+	});
+};
+
+const getAllEditRequest = (data) => {
+	return requestAPI.post({
+		url: "/getAllEditRequest",
 		data,
 	});
 };
@@ -118,4 +132,4 @@ const resetPassword = (data) => {
 };
 
 export default {loginApi, registerApi, forgotApi, getPostsApi, addPost, getMyPostsApi, addDeleteRequest,addReportRequest, addEditRequest, forgotpassword,
-	resetPassword,getDeleteRequest,getReportRequest, getEditRequest, handleDeleteRequest,handleReportRequest, handleEditRequest};
+	resetPassword,getDeleteRequest,getReportRequest, getEditRequest, handleDeleteRequest,handleReportRequest, handleEditRequest, getAllDeleteRequest, getEditRequest, getAllEditRequest};

@@ -7,32 +7,26 @@ import router from "../src/router/routerSetting";
 
 const app = createApp(App);
 router.beforeEach(async (to, from, next) => {
-	console.log(to.name);
 	if (to.name === "login") {
 		sessionStorage.clear();
 		next();
-	}
-	else if (to.name === "forgot") {
+	} else if (to.name === "forgot") {
 		sessionStorage.clear();
-		next();		
-	}
-	else {
+		next();
+	} else {
 		if (to.name === "register") {
 			next();
-		} 
-		else if(to.name==="forgotpassword"){
+		} else if (to.name === "forgotpassword") {
 			next();
-		} else if(to.name!==undefined&&to.name.startsWith('resetpassword')){
+		} else if (to.name !== undefined && to.name.startsWith("resetpassword")) {
 			next();
-		}
-		else {
+		} else {
 			if (sessionStorage.getItem("token") !== undefined && sessionStorage.getItem("token") !== null && sessionStorage.getItem("token") !== null) {
 				next();
 			} else {
 				next({ name: "login" });
 			}
 		}
-	
 	}
 });
 

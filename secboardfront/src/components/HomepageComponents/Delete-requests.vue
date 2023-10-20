@@ -30,7 +30,6 @@
 				<h1 style="color: #136583; margin-top: 20px">Post Content:</h1>
 				<h3>{{ delete_popup.originalMessage }}</h3>
 			</div>
-
 		</div>
 	</div>
 	<div style="height: 100%; display: flex; flex-direction: column; align-items: center">
@@ -43,7 +42,6 @@
 							<h3>Request Date - {{ post.requestDate }}</h3>
 							<h4 @click="get_delete_popup_content(index)" class="view_detail_button_css" style="margin-top: 10px; cursor: pointer; border: 1px solid gray; padding: 5px 10px 5px 10px; width: max-content; border-radius: 10px">View Details</h4>
 						</div>
-
 
 						<!-- <div style="min-width: 200px">
 							<h3 style="background-color: rgb(221, 221, 2); margin-top: 10px; border: 1px solid gray; padding: 5px 10px 5px 10px; border-radius: 10px; text-align: center; color: white">Requested</h3>
@@ -70,14 +68,12 @@
 			</ul>
 		</div>
 	</div>
-
 </template>
 
 <script setup>
 import { reactive, ref } from "vue";
 import api from "@/api/APIs";
 const mytoken = window.sessionStorage.getItem("token");
-
 
 const deleteReuqestsList = ref();
 const showPopup_Delete = ref(false);
@@ -87,7 +83,7 @@ const authForm = reactive({
 	token: mytoken,
 });
 
-api.getDeleteRequest(authForm).then((res) => {
+api.getAllDeleteRequest(authForm).then((res) => {
 	deleteReuqestsList.value = res.deletion_requests;
 });
 
@@ -113,9 +109,7 @@ function handleDeleteRequest(post, yes_or_no) {
 			});
 		}
 	});
-
 }
-
 </script>
 
 <style scoped>

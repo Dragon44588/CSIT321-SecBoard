@@ -85,7 +85,7 @@ const authForm = reactive({
 	token: mytoken,
 });
 
-api.getEditRequest(authForm).then((res) => {
+api.getAllEditRequest(authForm).then((res) => {
 	editReuqestsList.value = res.edit_requests;
 });
 

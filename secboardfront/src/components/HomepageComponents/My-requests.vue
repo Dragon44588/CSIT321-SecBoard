@@ -9,11 +9,14 @@
 				<div style="width: 100%; overflow: auto">
 					<h1 style="color: #136583">Original Post</h1>
 					<h2>{{ edit_popup.originTitle }}</h2>
-					<h3>{{ edit_popup.originMessage }}</h3>
+					<!-- <h3>{{ edit_popup.originMessage }}</h3> -->
+
+					<QuillEditor v-model:content="edit_popup.originMessage.ops" theme="bubble" :options="editorOptions" />
 
 					<h1 style="color: #136583; margin-top: 20px; border-top: 1px solid gray; padding-top: 20px">Edited Post</h1>
-					<h2>{{ edit_popup.originTitle }}</h2>
-					<h3>{{ edit_popup.originMessage }} <span style="color: red">new added/edited text shown in red</span></h3>
+					<h2>{{ edit_popup.newTitle }}</h2>
+					<!-- <h3>{{ edit_popup.newMessage }} <span style="color: red">new added/edited text shown in red</span></h3> -->
+					<QuillEditor v-model:content="edit_popup.newMessage.ops" theme="bubble" :options="editorOptions" />
 				</div>
 			</div>
 		</div>
@@ -29,7 +32,8 @@
 				<h2>{{ delete_popup.originalTitle }}</h2>
 
 				<h1 style="color: #136583; margin-top: 20px">Post Content:</h1>
-				<h3>{{ delete_popup.originalMessage }}</h3>
+				<!-- <h3>{{ delete_popup.originalMessage }}</h3> -->
+				<QuillEditor v-model:content="delete_popup.originalMessage.ops" theme="bubble" :options="editorOptions" />
 			</div>
 		</div>
 	</div>
@@ -89,6 +93,9 @@
 <script setup>
 import { reactive, ref } from "vue";
 import api from "@/api/APIs";
+import { QuillEditor } from "@vueup/vue-quill";
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
+import "@vueup/vue-quill/dist/vue-quill.bubble.css";
 const mytoken = window.sessionStorage.getItem("token");
 
 const deleteReuqestsList = ref();
@@ -122,6 +129,24 @@ api.getEditRequest(authForm).then((res) => {
 	console.log("Im Edit Request List", res.edit_requests);
 	editRequestsList.value = res.edit_requests;
 });
+const editorOptions = {
+	readOnly: true,
+	theme: "bubble",
+};
+// function compareObjects(obj1, obj2) {
+// 	const keys1 = Object.keys(obj1);
+// 	// const keys2 = Object.keys(obj2);
+
+// 	// if (keys1.length !== keys2.length) {
+// 	// 	return false; // 对象属性数量不同
+// 	// }
+
+// 	for (const key of keys1) {
+// 		if (obj1[key] !== obj2[key]) {
+// 			console.log(obj2[key]);
+// 		}
+// 	}
+// }
 </script>
 
 <style scoped>
