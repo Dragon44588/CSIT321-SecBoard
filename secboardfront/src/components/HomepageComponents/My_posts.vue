@@ -5,29 +5,24 @@
 	<div style="flex: 1">
 		<div style="background-color: white; min-height: 500px; margin: 20px 20px 20px 50px; border-radius: 5px">
 			<ul style="display: grid; grid-template-columns: repeat(3, minmax(350px, 35%)); grid-auto-rows: 350px">
-				<li v-for="(mpl, index) in myPostsList" :key="index" style="height: 300px; margin: 20px; background-color: #fdf2b3; border-radius: 5px">
-					<div style="padding: 15px">
-						<div style="display: flex">
-							<div style="flex: 1; width: inherit; white-space: normal; word-break: break-all; word-wrap: break-word">
-								<strong style="font-weight: bold; font-size: 2em">{{ mpl.title }}</strong>
+				<li v-for="(mpl, index) in myPostsList" :key="index" :style="{ backgroundColor: mpl.background_color }" style="height: 300px; margin: 20px; border-radius: 5px; padding: 10px 10px 100px 10px; overflow: hidden">
+					<div style="display: flex; justify-content: flex-end">
+						<div style="display: flex; justify-content: center">
+							<div @click="requestEdit(mpl)" style="margin-right: 10px; color: rgb(77, 76, 76); cursor: pointer">
+								<h4>Edit</h4>
 							</div>
-
-							<div style="display: flex; justify-content: center">
-								<div @click="requestEdit(mpl)" style="margin-right: 10px; color: rgb(77, 76, 76); cursor: pointer">
-									<h4>Edit</h4>
-								</div>
-								<div style="cursor: pointer">
-									<img @click="requestDelete(mpl)" style="height: 20px; width: 20px" src="../../../public/trash.svg" />
-								</div>
+							<div style="cursor: pointer">
+								<img @click="requestDelete(mpl)" style="height: 20px; width: 20px" src="../../../public/trash.svg" />
 							</div>
-						</div>
-
-						<div style="margin-top: 5px">
-							<span style="font-size: 1.1em">
-								{{ mpl.content }}
-							</span>
 						</div>
 					</div>
+
+					<p style="font-weight: bold; font-size: 2em">{{ mpl.title }}</p>
+					<p>
+						By: <strong>{{ mpl.user_name }}</strong> on <strong>{{ mpl.timestamp }}</strong>
+					</p>
+
+					<QuillEditor v-model:content="mpl.content.ops" theme="bubble" :options="editorOptions" />
 				</li>
 				<li @click="goAddNewPost" class="add-post-button" style="height: 300px; margin: 20px; border-radius: 5px; display: flex; justify-content: center; align-items: center; cursor: pointer">
 					<div style="padding: 15px">
@@ -44,6 +39,10 @@ import { reactive, ref } from "vue";
 import api from "@/api/APIs";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
+import { QuillEditor } from "@vueup/vue-quill";
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
+import "@vueup/vue-quill/dist/vue-quill.bubble.css";
+
 const router = useRouter();
 const myPostsList = ref();
 const postContent = ref();
@@ -88,19 +87,26 @@ function requestDelete(mpl) {
 	});
 }
 function requestEdit(mpl) {
-	sendToDatabase.post_id = mpl.post_id;
-	sendToDatabase.title = mpl.title;
-	sendToDatabase.content = mpl.content;
-	api.addEditRequest(sendToDatabase).then((res) => {
-		if (res.status === 201) {
-			ElMessage({
-				message: "Done!",
-				type: "success",
-			});
-			router.push({ path: "/home" });
-		}
-	});
+	window.sessionStorage.setItem("current_editing", JSON.stringify(mpl));
+	router.push({ path: "/home/edit_post" });
+
+	// sendToDatabase.post_id = mpl.post_id;
+	// sendToDatabase.title = mpl.title;
+	// sendToDatabase.content = mpl.content;
+	// api.addEditRequest(sendToDatabase).then((res) => {
+	// 	if (res.status === 201) {
+	// 		ElMessage({
+	// 			message: "Done!",
+	// 			type: "success",
+	// 		});
+	// 		router.push({ path: "/home" });
+	// 	}
+	// });
 }
+const editorOptions = {
+	readOnly: true,
+	theme: "bubble",
+};
 </script>
 
 <style scope>

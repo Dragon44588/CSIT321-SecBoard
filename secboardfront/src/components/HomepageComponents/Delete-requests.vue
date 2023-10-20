@@ -18,7 +18,6 @@
 			</div>
 		</div>
 	</div>
-
 	<div v-if="showPopup_Delete" style="display: flex; justify-content: center; align-items: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(108, 108, 108, 0.5); z-index: 9999">
 		<div style="height: 400px; width: 500px; background-color: white; border-radius: 20px; display: flex; flex-direction: column; overflow: hidden; padding: 20px 30px 30px 30px">
 			<div style="width: 100%; display: flex; justify-content: flex-end">
@@ -77,15 +76,14 @@ import api from "@/api/APIs";
 const mytoken = window.sessionStorage.getItem("token");
 
 const deleteReuqestsList = ref();
-
-const showPopup_Delete = ref(false);
-const delete_popup = ref();
+const showPopup_Delete = false;
+const delete_popup = false;
 
 const authForm = reactive({
 	token: mytoken,
 });
 
-api.getDeleteRequest(authForm).then((res) => {
+api.getAllDeleteRequest(authForm).then((res) => {
 	deleteReuqestsList.value = res.deletion_requests;
 });
 
@@ -99,6 +97,7 @@ const handle_delete_request_form = reactive({
 	post_id: null,
 	yes_or_no: null,
 });
+
 function handleDeleteRequest(post, yes_or_no) {
 	handle_delete_request_form.post_id = post.post_id;
 	handle_delete_request_form.yes_or_no = yes_or_no;

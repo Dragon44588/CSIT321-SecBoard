@@ -22,6 +22,7 @@ const { error } = require("console");
 let { PythonShell } = require("python-shell");
 
 PythonShell.run("./blockchain/main.py", null).then((messages) => {
+	// console.log(messages);
 	console.log("Python script end");
 });
 
@@ -36,7 +37,7 @@ var httpServer = http.createServer(app);
 //	console.log("3210 Ports running");
 //});
 httpServer.listen(3210, () => {
-	console.log("3211 Ports running");
+	console.log("3210 Ports running");
 });
 
 //app.use(
@@ -55,7 +56,11 @@ app.use(
 // 	console.log("3210 port running");
 // });
 
-app.use(express.json());
+app.use(
+	express.json({
+		limit: "50mb",
+	})
+);
 
 // app.use((req, res, next) => {
 // 	res.header("Access-Control-Allow-Origin", "*");
@@ -145,10 +150,28 @@ app.post("/api/getPosts", (req, res) => {
 			return new Error("Authentication error");
 		}
 		const getPostsSQL = "select * from posts";
-		mySqlConnection.query(getPostsSQL, (error, result) => {
+		mySqlConnection.query(getPostsSQL, (error, results) => {
+			if (error) {
+				return new Error(error);
+			}
+			// console.log(results);
+			results.forEach((post) => {
+				post.content = JSON.parse(post.content);
+				const dateTime = new Date(post.timestamp);
+
+				const year = dateTime.getFullYear();
+				const month = (dateTime.getMonth() + 1).toString().padStart(2, "0"); // 月份从0开始，需要加1
+				const day = dateTime.getDate().toString().padStart(2, "0");
+				const hours = dateTime.getHours().toString().padStart(2, "0");
+				const minutes = dateTime.getMinutes().toString().padStart(2, "0");
+
+				const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
+				post.timestamp = formattedDate;
+			});
+
 			res.send({
 				status: 201,
-				posts: result,
+				posts: results,
 			});
 		});
 	});
@@ -164,13 +187,26 @@ app.post("/api/getMyPosts", (req, res) => {
 		}
 		const getMyPostSQL = "select * from posts where user_name=?";
 		const getMyPostParams = [req.body.name];
-		mySqlConnection.query(getMyPostSQL, getMyPostParams, (error, result) => {
+		mySqlConnection.query(getMyPostSQL, getMyPostParams, (error, results) => {
 			if (error) {
-				console.log(error);
+				return new Error(error);
 			}
+			results.forEach((post) => {
+				post.content = JSON.parse(post.content);
+				const dateTime = new Date(post.timestamp);
+
+				const year = dateTime.getFullYear();
+				const month = (dateTime.getMonth() + 1).toString().padStart(2, "0"); // 月份从0开始，需要加1
+				const day = dateTime.getDate().toString().padStart(2, "0");
+				const hours = dateTime.getHours().toString().padStart(2, "0");
+				const minutes = dateTime.getMinutes().toString().padStart(2, "0");
+
+				const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
+				post.timestamp = formattedDate;
+			});
 			res.send({
 				status: 201,
-				myPosts: result,
+				myPosts: results,
 			});
 		});
 	});
@@ -180,7 +216,6 @@ const { createHash } = require("crypto");
 
 app.post("/api/addPost", async (req, res) => {
 	const loggedInToken = req.body.token;
-	// verifyRoomToken(loggedInToken, next)
 	const secretKey = process.env.ACCESS_TOKEN_SECRET;
 	jwt.verify(loggedInToken.split(" ")[1], secretKey, async (err, decoded) => {
 		if (err) {
@@ -189,10 +224,24 @@ app.post("/api/addPost", async (req, res) => {
 
 		const saltC = 10;
 		let salt = await bcrypt.genSalt(saltC);
-		let hashedContent = createHash("sha256").update(req.body.content).digest("hex");
+		let stringify_content = JSON.stringify(req.body.content);
+		let hashedContent = createHash("sha256").update(stringify_content).digest("hex");
 
-		const makePostSQL = "insert into posts values(NULL, ?,?,?,?,?,?,?,?)";
-		const makePostParams = [decoded.email, req.body.name, 0, req.body.title, req.body.content, hashedContent, new Date(), "#ffff"];
+		// add post to blockchain
+		let options = {
+			mode: "text",
+			pythonOptions: ["-u"], // get print results in real-time
+			scriptPath: "../secboardback/blockchain/",
+			args: [stringify_content],
+		};
+
+		PythonShell.run("addStandardBlock.py", options).then((messages) => {
+			// results is an array consisting of messages collected during execution
+			// console.log(messages);
+		});
+
+		const makePostSQL = "insert into posts values(?,?,?,?,?,?,?,?,?)";
+		const makePostParams = [null, decoded.email, req.body.name, 0, req.body.title, stringify_content, hashedContent, new Date(), req.body.post_color];
 		mySqlConnection.query(makePostSQL, makePostParams, (error, result) => {
 			if (error) {
 				console.log(error);
@@ -216,7 +265,7 @@ app.post("/api/addDeleteRequest", async (req, res) => {
 		const makePostSQL = "insert into deletion_requests values(?,?,?,?,?,?,?)";
 		const current = new Date();
 		const date = `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`;
-		const makePostParams = [req.body.post_id, date, decoded.email, req.body.name, req.body.title, req.body.content, "pending"];
+		const makePostParams = [req.body.post_id, date, decoded.email, req.body.name, req.body.title, JSON.stringify(req.body.content), "pending"];
 		mySqlConnection.query(makePostSQL, makePostParams, (error, result) => {
 			if (error) {
 				console.log(error);
@@ -261,6 +310,60 @@ LEFT JOIN
     Votes v ON dr.post_id = v.post_id AND v.email = ?;
 
 		 */
+		const getPostsSQL = "SELECT dr.*,COALESCE(votes.yes_votes, 0) AS yes_votes,COALESCE(votes.no_votes, 0) AS no_votes,CASE WHEN v.vote_yes_or_no = 1 THEN 'voted_yes'WHEN v.vote_yes_or_no = 0 THEN 'voted_no'ELSE '' END AS did_u_vote FROM deletion_requests dr LEFT JOIN (SELECT post_id,SUM(CASE WHEN vote_yes_or_no = 1 THEN 1 ELSE 0 END) AS yes_votes,SUM(CASE WHEN vote_yes_or_no = 0 THEN 1 ELSE 0 END) AS no_votes FROM Votes GROUP BY post_id) votes ON dr.post_id = votes.post_id LEFT JOIN Votes v ON dr.post_id = v.post_id AND v.email = ? WHERE dr.email = ?";
+		const pra = [decoded.email, decoded.email];
+		mySqlConnection.query(getPostsSQL, pra, (error, result) => {
+			if (error) {
+				console.error("Error executing query:", error);
+				return;
+			}
+			result.forEach((post) => {
+				post.originalMessage = JSON.parse(post.originalMessage);
+				// post.newMessage = JSON.parse(post.newMessage);
+			});
+
+			// console.log(result);
+			res.send({
+				status: 201,
+				deletion_requests: result,
+			});
+		});
+	});
+});
+
+app.post("/api/getAllDeleteRequest", (req, res) => {
+	const loggedInToken = req.body.token;
+	// verifyRoomToken(loggedInToken, next)
+	const secretKey = process.env.ACCESS_TOKEN_SECRET;
+	jwt.verify(loggedInToken.split(" ")[1], secretKey, async (err, decoded) => {
+		if (err) {
+			return new Error("Authentication error");
+		}
+		/**
+		 * SELECT 
+    dr.*,
+    COALESCE(votes.yes_votes, 0) AS yes_votes,
+    COALESCE(votes.no_votes, 0) AS no_votes,
+    CASE 
+        WHEN v.vote_yes_or_no = 1 THEN 'voted_yes'
+        WHEN v.vote_yes_or_no = 0 THEN 'voted_no'
+        ELSE ''
+    END AS did_u_vote
+FROM 
+    deletion_requests dr
+LEFT JOIN 
+    (SELECT 
+        post_id,
+        SUM(CASE WHEN vote_yes_or_no = 1 THEN 1 ELSE 0 END) AS yes_votes,
+        SUM(CASE WHEN vote_yes_or_no = 0 THEN 1 ELSE 0 END) AS no_votes
+    FROM 
+        Votes
+    GROUP BY 
+        post_id) votes ON dr.post_id = votes.post_id
+LEFT JOIN 
+    Votes v ON dr.post_id = v.post_id AND v.email = ?;
+
+		 */
 		const getPostsSQL = "SELECT dr.*,COALESCE(votes.yes_votes, 0) AS yes_votes,COALESCE(votes.no_votes, 0) AS no_votes,CASE WHEN v.vote_yes_or_no = 1 THEN 'voted_yes'WHEN v.vote_yes_or_no = 0 THEN 'voted_no'ELSE '' END AS did_u_vote FROM deletion_requests dr LEFT JOIN (SELECT post_id,SUM(CASE WHEN vote_yes_or_no = 1 THEN 1 ELSE 0 END) AS yes_votes,SUM(CASE WHEN vote_yes_or_no = 0 THEN 1 ELSE 0 END) AS no_votes FROM Votes GROUP BY post_id) votes ON dr.post_id = votes.post_id LEFT JOIN Votes v ON dr.post_id = v.post_id AND v.email = ?";
 		const pra = [decoded.email];
 		mySqlConnection.query(getPostsSQL, pra, (error, result) => {
@@ -268,6 +371,11 @@ LEFT JOIN
 				console.error("Error executing query:", error);
 				return;
 			}
+			result.forEach((post) => {
+				post.originalMessage = JSON.parse(post.originalMessage);
+				// post.newMessage = JSON.parse(post.newMessage);
+			});
+
 			// console.log(result);
 			res.send({
 				status: 201,
@@ -311,7 +419,7 @@ app.post("/api/addEditRequest", async (req, res) => {
 		const add_edit_request_SQL = "insert into edit_requests values(?,?,?,?,?,?,?,?,?)";
 		const current = new Date();
 		const date = `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`;
-		const add_edit_request_Params = [req.body.post_id, date, decoded.email, req.body.name, req.body.title, req.body.content, "nothing edited", "nothing edited", "pending"];
+		const add_edit_request_Params = [req.body.post_id, date, decoded.email, req.body.name, req.body.origin_title, JSON.stringify(req.body.origin_content), req.body.title, JSON.stringify(req.body.content), "pending"];
 		mySqlConnection.query(add_edit_request_SQL, add_edit_request_Params, (error, result) => {
 			if (error) {
 				console.log(error);
@@ -357,6 +465,60 @@ LEFT JOIN
     Votes v ON er.post_id = v.post_id AND v.email = ?;
 
 		 */
+		const getPostsSQL = "SELECT er.*,COALESCE(votes.yes_votes, 0) AS yes_votes,COALESCE(votes.no_votes, 0) AS no_votes,CASE WHEN v.vote_yes_or_no = 1 THEN 'voted_yes'WHEN v.vote_yes_or_no = 0 THEN 'voted_no'ELSE '' END AS did_u_vote FROM edit_requests er LEFT JOIN (SELECT post_id,SUM(CASE WHEN vote_yes_or_no = 1 THEN 1 ELSE 0 END) AS yes_votes,SUM(CASE WHEN vote_yes_or_no = 0 THEN 1 ELSE 0 END) AS no_votes FROM Votes GROUP BY post_id) votes ON er.post_id = votes.post_id LEFT JOIN Votes v ON er.post_id = v.post_id AND v.email = ? WHERE er.email = ?;";
+		const pra = [decoded.email, decoded.email];
+		mySqlConnection.query(getPostsSQL, pra, (error, result) => {
+			if (error) {
+				console.error("Error executing query:", error);
+				return;
+			}
+			result.forEach((post) => {
+				post.originMessage = JSON.parse(post.originMessage);
+				post.newMessage = JSON.parse(post.newMessage);
+			});
+
+			// console.log(result);
+			res.send({
+				status: 201,
+				edit_requests: result,
+			});
+		});
+	});
+});
+
+app.post("/api/getAllEditRequest", (req, res) => {
+	const loggedInToken = req.body.token;
+	// verifyRoomToken(loggedInToken, next)
+	const secretKey = process.env.ACCESS_TOKEN_SECRET;
+	jwt.verify(loggedInToken.split(" ")[1], secretKey, async (err, decoded) => {
+		if (err) {
+			return new Error("Authentication error");
+		}
+		/**
+		 * SELECT 
+    er.*,
+    COALESCE(votes.yes_votes, 0) AS yes_votes,
+    COALESCE(votes.no_votes, 0) AS no_votes,
+    CASE 
+        WHEN v.vote_yes_or_no = 1 THEN 'voted_yes'
+        WHEN v.vote_yes_or_no = 0 THEN 'voted_no'
+        ELSE ''
+    END AS did_u_vote
+FROM 
+    edit_requests er
+LEFT JOIN 
+    (SELECT 
+        post_id,
+        SUM(CASE WHEN vote_yes_or_no = 1 THEN 1 ELSE 0 END) AS yes_votes,
+        SUM(CASE WHEN vote_yes_or_no = 0 THEN 1 ELSE 0 END) AS no_votes
+    FROM 
+        Votes
+    GROUP BY 
+        post_id) votes ON er.post_id = votes.post_id
+LEFT JOIN 
+    Votes v ON er.post_id = v.post_id AND v.email = ?;
+
+		 */
 		const getPostsSQL = "SELECT er.*,COALESCE(votes.yes_votes, 0) AS yes_votes,COALESCE(votes.no_votes, 0) AS no_votes,CASE WHEN v.vote_yes_or_no = 1 THEN 'voted_yes'WHEN v.vote_yes_or_no = 0 THEN 'voted_no'ELSE '' END AS did_u_vote FROM edit_requests er LEFT JOIN (SELECT post_id,SUM(CASE WHEN vote_yes_or_no = 1 THEN 1 ELSE 0 END) AS yes_votes,SUM(CASE WHEN vote_yes_or_no = 0 THEN 1 ELSE 0 END) AS no_votes FROM Votes GROUP BY post_id) votes ON er.post_id = votes.post_id LEFT JOIN Votes v ON er.post_id = v.post_id AND v.email = ?;";
 		const pra = [decoded.email];
 		mySqlConnection.query(getPostsSQL, pra, (error, result) => {
@@ -364,7 +526,12 @@ LEFT JOIN
 				console.error("Error executing query:", error);
 				return;
 			}
-			console.log(result);
+			result.forEach((post) => {
+				post.originMessage = JSON.parse(post.originMessage);
+				post.newMessage = JSON.parse(post.newMessage);
+			});
+
+			// console.log(result);
 			res.send({
 				status: 201,
 				edit_requests: result,
