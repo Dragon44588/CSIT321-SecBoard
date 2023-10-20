@@ -9,11 +9,13 @@
 				<div style="width: 100%; overflow: auto">
 					<h1 style="color: #136583">Original Post</h1>
 					<h2>{{ edit_popup.originTitle }}</h2>
-					<h3>{{ edit_popup.originMessage }}</h3>
+					<!-- <h3>{{ edit_popup.originMessage }}</h3> -->
+					<QuillEditor v-model:content="edit_popup.originMessage.ops" theme="bubble" :options="editorOptions" />
 
 					<h1 style="color: #136583; margin-top: 20px; border-top: 1px solid gray; padding-top: 20px">Edited Post</h1>
 					<h2>{{ edit_popup.originTitle }}</h2>
-					<h3>{{ edit_popup.originMessage }} <span style="color: red">new added/edited text shown in red</span></h3>
+					<!-- <h3>{{ edit_popup.originMessage }} <span style="color: red">new added/edited text shown in red</span></h3> -->
+					<QuillEditor v-model:content="edit_popup.newMessage.ops" theme="bubble" :options="editorOptions" />
 				</div>
 			</div>
 		</div>
@@ -74,6 +76,9 @@
 <script setup>
 import { reactive, ref } from "vue";
 import api from "@/api/APIs";
+import { QuillEditor } from "@vueup/vue-quill";
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
+import "@vueup/vue-quill/dist/vue-quill.bubble.css";
 const mytoken = window.sessionStorage.getItem("token");
 
 const editReuqestsList = ref();

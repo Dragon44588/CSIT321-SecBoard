@@ -28,7 +28,8 @@
 				<h2>{{ delete_popup.originalTitle }}</h2>
 
 				<h1 style="color: #136583; margin-top: 20px">Post Content:</h1>
-				<h3>{{ delete_popup.originalMessage }}</h3>
+				<!-- <h3>{{ delete_popup.originalMessage }}</h3> -->
+				<QuillEditor v-model:content="delete_popup.originalMessage.ops" theme="bubble" :options="editorOptions" />
 			</div>
 		</div>
 	</div>
@@ -73,6 +74,9 @@
 <script setup>
 import { reactive, ref } from "vue";
 import api from "@/api/APIs";
+import { QuillEditor } from "@vueup/vue-quill";
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
+import "@vueup/vue-quill/dist/vue-quill.bubble.css";
 const mytoken = window.sessionStorage.getItem("token");
 
 const deleteReuqestsList = ref();

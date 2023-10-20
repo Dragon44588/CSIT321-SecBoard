@@ -28,7 +28,8 @@
 				<h2>{{ report_popup.originalTitle }}</h2>
 
 				<h1 style="color: #136583; margin-top: 20px">Post Content:</h1>
-				<h3>{{ report_popup.originalMessage }}</h3>
+				<!-- <h3>{{ report_popup.originalMessage }}</h3> -->
+				<QuillEditor v-model:content="report_popup.originalMessage.ops" theme="bubble" :options="editorOptions" />
 			</div>
 		</div>
 	</div>
@@ -73,6 +74,9 @@
 <script setup>
 import { reactive, ref } from "vue";
 import api from "@/api/APIs";
+import { QuillEditor } from "@vueup/vue-quill";
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
+import "@vueup/vue-quill/dist/vue-quill.bubble.css";
 const mytoken = window.sessionStorage.getItem("token");
 
 const reportReuqestsList = ref();
@@ -101,7 +105,7 @@ const handle_report_request_form = reactive({
 function handleReportRequest(post, yes_or_no) {
 	handle_report_request_form.post_id = post.post_id;
 	handle_report_request_form.yes_or_no = yes_or_no;
-	api.handleDeleteRequest(handle_report_request_form).then((res) => {
+	api.handleReportRequest(handle_report_request_form).then((res) => {
 		if (res.status === 200) {
 			console.log("handled a report request");
 			api.getDeleteRequest(authForm).then((res) => {

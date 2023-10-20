@@ -112,7 +112,7 @@ const handleDeleteRequest = (data) => {
 
 const handleReportRequest = (data) => {
 	return requestAPI.post({
-		url: "/handleReportRequest",
+		url: "/handle_report_request",
 		data,
 	});
 };

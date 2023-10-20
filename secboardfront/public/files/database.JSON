@@ -570,15 +570,51 @@
             "Data": "{\"ops\":[{\"insert\":\"I will be edited\\n\"}]}",
             "Proof of work": 154,
             "Correction hash": "Correction"
+        },
+        {
+            "Previous Hash": "0019a108f381583cdaee3fc19d3b90931e5fcf253fdaf960584b2668eec72bf2",
+            "Data": "{\"ops\":[{\"insert\":\"abcd123\\n\"}]}",
+            "Proof of work": 244,
+            "Correction hash": "Correction"
+        },
+        {
+            "Previous Hash": "00f3644d49934630d993870262a2b56d0c6d0f64dce1b37cd909094eb8ccc5b0",
+            "Data": "{\"ops\":[{\"insert\":\"123abc\\n\"}]}",
+            "Proof of work": 274,
+            "Correction hash": "Correction"
+        },
+        {
+            "Previous Hash": "006d3b333547c67b3ea82ff1026c7bfc72c245d8631382ee17525707e9c3729a",
+            "Data": "{\"ops\":[{\"insert\":\"REPORT REPORT REPORT\\n\"}]}",
+            "Proof of work": 17,
+            "Correction hash": "Correction"
+        },
+        {
+            "Previous Hash": "00c68a2122ee15975496f127868951daa2bd285575b7aa07c84eb5ce2e08e4b0",
+            "Data": "{\"ops\":[{\"insert\":\"I WILL BE DELETED 123123123\\n\"}]}",
+            "Proof of work": 116,
+            "Correction hash": "Correction"
+        },
+        {
+            "Previous Hash": "004ed40cdb1bbad14840c286a6c72c05ef5192e35d9a7df746b780331b5834ce",
+            "Data": "{\"ops\":[{\"insert\":\"I WILL BE EDITED abcd abcd abcd\\n\"}]}",
+            "Proof of work": 147,
+            "Correction hash": "Correction"
+        },
+        {
+            "Previous Hash": "00f2006134334cc86bd4034f56d172b0c9ea44c17ee95b9049ded9edc56c41b9",
+            "Data": "{\"ops\":[{\"insert\":\"123\\n\"}]}",
+            "Proof of work": 384,
+            "Correction hash": "Correction"
         }
     ],
     "Correction chain": [
         {
             "Previous hash": "00c7a3be93f1bf7c0f586ac83c6849689bf43dd2d2faf497749ff015ead62b05",
             "Data": "undefined",
-            "Proof of work": 139,
+            "Proof of work": 476,
             "Election hash": "Election Hash TBI",
-            "Standard head hash": "000e23881f5965e7336be6c0b05be4ee1fda5bdd4d3205dd375f08dbf3b0494e",
+            "Standard head hash": "00f2006134334cc86bd4034f56d172b0c9ea44c17ee95b9049ded9edc56c41b9",
             "Successor hash": "006cf8b3c4847664252be8ddfb48b3f9abed07bdbf874b26779d7771c8b02709",
             "Block replace number": 2
         }

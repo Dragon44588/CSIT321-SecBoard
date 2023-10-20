@@ -446,22 +446,49 @@ app.post("/api/handle_delete_request", (req, res) => {
 			return new Error("Authentication error");
 		}
 
-		if (handleDeleteRequest(req.body.post_id, req.body.yes_or_no, decoded.email)) {
+		// if (handleDeleteRequest(req.body.post_id, req.body.yes_or_no, decoded.email)) {
+		// 	res.send({
+		// 		status: 200,
+		// 	});
+		// }
+		const accept_delete_SQL = "insert into Votes values (?, ?, ?, ?)";
+		const accept_delte_Param = [req.body.post_id, "Delete", req.body.yes_or_no, decoded.email];
+		mySqlConnection.query(accept_delete_SQL, accept_delte_Param, (error, result) => {
+			if (error) {
+				return console.log(error);
+			}
 			res.send({
 				status: 200,
 			});
-		}
+		});
 	});
 });
-function handleDeleteRequest(id, yes_or_no, email) {
-	const accept_delete_SQL = "insert into Votes values (?, ?, ?, ?)";
-	const accept_delte_Param = [id, "Delete", yes_or_no, email];
-	mySqlConnection.query(accept_delete_SQL, accept_delte_Param, (error, result) => {
-		if (error) {
-			return console.log(error);
+app.post("/api/handle_report_request", (req, res) => {
+	const loggedInToken = req.body.token;
+	// verifyRoomToken(loggedInToken, next)
+	const secretKey = process.env.ACCESS_TOKEN_SECRET;
+	jwt.verify(loggedInToken.split(" ")[1], secretKey, async (err, decoded) => {
+		if (err) {
+			return new Error("Authentication error");
 		}
+
+		// if (handleDeleteRequest(req.body.post_id, req.body.yes_or_no, decoded.email)) {
+		// 	res.send({
+		// 		status: 200,
+		// 	});
+		// }
+		const accept_delete_SQL = "insert into Votes values (?, ?, ?, ?)";
+		const accept_delte_Param = [req.body.post_id, "report", req.body.yes_or_no, decoded.email];
+		mySqlConnection.query(accept_delete_SQL, accept_delte_Param, (error, result) => {
+			if (error) {
+				return console.log(error);
+			}
+			res.send({
+				status: 200,
+			});
+		});
 	});
-}
+});
 
 app.post("/api/addReportRequest", async (req, res) => {
 	//Add error handling, Check if it's already reported or already in delete request and if admin reports immediatley goes to delete requests
@@ -541,7 +568,7 @@ LEFT JOIN
 
 		 */
 		// const getPostsSQL = "SELECT rr.*,COALESCE(votes.yes_votes, 0) AS yes_votes,COALESCE(votes.no_votes, 0) AS no_votes,CASE WHEN v.vote_yes_or_no = 1 THEN 'voted_yes'WHEN v.vote_yes_or_no = 0 THEN 'voted_no'ELSE '' END AS did_u_vote FROM report_requests rr LEFT JOIN (SELECT post_id,SUM(CASE WHEN vote_yes_or_no = 1 THEN 1 ELSE 0 END) AS yes_votes,SUM(CASE WHEN vote_yes_or_no = 0 THEN 1 ELSE 0 END) AS no_votes FROM Votes WHERE request_type = 'report' GROUP BY post_id) votes ON rr.post_id = votes.post_id LEFT JOIN Votes v ON rr.post_id = v.post_id AND v.email = ?";
-		const getPostsSQL = "SELECT rr.*, COALESCE(votes.yes_votes, 0) AS yes_votes, COALESCE(votes.no_votes, 0) AS no_votes, CASE WHEN COALESCE(votes.yes_votes, 0) = 0 AND COALESCE(votes.no_votes, 0) = 0 THEN '' WHEN v.vote_yes_or_no = 1 THEN 'voted_yes' WHEN v.vote_yes_or_no = 0 THEN 'voted_no' ELSE '' END AS did_u_vote FROM report_requests rr LEFT JOIN (SELECT post_id, SUM(CASE WHEN vote_yes_or_no = 1 THEN 1 ELSE 0 END) AS yes_votes, SUM(CASE WHEN vote_yes_or_no = 0 THEN 1 ELSE 0 END) AS no_votes FROM Votes WHERE request_type = 'report' GROUP BY post_id) votes ON rr.post_id = votes.post_id LEFT JOIN Votes v ON rr.post_id = v.post_id AND v.email = ? AND v.request_type = 'report';";
+		const getPostsSQL = "SELECT rr.*, COALESCE(votes.yes_votes, 0) AS yes_votes, COALESCE(votes.no_votes, 0) AS no_votes, CASE WHEN COALESCE(votes.yes_votes, 0) = 0 AND COALESCE(votes.no_votes, 0) = 0 THEN '' WHEN v.vote_yes_or_no = 1 THEN 'voted_yes' WHEN v.vote_yes_or_no = 0 THEN 'voted_no' ELSE '' END AS did_u_vote FROM report_requests rr LEFT JOIN (SELECT post_id, SUM(CASE WHEN vote_yes_or_no = 1 THEN 1 ELSE 0 END) AS yes_votes, SUM(CASE WHEN vote_yes_or_no = 0 THEN 1 ELSE 0 END) AS no_votes FROM Votes WHERE request_type = 'report' GROUP BY post_id) votes ON rr.post_id = votes.post_id LEFT JOIN Votes v ON rr.post_id = v.post_id AND v.email = ? AND v.request_type = 'Report';";
 		const pra = [decoded.email];
 		mySqlConnection.query(getPostsSQL, pra, (error, result) => {
 			if (error) {
@@ -563,54 +590,54 @@ LEFT JOIN
 	});
 });
 
-app.post("/api/handleReportRequest", (req, res) => {
-	const loggedInToken = req.body.token;
-	const enoughNoVotes = 3;
-	// verifyRoomToken(loggedInToken, next)
-	const secretKey = process.env.ACCESS_TOKEN_SECRET;
-	const removeRequestSQL = "delete from report_requests where post_id = ?;"; //Removes From report Request table
-	jwt.verify(loggedInToken.split(" ")[1], secretKey, async (err, decoded) => {
-		if (err) {
-			return new Error("Authentication error");
-		} else if (req.body.yes_or_no === 1) {
-			//If the vote is yes (only needs one yes vote for it to be voted on deletion)
-			mySqlConnection.query(removeRequestSQL, [req.body.post_id], (error, result) => {
-				if (error) {
-					return console.log(error);
-				}
-				console.log("id:" + req.body.post_id + ", email:" + req.body.email + ", name:" + req.body.name + ", title:" + req.body.title + ", content:" + req.body.content);
-				addDeleteRequest(req.body.post_id, req.body.email, req.body.name, req.body.title, req.body.content); //Adds delete request
-				handleDeleteRequest(req.body.post_id, req.body.yes_or_no, decoded.email); //Adds vote toward delete request
-				res.send({
-					status: 200,
-				});
-			});
-		} else {
-			//If the vote is no
-			const accept_report_SQL = "insert into Votes values (?, ?, ?, ?)";
-			const accept_report_Param = [req.body.post_id, "Report", req.body.yes_or_no, decoded.email];
-			mySqlConnection.query(accept_report_SQL, accept_report_Param, (error, result) => {
-				if (error) {
-					return console.log(error);
-				}
-				const voteCountSQL = "select COUNT(post_id) as votes from votes where post_id = ? && vote_yes_or_no = 0 && request_type = 'Report';";
-				mySqlConnection.query(voteCountSQL, [req.body.post_id], (error, result) => {
-					if (result[0].votes >= enoughNoVotes) {
-						//remove post from report request
-						mySqlConnection.query(removeRequestSQL, [req.body.post_id], (error, result) => {
-							if (error) {
-								return console.log(error);
-							}
-						});
-					}
-				});
-				res.send({
-					status: 200,
-				});
-			});
-		}
-	});
-});
+// app.post("/api/handleReportRequest", (req, res) => {
+// 	const loggedInToken = req.body.token;
+// 	const enoughNoVotes = 3;
+// 	// verifyRoomToken(loggedInToken, next)
+// 	const secretKey = process.env.ACCESS_TOKEN_SECRET;
+// 	const removeRequestSQL = "delete from report_requests where post_id = ?;"; //Removes From report Request table
+// 	jwt.verify(loggedInToken.split(" ")[1], secretKey, async (err, decoded) => {
+// 		if (err) {
+// 			return new Error("Authentication error");
+// 		} else if (req.body.yes_or_no === 1) {
+// 			//If the vote is yes (only needs one yes vote for it to be voted on deletion)
+// 			mySqlConnection.query(removeRequestSQL, [req.body.post_id], (error, result) => {
+// 				if (error) {
+// 					return console.log(error);
+// 				}
+// 				console.log("id:" + req.body.post_id + ", email:" + req.body.email + ", name:" + req.body.name + ", title:" + req.body.title + ", content:" + req.body.content);
+// 				addDeleteRequest(req.body.post_id, req.body.email, req.body.name, req.body.title, req.body.content); //Adds delete request
+// 				handleDeleteRequest(req.body.post_id, req.body.yes_or_no, decoded.email); //Adds vote toward delete request
+// 				res.send({
+// 					status: 200,
+// 				});
+// 			});
+// 		} else {
+// 			//If the vote is no
+// 			const accept_report_SQL = "insert into Votes values (?, ?, ?, ?)";
+// 			const accept_report_Param = [req.body.post_id, "Report", req.body.yes_or_no, decoded.email];
+// 			mySqlConnection.query(accept_report_SQL, accept_report_Param, (error, result) => {
+// 				if (error) {
+// 					return console.log(error);
+// 				}
+// 				const voteCountSQL = "select COUNT(post_id) as votes from votes where post_id = ? && vote_yes_or_no = 0 && request_type = 'Report';";
+// 				mySqlConnection.query(voteCountSQL, [req.body.post_id], (error, result) => {
+// 					if (result[0].votes >= enoughNoVotes) {
+// 						//remove post from report request
+// 						mySqlConnection.query(removeRequestSQL, [req.body.post_id], (error, result) => {
+// 							if (error) {
+// 								return console.log(error);
+// 							}
+// 						});
+// 					}
+// 				});
+// 				res.send({
+// 					status: 200,
+// 				});
+// 			});
+// 		}
+// 	});
+// });
 
 app.post("/api/addEditRequest", async (req, res) => {
 	const loggedInToken = req.body.token;
@@ -626,7 +653,7 @@ app.post("/api/addEditRequest", async (req, res) => {
 		const add_edit_request_SQL = "insert into edit_requests values(?,?,?,?,?,?,?,?,?)";
 		const current = new Date();
 		const date = `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`;
-		const add_edit_request_Params = [req.body.post_id, date, decoded.email, req.body.name, req.body.origin_title, JSON.stringify(req.body.origin_content), req.body.title, JSON.stringify(req.body.content), "pending"];
+		const add_edit_request_Params = [req.body.post_id, date, decoded.email, req.body.name, req.body.origin_title, req.body.origin_content, req.body.title, req.body.content, "pending"];
 		mySqlConnection.query(add_edit_request_SQL, add_edit_request_Params, (error, result) => {
 			if (error) {
 				console.log(error);
