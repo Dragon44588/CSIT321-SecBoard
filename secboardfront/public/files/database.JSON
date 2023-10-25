@@ -3,44 +3,33 @@
         {
             "Previous Hash": "Genesis",
             "Data": "Test",
-            "Proof of work": 211,
+            "Proof of work": 230,
             "Correction hash": "Correction"
         },
         {
-            "Previous Hash": "b84eaf1e5daa74c2be416e144f886aa572e8466caa74a64fa6f82c3b2059fc9d",
-            "Data": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
-            "Proof of work": "15",
+            "Previous Hash": "00c97db7a756e748d4e0d0657285416997310027932c2579bbe6dcc134e1d6fd",
+            "Data": "157b96cdd294774990fe6b1ee5a19bf6dd07d744791970aef1358f752b44d7cb",
+            "Proof of work": "561",
             "Correction hash": "Correction"
         },
         {
-            "Previous Hash": "dcd000924555faec5a5ab5dd8e8972edab22f08a12f7a31d9492a516d58925ce",
-            "Data": "3f32fb79fdc9f7d766c9b6a9c29cbb601f1a63ea9651981f9a666498b6b86e92",
-            "Proof of work": "166",
+            "Previous Hash": "002acd2a80830ff50fcf2d2beddbcfb458c51f15dfdd6e2f8a44dc9acc32dea6",
+            "Data": "e5910d7c0a314c7ff266f194fa1190479986c641df8f89c700d13d9629fc2d50",
+            "Proof of work": "116",
             "Correction hash": "Correction"
         },
         {
-            "Previous Hash": "fc608c8fcad8bf31d4ae6905976ed1cef3187590a4a5e6d6a01ec76de9e566e5",
-            "Data": "2944d157a9d6252c12e9b843ecc973cc5a8aee3b80f3949dc6f4d28b53acaf6d",
-            "Proof of work": "567",
+            "Previous Hash": "00ca06af81f262728a634539d9b95e9ac01af2a71c137500b4abfc6893448469",
+            "Data": "2e628adece1243d197d424028b912d1b4053bb49937e3e703ba70ceda36c3495",
+            "Proof of work": "94",
             "Correction hash": "Correction"
         },
-        null,
         {
-            "Previous Hash": "CORRECTED",
-            "Data": "e591f643d9cd201a89d277773e0d331d36763985e1e04c2aa421f3654fb77b12",
-            "Proof of work": 71,
-            "Correction hash": "ab79bf0637d79f726b1dbce65e92fea07dae8237ce876403cd3586cbed89227b"
+            "Previous Hash": "007799aa896d1654545271a5ce457dce393b2976c10320f5346321780c84c90f",
+            "Data": "24deabf0b1c11bbc5bbc8760cc020d8e33abdea7189bbe42b6022456a34961b1",
+            "Proof of work": 495,
+            "Correction hash": "Correction"
         }
     ],
-    "Correction chain": [
-        {
-            "Previous hash": "c3f16c50a026525e7989626a1929832ddb03c43e2e233b68835c8c779608fc95",
-            "Data": "24f462a5098b1145b2002d06a70a8e1ca442b7541ef7724ec9ea47a04f29a01c",
-            "Proof of work": "12",
-            "Election hash": "Election Hash TBI",
-            "Standard head hash": "8399668a2c09cfad62b9736670f432e4b80d8b93dd42243abbc03ad19a8c2db3",
-            "Successor hash": "6b6dd9dc1802ad57fc8e54e55fd5e8601e756ef98b893acbacc81ac44eaeca98",
-            "Block replace number": "5"
-        }
-    ]
+    "Correction chain": []
 }

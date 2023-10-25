@@ -100,6 +100,9 @@ class standardChain: # class defining the standard chain by creating a list of s
         print(output)                
 
     def ProofOfWorkGenesis(self, previousHash, data, correctionHash): # generates hash and provides nonce value for initialising genesis block
+        # hash data
+        data = hashlib.sha256(data.encode('utf-8')).hexdigest()
+
         nonceValue = -1 # ensures nonce counting will start at 0
         hash1 = ''
         # find nonce value and generate block along with its hash
@@ -107,10 +110,10 @@ class standardChain: # class defining the standard chain by creating a list of s
             nonceValue = nonceValue + 1
             newBlock = json.dumps({
     
-                'Previous Hash': previousHash,
-                'Hash of Data': data, 
-                'Proof of Work': nonceValue,
-                'Correction Hash': correctionHash
+                'Previous Hash': str(previousHash),
+                'Hash of Data': str(data), 
+                'Proof of Work': str(nonceValue),
+                'Correction Hash': str(correctionHash)
     
             }, sort_keys=True, indent=4, separators=(',', ': '))
             hash1 = hashlib.sha256(newBlock.encode('utf-8')).hexdigest()
@@ -119,18 +122,21 @@ class standardChain: # class defining the standard chain by creating a list of s
         return hash1, nonceValue
 
     def ProofOfWork(self, previousHash, data, correctionHash): # generates nonce value for standard chain
+        # hash data
+        data = hashlib.sha256(data.encode('utf-8')).hexdigest()
+
         nonceValue = -1 # ensures nonce counting will start at 0
         hash1 = ''
         # find nonce value and generate block along with its hash
-        while not str(hash1).startswith(difficulty): # four zeroes currently chosen as arbitrary difficulty
+        while not str(hash1).startswith(difficulty): # zeroes chosen as arbitrary difficulty
           
             nonceValue = nonceValue + 1
             newBlock = json.dumps({
     
-                'Previous Hash': previousHash,
-                'Hash of Data': data,
-                'Proof of Work': nonceValue,
-                'Correction Hash': correctionHash
+                'Previous Hash': str(previousHash),
+                'Hash of Data': str(data),
+                'Proof of Work': str(nonceValue),
+                'Correction Hash': str(correctionHash)
     
             }, sort_keys=True, indent=4, separators=(',', ': '))
             hash1 = hashlib.sha256(newBlock.encode('utf-8')).hexdigest()
@@ -139,6 +145,9 @@ class standardChain: # class defining the standard chain by creating a list of s
         return nonceValue 
 
     def ProofOfWorkCorrection(self, previousHash, data, electionHash, successorHash, headHash, block_replace_number): # generates nonce value for correction chain
+        # hash data
+        data = hashlib.sha256(data.encode('utf-8')).hexdigest()
+
         nonceValue = -1 # ensures nonce counting will start at 0
         hash1 = ''
         # find nonce value and generate block along with its hash
@@ -146,13 +155,13 @@ class standardChain: # class defining the standard chain by creating a list of s
             nonceValue = nonceValue + 1
             newBlock = json.dumps({
     
-                'Previous Hash': previousHash,
-                'Hash of Data': data,
-                'Proof of Work': nonceValue,
-                'Election Hash': electionHash,
-                'Successor Hash': successorHash,
-                'Standard Head Hash': headHash,
-                'Block Replace Number': block_replace_number
+                'Previous Hash': str(previousHash),
+                'Hash of Data': str(data),
+                'Proof of Work': str(nonceValue),
+                'Election Hash': str(electionHash),
+                'Successor Hash': str(successorHash),
+                'Standard Head Hash': str(headHash),
+                'Block Replace Number': str(block_replace_number)
     
             }, sort_keys=True, indent=4, separators=(',', ': '))
             hash1 = hashlib.sha256(newBlock.encode('utf-8')).hexdigest()
@@ -178,13 +187,13 @@ class standardChain: # class defining the standard chain by creating a list of s
             previousBlockIndex = len(self.correctionList) - 1
             correctionBlock = json.dumps({
     
-                'Previous Hash': self.correctionList[previousBlockIndex].previousHash,
-                'Hash of Data': self.correctionList[previousBlockIndex].data,
-                'Proof of Work': self.correctionList[previousBlockIndex].proofOfWork,
-                'Election Hash': self.correctionList[previousBlockIndex].electionHash,
-                'Successor Hash': self.correctionList[previousBlockIndex].successorHash,
-                'Standard Head Hash': self.correctionList[previousBlockIndex].standardHeadHash,
-                'Block Replace Number': self.correctionList[previousBlockIndex].blockReplaceNumber
+                'Previous Hash': str(self.correctionList[previousBlockIndex].previousHash),
+                'Hash of Data': str(self.correctionList[previousBlockIndex].data),
+                'Proof of Work': str(self.correctionList[previousBlockIndex].proofOfWork),
+                'Election Hash': str(self.correctionList[previousBlockIndex].electionHash),
+                'Successor Hash': str(self.correctionList[previousBlockIndex].successorHash),
+                'Standard Head Hash': str(self.correctionList[previousBlockIndex].standardHeadHash),
+                'Block Replace Number': str(self.correctionList[previousBlockIndex].blockReplaceNumber)
     
             }, sort_keys=True, indent=4, separators=(',', ': '))
             correctionHash = hashlib.sha256(correctionBlock.encode('utf-8')).hexdigest()
@@ -198,10 +207,10 @@ class standardChain: # class defining the standard chain by creating a list of s
         else:
             newBlock = json.dumps({
     
-                'Previous Hash': self.chainList[previousBlockIndex].previousHash,
-                'Hash of Data': hashlib.sha256((self.chainList[previousBlockIndex].data).encode('utf-8')).hexdigest(),
-                'Proof of Work': self.chainList[previousBlockIndex].proofOfWork,
-                'Correction Hash': self.chainList[previousBlockIndex].correctionHash
+                'Previous Hash': str(self.chainList[previousBlockIndex].previousHash),
+                'Hash of Data': str(hashlib.sha256((self.chainList[previousBlockIndex].data).encode('utf-8')).hexdigest()),
+                'Proof of Work': str(self.chainList[previousBlockIndex].proofOfWork),
+                'Correction Hash': str(self.chainList[previousBlockIndex].correctionHash)
     
             }, sort_keys=True, indent=4, separators=(',', ': '))
             hashOfPrevious = hashlib.sha256(newBlock.encode('utf-8')).hexdigest()
@@ -233,14 +242,17 @@ class standardChain: # class defining the standard chain by creating a list of s
         
 
     def createCorrectionBlock(self, data, electionHash, block_replace_number): # this occurs after a successful election to correct a block
+        # hash data
+        data = hashlib.sha256(data.encode('utf-8')).hexdigest()
+
         if not self.correctionList: # nothing has been added to the correction chain and thus data must be taken from the genesis of the standard chain
             # get the hash of the genesis block
             newBlock = json.dumps({
     
-                'Previous Hash': self.chainList[0].previousHash,
-                'Hash of Data': hashlib.sha256((self.chainList[0].data).encode('utf-8')).hexdigest(),
-                'Proof of Work': self.chainList[0].proofOfWork,
-                'Correction Hash': self.chainList[0].correctionHash
+                'Previous Hash': str(self.chainList[0].previousHash),
+                'Hash of Data': str(hashlib.sha256((self.chainList[0].data).encode('utf-8')).hexdigest()),
+                'Proof of Work': str(self.chainList[0].proofOfWork),
+                'Correction Hash': str(self.chainList[0].correctionHash)
     
             }, sort_keys=True, indent=4, separators=(',', ': '))
             hashOfPrevious = hashlib.sha256(newBlock.encode('utf-8')).hexdigest()
@@ -251,10 +263,10 @@ class standardChain: # class defining the standard chain by creating a list of s
             try: # if there is no successor block, there will be an index error
                 successorBlock = json.dumps({
         
-                    'Previous Hash': self.chainList[block_replace_number].previousHash,
-                    'Hash of Data': hashlib.sha256((self.chainList[block_replace_number].data).encode('utf-8')).hexdigest(),
-                    'Proof of Work': self.chainList[block_replace_number].proofOfWork,
-                    'Correction Hash': self.chainList[block_replace_number].correctionHash
+                    'Previous Hash': str(self.chainList[block_replace_number].previousHash),
+                    'Hash of Data': str(hashlib.sha256((self.chainList[block_replace_number].data).encode('utf-8')).hexdigest()),
+                    'Proof of Work': str(self.chainList[block_replace_number].proofOfWork),
+                    'Correction Hash': str(self.chainList[block_replace_number].correctionHash)
         
                 }, sort_keys=True, indent=4, separators=(',', ': '))
                 newSuccessorHash = hashlib.sha256(successorBlock.encode('utf-8')).hexdigest()
@@ -264,10 +276,10 @@ class standardChain: # class defining the standard chain by creating a list of s
             # get hash of head of standard chain
             headBlock = json.dumps({
     
-                'Previous Hash': self.chainList[-1].previousHash, # [-1] gets the last element in the list
-                'Hash of Data': hashlib.sha256((self.chainList[-1].data).encode('utf-8')).hexdigest(),
-                'Proof of Work': self.chainList[-1].proofOfWork,
-                'Correction Hash': self.chainList[-1].correctionHash
+                'Previous Hash': str(self.chainList[-1].previousHash), # [-1] gets the last element in the list
+                'Hash of Data': str(hashlib.sha256((self.chainList[-1].data).encode('utf-8')).hexdigest()),
+                'Proof of Work': str(self.chainList[-1].proofOfWork),
+                'Correction Hash': str(self.chainList[-1].correctionHash)
     
             }, sort_keys=True, indent=4, separators=(',', ': '))
             headHash = hashlib.sha256(headBlock.encode('utf-8')).hexdigest()
@@ -294,13 +306,13 @@ class standardChain: # class defining the standard chain by creating a list of s
         # get the hash of the previous correction block
         newBlock = json.dumps({
     
-            'Previous Hash': self.correctionList[previousBlockIndex].previousHash,
-            'Hash of Data': hashlib.sha256((self.correctionList[previousBlockIndex].data).encode('utf-8')).hexdigest(),
-            'Proof of Work': self.correctionList[previousBlockIndex].proofOfWork,
-            'Election Hash': self.correctionList[previousBlockIndex].electionHash,
-            'Successor Hash': self.correctionList[previousBlockIndex].successorHash,
-            'Standard Head Hash': self.correctionList[previousBlockIndex].standardHeadHash,
-            'Block Replace Number': self.correctionList[previousBlockIndex].blockReplaceNumber
+            'Previous Hash': str(self.correctionList[previousBlockIndex].previousHash),
+            'Hash of Data': str(hashlib.sha256((self.correctionList[previousBlockIndex].data).encode('utf-8')).hexdigest()),
+            'Proof of Work': str(self.correctionList[previousBlockIndex].proofOfWork),
+            'Election Hash': str(self.correctionList[previousBlockIndex].electionHash),
+            'Successor Hash': str(self.correctionList[previousBlockIndex].successorHash),
+            'Standard Head Hash': str(self.correctionList[previousBlockIndex].standardHeadHash),
+            'Block Replace Number': str(self.correctionList[previousBlockIndex].blockReplaceNumber)
 
         }, sort_keys=True, indent=4, separators=(',', ': '))
         hashOfPrevious = hashlib.sha256(newBlock.encode('utf-8')).hexdigest()
@@ -311,10 +323,10 @@ class standardChain: # class defining the standard chain by creating a list of s
         try: # if there is no successor block, there will be an index error
             successorBlock = json.dumps({
         
-                'Previous Hash': self.chainList[block_replace_number].previousHash,
-                'Hash of Data': hashlib.sha256((self.chainList[block_replace_number].data).encode('utf-8')).hexdigest(),
-                'Proof of Work': self.chainList[block_replace_number].proofOfWork,
-                'Correction Hash': self.chainList[block_replace_number].correctionHash
+                'Previous Hash': str(self.chainList[block_replace_number].previousHash),
+                'Hash of Data': str(hashlib.sha256((self.chainList[block_replace_number].data).encode('utf-8')).hexdigest()),
+                'Proof of Work': str(self.chainList[block_replace_number].proofOfWork),
+                'Correction Hash': str(self.chainList[block_replace_number].correctionHash)
 
             }, sort_keys=True, indent=4, separators=(',', ': '))
             newSuccessorHash = hashlib.sha256(successorBlock.encode('utf-8')).hexdigest()
@@ -324,10 +336,10 @@ class standardChain: # class defining the standard chain by creating a list of s
         # get hash of head of standard chain
         headBlock = json.dumps({
     
-            'Previous Hash': self.chainList[-1].previousHash, # [-1] gets the last element in the list
-            'Hash of Data': hashlib.sha256((self.chainList[-1].data).encode('utf-8')).hexdigest(),
-            'Proof of Work': self.chainList[-1].proofOfWork,
-            'Correction Hash': self.chainList[-1].correctionHash
+            'Previous Hash': str(self.chainList[-1].previousHash), # [-1] gets the last element in the list
+            'Hash of Data': str(hashlib.sha256((self.chainList[-1].data).encode('utf-8')).hexdigest()),
+            'Proof of Work': str(self.chainList[-1].proofOfWork),
+            'Correction Hash': str(self.chainList[-1].correctionHash)
     
         }, sort_keys=True, indent=4, separators=(',', ': '))
         headHash = hashlib.sha256(headBlock.encode('utf-8')).hexdigest()
@@ -374,13 +386,13 @@ class standardChain: # class defining the standard chain by creating a list of s
                 # hash the previous block
                 newBlock = json.dumps({
     
-                    'Previous Hash': self.correctionList[corrections-1].previousHash,
-                    'Hash of Data': hashlib.sha256((self.correctionList[corrections-1].data).encode('utf-8')).hexdigest(),
-                    'Proof of Work': self.correctionList[corrections-1].proofOfWork,
-                    'Election Hash': self.correctionList[corrections-1].electionHash,
-                    'Successor Hash': self.correctionList[corrections-1].successorHash,
-                    'Standard Head Hash': self.correctionList[corrections-1].standardHeadHash,
-                    'Block Replace Number': self.correctionList[corrections-1].blockReplaceNumber
+                    'Previous Hash': str(self.correctionList[corrections-1].previousHash),
+                    'Hash of Data': str(hashlib.sha256((self.correctionList[corrections-1].data).encode('utf-8')).hexdigest()),
+                    'Proof of Work': str(self.correctionList[corrections-1].proofOfWork),
+                    'Election Hash': str(self.correctionList[corrections-1].electionHash),
+                    'Successor Hash': str(self.correctionList[corrections-1].successorHash),
+                    'Standard Head Hash': str(self.correctionList[corrections-1].standardHeadHash),
+                    'Block Replace Number': str(self.correctionList[corrections-1].blockReplaceNumber)
 
                 }, sort_keys=True, indent=4, separators=(',', ': '))
                 rehash_previous_block = hashlib.sha256(newBlock.encode('utf-8')).hexdigest()
@@ -396,10 +408,10 @@ class standardChain: # class defining the standard chain by creating a list of s
                     # hash the current block
                     newBlock = json.dumps({
         
-                        'Previous Hash': self.chainList[count].previousHash,
-                        'Hash of Data': hashlib.sha256((self.chainList[count].data).encode('utf-8')).hexdigest(),
-                        'Proof of Work': self.chainList[count].proofOfWork,
-                        'Correction Hash': self.chainList[count].correctionHash
+                        'Previous Hash': str(self.chainList[count].previousHash),
+                        'Hash of Data': str(hashlib.sha256((self.chainList[count].data).encode('utf-8')).hexdigest()),
+                        'Proof of Work': str(self.chainList[count].proofOfWork),
+                        'Correction Hash': str(self.chainList[count].correctionHash)
         
                     }, sort_keys=True, indent=4, separators=(',', ': '))
                     rehash_previous_block = hashlib.sha256(newBlock.encode('utf-8')).hexdigest()
@@ -415,10 +427,10 @@ class standardChain: # class defining the standard chain by creating a list of s
                 # hash the previous block
                 newBlock = json.dumps({
     
-                    'Previous Hash': self.chainList[count-1].previousHash,
-                    'Hash of Data': hashlib.sha256((self.chainList[count-1].data).encode('utf-8')).hexdigest(),
-                    'Proof of Work': self.chainList[count-1].proofOfWork,
-                    'Correction Hash': self.chainList[count-1].correctionHash
+                    'Previous Hash': str(self.chainList[count-1].previousHash),
+                    'Hash of Data': str(hashlib.sha256((self.chainList[count-1].data).encode('utf-8')).hexdigest()),
+                    'Proof of Work': str(self.chainList[count-1].proofOfWork),
+                    'Correction Hash': str(self.chainList[count-1].correctionHash)
     
                 }, sort_keys=True, indent=4, separators=(',', ': '))
                 rehash_previous_block = hashlib.sha256(newBlock.encode('utf-8')).hexdigest()
