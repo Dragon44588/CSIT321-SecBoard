@@ -8,21 +8,21 @@
         },
         {
             "Previous Hash": "00c97db7a756e748d4e0d0657285416997310027932c2579bbe6dcc134e1d6fd",
-            "Data": "202cbdf4e8a8eb76fc59b14e0413ad2e815c60462fa4f6577cab045db8c560db",
-            "Proof of work": 15,
+            "Data": "24c04be50bf59abaabdf8b36fbc56571e8153288b9f277fd72a39fc131982daa",
+            "Proof of work": "573",
             "Correction hash": "Correction"
         },
         null,
         {
-            "Previous Hash": "006e48c0b39fb3c1425860d6174488b871aab081bdbbdd9a7df7ca9606dd1895",
-            "Data": "91f23ba7951d5a6c016c5e85b3faf46d6f7bd16210d86dde599d94483ddc9206",
-            "Proof of work": 46,
+            "Previous Hash": "009f4d5c989a8483d5e7592ca497ac4302a8a030b4e8183a5c5602b3cdd68cbd",
+            "Data": "c95d37fee335ca767c841bb6a6d6cb5f8bd8d2047ce83ab31b4a445fbfcc2f0b",
+            "Proof of work": "66",
             "Correction hash": "Correction"
         },
         {
-            "Previous Hash": "005f5c2d150d40945a53114b02eadd1ec6f5fb5ddf3fc591beb3a284e326a7a2",
-            "Data": "cf246668a3e95f6469580db3a24bf3c8f72ea7dc426921b938e41652d6d266ce",
-            "Proof of work": 439,
+            "Previous Hash": "00fe267f9593214e3595db178fb9fac2dc7cbdad43f19a287317f2b36b0f4184",
+            "Data": "7f3f40789115013df3719362e2add8c520b67eb4cb12a0e49975a5c449e14c1a",
+            "Proof of work": "1482",
             "Correction hash": "Correction"
         }
     ],
@@ -30,10 +30,10 @@
         {
             "Previous hash": "00c97db7a756e748d4e0d0657285416997310027932c2579bbe6dcc134e1d6fd",
             "Data": "d37c6e7d34983705908c9049a0b7c62f92e0b7c08f279cadba6c14403a0131bd",
-            "Proof of work": 628,
+            "Proof of work": 135,
             "Election hash": "Election Hash TBI",
-            "Standard head hash": "0074532184e20cd02a6e81308cb34d410315b1542ebaf8cdd965073eeb6a1e8a",
-            "Successor hash": "005f5c2d150d40945a53114b02eadd1ec6f5fb5ddf3fc591beb3a284e326a7a2",
+            "Standard head hash": "00b20e0e07d66fa511b60dde039e69236c5f0322c5d163df496b656e179a4511",
+            "Successor hash": "00fe267f9593214e3595db178fb9fac2dc7cbdad43f19a287317f2b36b0f4184",
             "Block replace number": 3
         }
     ]
