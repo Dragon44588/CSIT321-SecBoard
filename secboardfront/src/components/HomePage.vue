@@ -80,7 +80,7 @@
 			<div v-if="myname == 'Admin' || myname == 'Admin2' || myname == 'Admin3'" @click="goBlockChain" class="aside-my-requests" style="height: 40px; margin-top: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer">
 				<div style="display: flex; align-items: center; width: 100%">
 					<div style="width: 30px; margin-left: 20px; display: flex; justify-content: center; align-items: center">
-						<img style="height: 20x; width: 20px" src="../../public/report-request.svg" />
+						<img style="height: 20x; width: 20px" src="../../public/view-blockchain.svg" />
 					</div>
 					<div style="flex: 1; margin-left: 5px">
 						<strong>Block Chain</strong>

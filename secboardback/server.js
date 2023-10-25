@@ -101,7 +101,7 @@ app.use(
 const mySqlConnection = mysql.createConnection({
 	host: "localhost",
 	user: "root",
-	password: "12345678",
+	password: "12345",
 	port: "3306",
 	database: "321db",
 	charset: "utf8mb4",
@@ -265,7 +265,8 @@ app.post("/api/addPost", upload.single("file"), async (req, res) => {
 
 		const saltC = 10;
 		let salt = await bcrypt.genSalt(saltC);
-		let stringify_content = req.body.content;
+		let stringify_content = req.body;
+		stringify_content = JSON.stringify(stringify_content);
 		let hashedContent = createHash("sha256").update(stringify_content).digest("hex");
 
 		// add post to blockchain
@@ -457,6 +458,45 @@ app.post("/api/handle_delete_request", (req, res) => {
 			if (error) {
 				return console.log(error);
 			}
+		});
+
+		// check if yes votes == 2 (correction block added) or no votes == 2 (request denied)
+		// check if vote SUCCEEDED
+		mySqlConnection.query("SELECT vote_yes_or_no FROM Votes WHERE post_id = " + req.body.post_id + " AND vote_yes_or_no = 1", (error, result) => {
+			if (error) {
+				return console.log(error);
+			}
+			if (result.length == 2) {
+				// update page to reflect that vote failed
+				// run python code to add correction block with new data\
+				let stringify_content = req.body;
+				stringify_content = JSON.stringify(stringify_content);
+				let hashedContent = createHash("sha256").update(stringify_content).digest("hex");
+				let options = {
+					mode: "text",
+					pythonOptions: ["-u"], // get print results in real-time
+					scriptPath: "../secboardback/blockchain/",
+					args: [hashedContent, "Election", req.body.post_id + 1], // adding correction block requires the following:
+					// the message content
+					// the election hash, to be added in future
+					// (post_id + 1) which equals the block number, as block 1 is genesis and post 1 is block 2 added after the genesis
+				};
+
+				PythonShell.run("addCorrectionBlock.py", options).then((messages) => {
+					// results is an array consisting of messages collected during execution
+					console.log(messages);
+				});
+			}
+		});
+
+		// check if vote FAILED
+		mySqlConnection.query("SELECT vote_yes_or_no FROM Votes WHERE post_id = " + req.body.post_id + " AND vote_yes_or_no = 0", (error, result) => {
+			if (error) {
+				return console.log(error);
+			}
+			if (result.length == 2) {
+				// update page to reflect that vote failed
+			}
 			res.send({
 				status: 200,
 			});
@@ -482,6 +522,45 @@ app.post("/api/handle_report_request", (req, res) => {
 		mySqlConnection.query(accept_delete_SQL, accept_delte_Param, (error, result) => {
 			if (error) {
 				return console.log(error);
+			}
+		});
+
+		// check if yes votes == 2 (correction block added) or no votes == 2 (request denied)
+		// check if vote SUCCEEDED
+		mySqlConnection.query("SELECT vote_yes_or_no FROM Votes WHERE post_id = " + req.body.post_id + " AND vote_yes_or_no = 1", (error, result) => {
+			if (error) {
+				return console.log(error);
+			}
+			if (result.length == 2) {
+				// update page to reflect that vote failed
+				// run python code to add correction block with new data\
+				let stringify_content = req.body;
+				stringify_content = JSON.stringify(stringify_content);
+				let hashedContent = createHash("sha256").update(stringify_content).digest("hex");
+				let options = {
+					mode: "text",
+					pythonOptions: ["-u"], // get print results in real-time
+					scriptPath: "../secboardback/blockchain/",
+					args: [hashedContent, "Election", req.body.post_id + 1], // adding correction block requires the following:
+					// the message content
+					// the election hash, to be added in future
+					// (post_id + 1) which equals the block number, as block 1 is genesis and post 1 is block 2 added after the genesis
+				};
+
+				PythonShell.run("addCorrectionBlock.py", options).then((messages) => {
+					// results is an array consisting of messages collected during execution
+					console.log(messages);
+				});
+			}
+		});
+
+		// check if vote FAILED
+		mySqlConnection.query("SELECT vote_yes_or_no FROM Votes WHERE post_id = " + req.body.post_id + " AND vote_yes_or_no = 0", (error, result) => {
+			if (error) {
+				return console.log(error);
+			}
+			if (result.length == 2) {
+				// update page to reflect that vote failed
 			}
 			res.send({
 				status: 200,
@@ -800,11 +879,14 @@ app.post("/api/handle_edit_request", (req, res) => {
 			if (result.length == 2) {
 				// update page to reflect that vote failed
 				// run python code to add correction block with new data\
+				let stringify_content = req.body;
+				stringify_content = JSON.stringify(stringify_content);
+				let hashedContent = createHash("sha256").update(stringify_content).digest("hex");
 				let options = {
 					mode: "text",
 					pythonOptions: ["-u"], // get print results in real-time
 					scriptPath: "../secboardback/blockchain/",
-					args: [req.body.content, "Election", req.body.post_id + 1], // adding correction block requires the following:
+					args: [hashedContent, "Election", req.body.post_id + 1], // adding correction block requires the following:
 					// the message content
 					// the election hash, to be added in future
 					// (post_id + 1) which equals the block number, as block 1 is genesis and post 1 is block 2 added after the genesis

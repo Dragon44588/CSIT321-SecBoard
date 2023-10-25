@@ -59,13 +59,13 @@ for i in chainData['Main chain']:
         testChain.createStandardBlock('null')
         continue
     print(i['Data'])
-    testChain.createStandardBlock(str(i['Data']))
+    testChain.loadStandardBlock(str(i['Previous Hash']), str(i['Data']), str(i['Proof of work']), str(i['Correction hash']))
 
 # load correction blocks
 counter = 0
 for i in chainData['Correction chain']:
     print(i['Data'])
-    testChain.createCorrectionBlock(str(i['Data']), 'Election Hash TBI', int(i['Block replace number']))
+    testChain.loadCorrectionBlock(str(i['Previous hash']), str(i['Data']), str(i['Proof of work']), str(i['Election hash']), str(i['Standard head hash']), str(i['Successor hash']), str(i['Block replace number']))
 
 chainFile.close()
 

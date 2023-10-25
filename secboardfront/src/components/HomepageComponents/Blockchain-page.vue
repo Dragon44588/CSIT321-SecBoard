@@ -8,10 +8,10 @@
 				<li v-for="(pl, index) in postsList" :key="index" style="height: 300px; margin: 20px; background-color: #fdf2b3; border-radius: 5px">
 					<div style="padding: 15px">
 						<div>
-							<strong style="font-weight: bold; font-size: 2em">{{ pl.title }}</strong>
+							<strong style="font-weight: bold; font-size: 2em">{{ pl.blockNumber }}</strong>
 						</div>
 						<div style="margin-top: 5px">
-							<span style="font-size: 1.1em">
+							<span style="font-size: 0.76em">
 								{{ pl }}
 							</span>
 						</div>
@@ -50,15 +50,25 @@ var postsList = ref([]);
 
 async function getBlockchain() {
 	var blockchain = [];
+	var blockNumber = 1;
 	try {
 		let response = await fetch("/files/database.JSON");
 		let responsejson = await response.json();
 		for (const i of responsejson["Main chain"]) {
+			var block = [];
+			var blockNumberString = String(blockNumber);
+			block.push(blockNumberString);
+			blockNumber = blockNumber + 1;
 			if (i && i["Previous Hash"]) {
-				blockchain.push(i["Previous Hash"]);
+				block.push(i["Previous Hash"]);
+				block.push(i["Data"]);
+				block.push(i["Proof of work"]);
 			} else {
-				blockchain.push("CORRECTED");
+				block.push("CORRECTED");
+				block.push("CORRECTED");
+				block.push("CORRECTED");
 			}
+			blockchain.push(block);
 		}
 		postsList.value = blockchain;
 	} catch (err) {

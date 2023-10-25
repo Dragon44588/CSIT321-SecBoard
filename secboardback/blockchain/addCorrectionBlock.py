@@ -63,7 +63,7 @@ for i in chainData['Main chain']:
 counter = 0
 for i in chainData['Correction chain']:
     print(i['Data'])
-    testChain.createCorrectionBlock(str(i['Data']), 'Election Hash TBI', int(i['Block replace number']))
+    testChain.loadCorrectionBlock(str(i['Previous hash']), str(i['Data']), str(i['Proof of work']), str(i['Election hash']), str(i['Standard head hash']), str(i['Successor hash']), str(i['Block replace number']))
 
 chainFile.close()
 
