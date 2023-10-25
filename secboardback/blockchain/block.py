@@ -227,6 +227,9 @@ class standardChain: # class defining the standard chain by creating a list of s
         # add block to the list
         self.correctionList.append(newBlock)
 
+    def loadNullBlock(self):
+        self.chainList.append('')
+
         
 
     def createCorrectionBlock(self, data, electionHash, block_replace_number): # this occurs after a successful election to correct a block

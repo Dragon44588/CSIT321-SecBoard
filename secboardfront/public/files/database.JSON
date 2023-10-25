@@ -8,66 +8,39 @@
         },
         {
             "Previous Hash": "b84eaf1e5daa74c2be416e144f886aa572e8466caa74a64fa6f82c3b2059fc9d",
-            "Data": "7f70054303a0bbc0a90d5a63209ea6a35addb443114f44f38d6d0bde7e2b716c",
-            "Proof of work": 43,
+            "Data": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+            "Proof of work": "15",
+            "Correction hash": "Correction"
+        },
+        {
+            "Previous Hash": "dcd000924555faec5a5ab5dd8e8972edab22f08a12f7a31d9492a516d58925ce",
+            "Data": "3f32fb79fdc9f7d766c9b6a9c29cbb601f1a63ea9651981f9a666498b6b86e92",
+            "Proof of work": "166",
+            "Correction hash": "Correction"
+        },
+        {
+            "Previous Hash": "fc608c8fcad8bf31d4ae6905976ed1cef3187590a4a5e6d6a01ec76de9e566e5",
+            "Data": "2944d157a9d6252c12e9b843ecc973cc5a8aee3b80f3949dc6f4d28b53acaf6d",
+            "Proof of work": "567",
             "Correction hash": "Correction"
         },
         null,
         {
-            "Previous Hash": "1175426590231f473fbdbd8403caff9694ebd017b629b491d60b5b91274ff5d8",
-            "Data": "768971cf9914dcd36667f95de0eee50adb4f22ff7ebd771b0064b6792fce0fc8",
-            "Proof of work": 790,
-            "Correction hash": "Correction"
-        },
-        {
-            "Previous Hash": "6b6dd9dc1802ad57fc8e54e55fd5e8601e756ef98b893acbacc81ac44eaeca98",
-            "Data": "0c8bd1776a3ff2c810335aa998cab1e420e6cf2ae13d2c3ea129c0ac29ea2f72",
-            "Proof of work": 569,
-            "Correction hash": "Correction"
-        },
-        {
-            "Previous Hash": "ae14efea49e4812969e0c5cec52212c2044e535918198fb5af8a7d8f5926cfab",
-            "Data": "cdaba034970c138c233524ab54d8e9e283bf4d3ffaae361b7dde69ffc19b01b3",
-            "Proof of work": 235,
-            "Correction hash": "Correction"
+            "Previous Hash": "CORRECTED",
+            "Data": "e591f643d9cd201a89d277773e0d331d36763985e1e04c2aa421f3654fb77b12",
+            "Proof of work": 71,
+            "Correction hash": "ab79bf0637d79f726b1dbce65e92fea07dae8237ce876403cd3586cbed89227b"
         }
     ],
     "Correction chain": [
         {
-            "Previous hash": "b84eaf1e5daa74c2be416e144f886aa572e8466caa74a64fa6f82c3b2059fc9d",
-            "Data": "undefined",
-            "Proof of work": "6",
-            "Election hash": "Election Hash TBI",
-            "Standard head hash": "a327824ccb1c1bc0852963c5705051b40c492889a1c6994d375c5f1a9bb728f5",
-            "Successor hash": "None",
-            "Block replace number": "3"
-        },
-        {
-            "Previous hash": "3576c1ea1abb2853c81de4f02c60504f05778bc64f7d8d571a0a3519361fc307",
-            "Data": "{\"token\":\"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IkFkbWluIiwiaWF0IjoxNjk4MTk2NDkzLCJleHAiOjE2OTgyMzk2OTN9.mwvqfeOY9pk2ZIcj6RMCsybMsHxu1wO2Cs675Zwj5Fs\",\"post_id\":3,\"yes_or_no\":1}",
-            "Proof of work": "116",
-            "Election hash": "Election Hash TBI",
-            "Standard head hash": "e7c72f6f8ba65d9cfe428b7385166ab59deb76264ce59a8434d7c5c7ba2cf8d4",
-            "Successor hash": "None",
-            "Block replace number": "4"
-        },
-        {
-            "Previous hash": "83cda916aac5164870406c80b56f9ae46bb6fb3bd39276bd0fdd66751582b8f7",
-            "Data": "019650d9951185ac4049df5fa8df4006ba8dcd09e57a3f27088e81e851367566",
-            "Proof of work": "83",
-            "Election hash": "Election Hash TBI",
-            "Standard head hash": "b71acf63500ccba6e982742c8108e8088afca7f16b2398bd5bc260a07e5b6e19",
-            "Successor hash": "None",
-            "Block replace number": "5"
-        },
-        {
             "Previous hash": "c3f16c50a026525e7989626a1929832ddb03c43e2e233b68835c8c779608fc95",
             "Data": "24f462a5098b1145b2002d06a70a8e1ca442b7541ef7724ec9ea47a04f29a01c",
-            "Proof of work": 12,
+            "Proof of work": "12",
             "Election hash": "Election Hash TBI",
             "Standard head hash": "8399668a2c09cfad62b9736670f432e4b80d8b93dd42243abbc03ad19a8c2db3",
             "Successor hash": "6b6dd9dc1802ad57fc8e54e55fd5e8601e756ef98b893acbacc81ac44eaeca98",
-            "Block replace number": 3
+            "Block replace number": "5"
         }
     ]
 }
