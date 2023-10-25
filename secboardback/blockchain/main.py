@@ -26,8 +26,8 @@ if __name__ == "__main__": # apparently this is cool
     # note to self: a correction block cannot be created until the election succeeds
 
     #Correction Chain
-    testChain.createCorrectionBlock('New message!', testElectionHash, 2)
-    testChain.createCorrectionBlock('New message 2!', testElectionHash, 5)
+    #testChain.createCorrectionBlock('New message!', testElectionHash, 2)
+    #testChain.createCorrectionBlock('New message 2!', testElectionHash, 5)
     #testChain.printCorrectionList()
 
     testChain.createStandardBlock('test 5')

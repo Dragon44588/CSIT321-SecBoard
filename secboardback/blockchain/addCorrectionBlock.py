@@ -57,7 +57,7 @@ for i in chainData['Main chain']:
         print('null')
         continue
     print(i['Data'])
-    testChain.createStandardBlock(str(i['Data']))
+    testChain.loadStandardBlock(str(i['Previous Hash']), str(i['Data']), str(i['Proof of work']), str(i['Correction hash']))
 
 # load correction blocks
 counter = 0

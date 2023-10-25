@@ -8,28 +8,33 @@
         },
         {
             "Previous Hash": "00c97db7a756e748d4e0d0657285416997310027932c2579bbe6dcc134e1d6fd",
-            "Data": "157b96cdd294774990fe6b1ee5a19bf6dd07d744791970aef1358f752b44d7cb",
-            "Proof of work": "561",
+            "Data": "202cbdf4e8a8eb76fc59b14e0413ad2e815c60462fa4f6577cab045db8c560db",
+            "Proof of work": 15,
+            "Correction hash": "Correction"
+        },
+        null,
+        {
+            "Previous Hash": "006e48c0b39fb3c1425860d6174488b871aab081bdbbdd9a7df7ca9606dd1895",
+            "Data": "91f23ba7951d5a6c016c5e85b3faf46d6f7bd16210d86dde599d94483ddc9206",
+            "Proof of work": 46,
             "Correction hash": "Correction"
         },
         {
-            "Previous Hash": "002acd2a80830ff50fcf2d2beddbcfb458c51f15dfdd6e2f8a44dc9acc32dea6",
-            "Data": "e5910d7c0a314c7ff266f194fa1190479986c641df8f89c700d13d9629fc2d50",
-            "Proof of work": "116",
-            "Correction hash": "Correction"
-        },
-        {
-            "Previous Hash": "00ca06af81f262728a634539d9b95e9ac01af2a71c137500b4abfc6893448469",
-            "Data": "2e628adece1243d197d424028b912d1b4053bb49937e3e703ba70ceda36c3495",
-            "Proof of work": "94",
-            "Correction hash": "Correction"
-        },
-        {
-            "Previous Hash": "007799aa896d1654545271a5ce457dce393b2976c10320f5346321780c84c90f",
-            "Data": "24deabf0b1c11bbc5bbc8760cc020d8e33abdea7189bbe42b6022456a34961b1",
-            "Proof of work": 495,
+            "Previous Hash": "005f5c2d150d40945a53114b02eadd1ec6f5fb5ddf3fc591beb3a284e326a7a2",
+            "Data": "cf246668a3e95f6469580db3a24bf3c8f72ea7dc426921b938e41652d6d266ce",
+            "Proof of work": 439,
             "Correction hash": "Correction"
         }
     ],
-    "Correction chain": []
+    "Correction chain": [
+        {
+            "Previous hash": "00c97db7a756e748d4e0d0657285416997310027932c2579bbe6dcc134e1d6fd",
+            "Data": "d37c6e7d34983705908c9049a0b7c62f92e0b7c08f279cadba6c14403a0131bd",
+            "Proof of work": 628,
+            "Election hash": "Election Hash TBI",
+            "Standard head hash": "0074532184e20cd02a6e81308cb34d410315b1542ebaf8cdd965073eeb6a1e8a",
+            "Successor hash": "005f5c2d150d40945a53114b02eadd1ec6f5fb5ddf3fc591beb3a284e326a7a2",
+            "Block replace number": 3
+        }
+    ]
 }
